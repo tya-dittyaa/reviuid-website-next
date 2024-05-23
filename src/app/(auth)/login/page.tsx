@@ -60,16 +60,16 @@ function White() {
     const login = await fetchUserLogin(formData.email, formData.password);
 
     // Promise for Toast Notification
-    const promise = (): Promise<void> =>
+    const toastPromise = (): Promise<void> =>
       new Promise((resolve, reject) =>
-        setTimeout(async () => {
+        setTimeout(() => {
           if (login === 201) resolve();
           else reject(login);
         }, 2000)
       );
 
     // Toast Notification
-    toast.promise(promise, {
+    toast.promise(toastPromise, {
       loading: "Sedang memproses...",
       success: () => {
         return `Selamat datang! Anda berhasil masuk! Mengalihkan ke halaman utama...`;
@@ -82,7 +82,7 @@ function White() {
     });
 
     // Redirect to Home Page after 2 seconds
-    promise().then(() => {
+    toastPromise().then(() => {
       setTimeout(() => {
         window.location.href = "/";
       }, 2000);
