@@ -76,7 +76,8 @@ function White() {
       },
       error: (data: number) => {
         setIsSubmitting(false);
-        if (data === 500) return "Terjadi kesalahan pada server!";
+        if (data === 500)
+          return "Terjadi kesalahan pada server! Coba lagi nanti...";
         else return "Email atau password salah! Silakan coba lagi!";
       },
     });
