@@ -1,6 +1,8 @@
 "use server";
 
-export const fetchUserLogin = async (email: string, password: string) => {
+import { UserLogin } from "@/types";
+
+export const fetchUserLogin = async (data: UserLogin): Promise<number> => {
   const BACKEND_URL = process.env.BACKEND_URL as string;
   const HEADER_API_KEY = process.env.HEADER_API_KEY as string;
 
@@ -11,7 +13,10 @@ export const fetchUserLogin = async (email: string, password: string) => {
         "Content-Type": "application/json",
         "x-api-key": HEADER_API_KEY,
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({
+        email: data.email,
+        password: data.password,
+      }),
     });
 
     return res.status;

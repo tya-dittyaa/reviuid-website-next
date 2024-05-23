@@ -1,6 +1,8 @@
 "use client";
 
 import { CustomButton } from "@/components";
+import { RegisterResult, UserRegister } from "@/types";
+import { fetchUserRegister } from "@/utils/fetchUserRegister";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import KeyIcon from "@mui/icons-material/Key";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
@@ -14,6 +16,7 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import { FormEvent, MouseEvent, useState } from "react";
+import { Toaster, toast } from "sonner";
 import styles from "./page.module.css";
 
 function Red() {
@@ -46,8 +49,18 @@ function White() {
     event.preventDefault();
   };
 
+  // Form State Management and Submission Handler for Confirm Password Visibility
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const handleClickShowConfirmPassword = () =>
+    setShowConfirmPassword((show) => !show);
+  const handleMouseDownConfirmPassword = (
+    event: MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+
   // Form State Management and Submission Handler for Username, Email, Password, and Confirm Password
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<UserRegister>({
     username: "",
     email: "",
     password: "",
@@ -56,6 +69,40 @@ function White() {
   const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSubmitting(true);
+
+    // Fetch User Register Data
+    const registerResult = await fetchUserRegister(formData);
+
+    // Promise for Toast Notification
+    const toastPromise = (): Promise<RegisterResult> =>
+      new Promise<RegisterResult>((resolve, reject) =>
+        setTimeout(() => {
+          if (registerResult.success) resolve(registerResult);
+          else reject(registerResult);
+        }, 2000)
+      );
+
+    // Toast Notification
+    toast.promise(toastPromise, {
+      loading: "Sedang mendaftarkan...",
+      success: (data) => {
+        return "Selamat datang! Anda berhasil mendaftar! Sedang mengalihkan ke halaman utama...";
+      },
+      error: (error) => {
+        setIsSubmitting(false);
+        if (error.code === 500)
+          return "Terjadi kesalahan pada server! Silakan coba lagi nanti!";
+        else if (error.code === 400) return `Gagal mendaftar! ${error.message}`;
+        else return `Gagal mendaftar! Silakan coba lagi nanti!`;
+      },
+    });
+
+    // Redirect to Home Page after 2 seconds
+    toastPromise().then(() => {
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 2000);
+    });
   };
 
   return (
@@ -160,7 +207,7 @@ function White() {
             <OutlinedInput
               id="input-confirm-password"
               label="Confirm Password"
-              type={showPassword ? "text" : "password"}
+              type={showConfirmPassword ? "text" : "password"}
               required
               size="small"
               placeholder="********"
@@ -181,11 +228,11 @@ function White() {
                 <InputAdornment position="end">
                   <IconButton
                     disabled={isSubmitting ? true : false}
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
+                    onClick={handleClickShowConfirmPassword}
+                    onMouseDown={handleMouseDownConfirmPassword}
                     edge="end"
                   >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
               }
@@ -226,6 +273,7 @@ export default function Login() {
     <main className={styles.container}>
       <Red />
       <White />
+      <Toaster richColors position="bottom-left" />
     </main>
   );
 }
