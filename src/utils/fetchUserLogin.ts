@@ -2,7 +2,7 @@
 
 import { UserLogin } from "@/types";
 
-export const fetchUserLogin = async (data: UserLogin) => {
+export const fetchUserLogin = async (data: UserLogin): Promise<number> => {
   const BACKEND_URL = process.env.BACKEND_URL as string;
   const HEADER_API_KEY = process.env.HEADER_API_KEY as string;
 
