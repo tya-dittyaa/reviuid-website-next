@@ -14,7 +14,7 @@ import {
   OutlinedInput,
 } from "@mui/material";
 import Image from "next/image";
-import { permanentRedirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { FormEvent, MouseEvent, useState } from "react";
 import { Toaster, toast } from "sonner";
 import styles from "./page.module.css";
