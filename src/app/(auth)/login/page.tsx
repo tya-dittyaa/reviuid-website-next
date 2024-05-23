@@ -1,6 +1,7 @@
 "use client";
 
 import { CustomButton } from "@/components";
+import { UserLogin } from "@/types";
 import { fetchUserLogin } from "@/utils";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import KeyIcon from "@mui/icons-material/Key";
@@ -48,7 +49,7 @@ function White() {
   };
 
   // Form State Management and Submission Handler for Email and Password
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<UserLogin>({
     email: "",
     password: "",
   });
@@ -57,7 +58,7 @@ function White() {
     setIsSubmitting(true);
 
     // Fetch User Login Data
-    const login = await fetchUserLogin(formData.email, formData.password);
+    const login = await fetchUserLogin(formData);
 
     // Promise for Toast Notification
     const toastPromise = (): Promise<void> =>
@@ -72,12 +73,12 @@ function White() {
     toast.promise(toastPromise, {
       loading: "Sedang memproses...",
       success: () => {
-        return `Selamat datang! Anda berhasil masuk! Mengalihkan ke halaman utama...`;
+        return `Selamat datang! Anda berhasil masuk! Sedang mengalihkan ke halaman utama...`;
       },
       error: (data: number) => {
         setIsSubmitting(false);
         if (data === 500)
-          return "Terjadi kesalahan pada server! Coba lagi nanti...";
+          return "Terjadi kesalahan pada server! Silakan coba lagi nanti!";
         else return "Email atau password salah! Silakan coba lagi!";
       },
     });
