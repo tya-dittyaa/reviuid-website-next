@@ -189,7 +189,7 @@ export default function Login() {
     <main className={styles.container}>
       <White />
       <Red />
-      <Toaster richColors />
+      <Toaster richColors position="bottom-right" />
     </main>
   );
 }
