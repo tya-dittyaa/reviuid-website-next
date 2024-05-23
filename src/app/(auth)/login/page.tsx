@@ -72,12 +72,12 @@ function White() {
     toast.promise(promise, {
       loading: "Sedang memproses...",
       success: () => {
-        return `Selamat datang! Anda berhasil masuk!`;
+        return `Selamat datang! Anda berhasil masuk! Mengalihkan ke halaman utama...`;
       },
       error: (data: number) => {
         setIsSubmitting(false);
         if (data === 500) return "Terjadi kesalahan pada server!";
-        else return "Email atau password salah!";
+        else return "Email atau password salah! Silakan coba lagi!";
       },
     });
 
