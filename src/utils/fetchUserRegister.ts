@@ -52,7 +52,6 @@ export const fetchUserRegister = async (
     });
 
     const result = await res.json();
-    console.log(result);
 
     if (result.message === "Email already exists") {
       return {
