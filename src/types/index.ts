@@ -1,3 +1,4 @@
 import { UserLogin } from "./userLogin.type";
+import { RegisterResult, UserRegister } from "./userRegister.type";
 
-export type { UserLogin };
+export type { RegisterResult, UserLogin, UserRegister };
