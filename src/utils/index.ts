@@ -1,3 +1,4 @@
-import { fetchUserLogin } from "./fetchUserLogin";
+import { FetchUserRegister } from "./FetchUserRegister";
+import { FetchUserLogin } from "./fetchUserLogin";
 
-export { fetchUserLogin };
+export { FetchUserLogin, FetchUserRegister };

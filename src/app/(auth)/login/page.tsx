@@ -2,7 +2,7 @@
 
 import { CustomButton } from "@/components";
 import { UserLogin } from "@/types";
-import { fetchUserLogin } from "@/utils";
+import { FetchUserLogin } from "@/utils";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import KeyIcon from "@mui/icons-material/Key";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
@@ -14,6 +14,7 @@ import {
   OutlinedInput,
 } from "@mui/material";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { FormEvent, MouseEvent, useState } from "react";
 import { Toaster, toast } from "sonner";
 import styles from "./page.module.css";
@@ -38,6 +39,8 @@ function Red() {
 }
 
 function White() {
+  const router = useRouter();
+
   // Form State Management for Submit Button
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -58,7 +61,7 @@ function White() {
     setIsSubmitting(true);
 
     // Fetch User Login Data
-    const login = await fetchUserLogin(formData);
+    const login = await FetchUserLogin(formData);
 
     // Promise for Toast Notification
     const toastPromise = (): Promise<void> =>
@@ -86,7 +89,7 @@ function White() {
     // Redirect to Home Page after 2 seconds
     toastPromise().then(() => {
       setTimeout(() => {
-        window.location.href = "/";
+        router.replace("/");
       }, 2000);
     });
   };
@@ -168,7 +171,7 @@ function White() {
               className={styles.button}
               disabled={isSubmitting ? true : false}
             >
-              Masuk
+              MASUK
             </CustomButton>
           </FormControl>
         </div>

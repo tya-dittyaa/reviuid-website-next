@@ -2,7 +2,7 @@
 
 import { RegisterResult, UserRegister } from "@/types";
 
-export const fetchUserRegister = async (
+export const FetchUserRegister = async (
   data: UserRegister
 ): Promise<RegisterResult> => {
   const BACKEND_URL = process.env.BACKEND_URL as string;
@@ -52,7 +52,6 @@ export const fetchUserRegister = async (
     });
 
     const result = await res.json();
-    console.log(result);
 
     if (result.message === "Email already exists") {
       return {
