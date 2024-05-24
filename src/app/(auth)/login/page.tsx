@@ -14,7 +14,6 @@ import {
   OutlinedInput,
 } from "@mui/material";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { FormEvent, MouseEvent, useState } from "react";
 import { Toaster, toast } from "sonner";
 import styles from "./page.module.css";
@@ -39,8 +38,6 @@ function Red() {
 }
 
 function White() {
-  const router = useRouter();
-
   // Form State Management for Submit Button
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -89,7 +86,7 @@ function White() {
     // Redirect to Home Page after 2 seconds
     toastPromise().then(() => {
       setTimeout(() => {
-        router.replace("/");
+        window.location.replace("/");
       }, 2000);
     });
   };
