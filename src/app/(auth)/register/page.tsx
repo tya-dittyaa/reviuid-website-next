@@ -270,10 +270,10 @@ function White() {
 
 export default function Login() {
   return (
-    <main className={styles.container}>
+    <div className={styles.container}>
       <Red />
       <White />
       <Toaster richColors position="bottom-left" />
-    </main>
+    </div>
   );
 }
