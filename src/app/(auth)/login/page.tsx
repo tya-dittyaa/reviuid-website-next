@@ -14,7 +14,6 @@ import {
   OutlinedInput,
 } from "@mui/material";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { FormEvent, MouseEvent, useState } from "react";
 import { Toaster, toast } from "sonner";
 import styles from "./page.module.css";
@@ -39,8 +38,6 @@ function Red() {
 }
 
 function White() {
-  const router = useRouter();
-
   // Form State Management for Submit Button
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -79,7 +76,6 @@ function White() {
         return `Selamat datang! Anda berhasil masuk! Sedang mengalihkan ke halaman utama...`;
       },
       error: (data: number) => {
-        setIsSubmitting(false);
         if (data === 500)
           return "Terjadi kesalahan pada server! Silakan coba lagi nanti!";
         else return "Email atau password salah! Silakan coba lagi!";
@@ -87,11 +83,15 @@ function White() {
     });
 
     // Redirect to Home Page after 2 seconds
-    toastPromise().then(() => {
-      setTimeout(() => {
-        router.replace("/");
-      }, 2000);
-    });
+    toastPromise()
+      .then(() => {
+        setTimeout(() => {
+          window.location.replace("/");
+        }, 2000);
+      })
+      .catch(() => {
+        setIsSubmitting(false);
+      });
   };
 
   return (
@@ -191,10 +191,10 @@ function White() {
 
 export default function Login() {
   return (
-    <main className={styles.container}>
+    <div className={styles.container}>
       <White />
       <Red />
       <Toaster richColors position="bottom-right" />
-    </main>
+    </div>
   );
 }
