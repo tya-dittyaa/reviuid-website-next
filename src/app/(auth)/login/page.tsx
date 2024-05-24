@@ -171,7 +171,7 @@ function White() {
               className={styles.button}
               disabled={isSubmitting ? true : false}
             >
-              Masuk
+              MASUK
             </CustomButton>
           </FormControl>
         </div>
