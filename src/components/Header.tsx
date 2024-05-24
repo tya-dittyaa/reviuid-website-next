@@ -102,11 +102,13 @@ function Header() {
               <CustomButton
                 variant="contained"
                 type="button"
-                fontColor="black"
-                paddingLeft="6vh"
-                paddingRight="6vh"
-                borderRadius="1.5vh"
                 onClick={() => router.push("/login")}
+                sx={{
+                  paddingLeft: 3,
+                  paddingRight: 3,
+                  borderRadius: 1.5,
+                  color: "black",
+                }}
               >
                 Masuk
               </CustomButton>
