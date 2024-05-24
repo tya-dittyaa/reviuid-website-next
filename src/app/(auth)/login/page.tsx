@@ -2,7 +2,7 @@
 
 import { CustomButton } from "@/components";
 import { UserLogin } from "@/types";
-import { fetchUserLogin } from "@/utils";
+import { FetchUserLogin } from "@/utils";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import KeyIcon from "@mui/icons-material/Key";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
@@ -61,7 +61,7 @@ function White() {
     setIsSubmitting(true);
 
     // Fetch User Login Data
-    const login = await fetchUserLogin(formData);
+    const login = await FetchUserLogin(formData);
 
     // Promise for Toast Notification
     const toastPromise = (): Promise<void> =>

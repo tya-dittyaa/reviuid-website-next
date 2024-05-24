@@ -2,7 +2,7 @@
 
 import { CustomButton } from "@/components";
 import { RegisterResult, UserRegister } from "@/types";
-import { fetchUserRegister } from "@/utils/fetchUserRegister";
+import { FetchUserRegister } from "@/utils";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import KeyIcon from "@mui/icons-material/Key";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
@@ -74,7 +74,7 @@ function White() {
     setIsSubmitting(true);
 
     // Fetch User Register Data
-    const registerResult = await fetchUserRegister(formData);
+    const registerResult = await FetchUserRegister(formData);
 
     // Promise for Toast Notification
     const toastPromise = (): Promise<RegisterResult> =>
