@@ -49,18 +49,6 @@
   margin-bottom: 20px;
 }
 
-.button {
-  background-color: #E2B808;
-}
-
-.button:active {
-  background-color: #E2B808;
-}
-
-.button:hover {
-  background-color: #caa308;
-}
-
 .LoginRef {
   font-size: 10px;
   color: gray;
