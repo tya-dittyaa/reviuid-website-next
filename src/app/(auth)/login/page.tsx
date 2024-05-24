@@ -76,7 +76,6 @@ function White() {
         return `Selamat datang! Anda berhasil masuk! Sedang mengalihkan ke halaman utama...`;
       },
       error: (data: number) => {
-        setIsSubmitting(false);
         if (data === 500)
           return "Terjadi kesalahan pada server! Silakan coba lagi nanti!";
         else return "Email atau password salah! Silakan coba lagi!";
@@ -84,11 +83,15 @@ function White() {
     });
 
     // Redirect to Home Page after 2 seconds
-    toastPromise().then(() => {
-      setTimeout(() => {
-        window.location.replace("/");
-      }, 2000);
-    });
+    toastPromise()
+      .then(() => {
+        setTimeout(() => {
+          window.location.replace("/");
+        }, 2000);
+      })
+      .catch(() => {
+        setIsSubmitting(false);
+      });
   };
 
   return (

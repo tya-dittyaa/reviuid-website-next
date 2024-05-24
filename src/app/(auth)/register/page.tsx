@@ -89,7 +89,6 @@ function White() {
         return "Selamat datang! Anda berhasil mendaftar! Sedang mengalihkan ke halaman utama...";
       },
       error: (error) => {
-        setIsSubmitting(false);
         if (error.code === 500)
           return "Terjadi kesalahan pada server! Silakan coba lagi nanti!";
         else if (error.code === 400) return `Gagal mendaftar! ${error.message}`;
@@ -98,11 +97,15 @@ function White() {
     });
 
     // Redirect to Home Page after 2 seconds
-    toastPromise().then(() => {
-      setTimeout(() => {
-        window.location.replace("/");
-      }, 2000);
-    });
+    toastPromise()
+      .then(() => {
+        setTimeout(() => {
+          window.location.replace("/");
+        }, 2000);
+      })
+      .catch(() => {
+        setIsSubmitting(false);
+      });
   };
 
   return (
