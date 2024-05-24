@@ -1,6 +1,5 @@
 import CustomButton from "./CustomButton";
-import FooterLayout from "./Footer";
-import HeaderAfterLogin from "./HeaderAfterLogin";
-import HeaderBeforeLogin from "./HeaderBeforeLogin";
+import Footer from "./Footer";
+import Header from "./Header";
 
-export { CustomButton, FooterLayout, HeaderAfterLogin, HeaderBeforeLogin };
+export { CustomButton, Footer, Header };
