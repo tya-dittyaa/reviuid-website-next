@@ -9,13 +9,22 @@ export const GetUserSession = async (): Promise<UserSession | null> => {
   // Get the environment variables
   const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET as string;
 
-  // Get the access token
+  // Initialize the access token
+  let accessToken: string = "";
+
+  // Get the refresh token
   const rt = cookies().get("rt");
   if (!rt) return null;
 
-  // Fetch the refresh token
-  const accessToken = await FetchRefreshToken(rt.value);
-  if (!accessToken) return null;
+  // Check the access token
+  const at = cookies().get("at");
+  if (at) {
+    accessToken = at.value;
+  } else {
+    const newAt = await FetchRefreshToken();
+    if (!newAt) return null;
+    accessToken = newAt;
+  }
 
   // Verify the access token
   const token = Buffer.from(JWT_ACCESS_SECRET, "base64").toString("utf-8");
