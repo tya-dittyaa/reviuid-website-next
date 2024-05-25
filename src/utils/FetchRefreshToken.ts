@@ -3,10 +3,14 @@
 import { LoginResult } from "@/types";
 import { cookies } from "next/headers";
 
-export const FetchRefreshToken = async (rt: string): Promise<string | null> => {
+export const FetchRefreshToken = async (): Promise<string | null> => {
   // Get the environment variables
   const BACKEND_URL = process.env.BACKEND_URL as string;
   const HEADER_API_KEY = process.env.HEADER_API_KEY as string;
+
+  // Get the refresh token
+  const rt = cookies().get("rt");
+  if (!rt) return null;
 
   try {
     // Fetch the user login
@@ -14,7 +18,7 @@ export const FetchRefreshToken = async (rt: string): Promise<string | null> => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${rt}`,
+        Authorization: `Bearer ${rt.value}`,
         "x-api-key": HEADER_API_KEY,
       },
     });

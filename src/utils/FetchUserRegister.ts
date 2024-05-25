@@ -1,6 +1,7 @@
 "use server";
 
-import { RegisterResult, UserRegister } from "@/types";
+import { LoginResult, RegisterResult, UserRegister } from "@/types";
+import { cookies } from "next/headers";
 
 export const FetchUserRegister = async (
   data: UserRegister
@@ -54,7 +55,7 @@ export const FetchUserRegister = async (
     });
 
     // Get the result
-    const result = await res.json();
+    const result: RegisterResult = await res.json();
 
     // Email already exists
     if (result.message === "Email already exists") {
@@ -73,6 +74,25 @@ export const FetchUserRegister = async (
         message: "Username sudah terdaftar!",
       };
     }
+
+    // Get the result if success
+    const resultSuccess: LoginResult = await res.json();
+
+    // Set the cookies
+    cookies().set({
+      name: "at",
+      value: resultSuccess.accessToken,
+      httpOnly: true,
+      secure: true,
+      maxAge: 60 * 15,
+    });
+    cookies().set({
+      name: "rt",
+      value: resultSuccess.refreshToken,
+      httpOnly: true,
+      secure: true,
+      maxAge: 60 * 60 * 24 * 7,
+    });
 
     // Return the result
     return {
