@@ -23,8 +23,6 @@ export const FetchRefreshToken = async (): Promise<string | null> => {
       },
     });
 
-    console.log(rt);
-
     // If not 200, return false
     if (res.status !== 200) return null;
 
