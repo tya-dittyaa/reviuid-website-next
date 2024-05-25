@@ -133,13 +133,12 @@ function UserProfile() {
           />
         </Avatar>
       </IconButton>
-      <ExitToAppIcon
-        sx={{
-          marginLeft: 2,
-          color: "#E2B808",
-          fontSize: 30,
-        }}
-      />
+      <IconButton
+        sx={{ p: 0, marginLeft: 2, alignItems: "center" }}
+        onClick={() => router.push(`/logout`)}
+      >
+        <ExitToAppIcon sx={{ color: "#E2B808", fontSize: 25 }} />
+      </IconButton>
     </>
   );
 }
@@ -159,4 +158,5 @@ function Header() {
     </header>
   );
 }
+
 export default Header;
