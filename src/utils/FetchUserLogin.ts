@@ -26,20 +26,22 @@ export const FetchUserLogin = async (data: UserLogin): Promise<number> => {
     const result: LoginResult = await res.json();
 
     // Set the cookies
-    cookies().set({
-      name: "at",
-      value: result.accessToken,
-      httpOnly: true,
-      secure: true,
-      maxAge: 60 * 15,
-    });
-    cookies().set({
-      name: "rt",
-      value: result.refreshToken,
-      httpOnly: true,
-      secure: true,
-      maxAge: 60 * 60 * 24 * 7,
-    });
+    if (res.status === 201) {
+      cookies().set({
+        name: "at",
+        value: result.accessToken,
+        httpOnly: true,
+        secure: true,
+        maxAge: 60 * 15,
+      });
+      cookies().set({
+        name: "rt",
+        value: result.refreshToken,
+        httpOnly: true,
+        secure: true,
+        maxAge: 60 * 60 * 24 * 7,
+      });
+    }
 
     // Return the status code
     return res.status;
