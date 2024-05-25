@@ -1,5 +1,7 @@
 "use client";
 
+import { UserSession } from "@/types";
+import { GetUserSession } from "@/utils";
 import { IconButton } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
@@ -9,12 +11,31 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React from "react";
+import { useEffect, useState } from "react";
 import CustomButton from "./CustomButton";
 
 function Header() {
   const router = useRouter();
-  const [auth, setAuth] = React.useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
+  const [user, setUser] = useState<UserSession | null>(null);
+
+  useEffect(() => {
+    async function checkAuth() {
+      const session = await GetUserSession();
+      if (session) {
+        setIsLogin(true);
+        setUser(session);
+      } else {
+        setIsLogin(false);
+        setUser(null);
+      }
+      return;
+    }
+
+    checkAuth();
+    setIsLoading(false);
+  }, []);
 
   return (
     <header>
@@ -69,55 +90,57 @@ function Header() {
 
             <Box sx={{ flexGrow: 1 }}></Box>
 
-            {auth ? (
-              <>
-                <Typography
-                  variant="h6"
-                  noWrap
-                  component="a"
-                  sx={{
-                    display: { xs: "none", md: "flex" },
-                    fontWeight: 775,
-                    fontSize: 20,
-                    color: "#E2B808",
-                    textDecoration: "none",
-                    alignItems: "center",
-                    marginRight: 2,
-                  }}
-                >
-                  Aditiyongg6969
-                </Typography>
-                <IconButton
-                  sx={{ p: 0 }}
-                  onClick={() => router.push(`/profile`)}
-                >
-                  <Avatar>
-                    <Image
-                      src="https://drive.google.com/uc?export=view&id=1yhM-tDrQwh166RGAqTGzLKPvVri7jAKD"
-                      alt="User Avatar"
-                      width={40}
-                      height={40}
-                    />
-                  </Avatar>
-                </IconButton>
-              </>
-            ) : (
-              <>
-                <CustomButton
-                  variant="contained"
-                  type="button"
-                  onClick={() => router.push("/login")}
-                  sx={{
-                    paddingLeft: 5,
-                    paddingRight: 5,
-                    borderRadius: 1.5,
-                    color: "black",
-                  }}
-                >
-                  Masuk
-                </CustomButton>
-              </>
-            )}
+            {!isLoading &&
+              (isLogin ? (
+                <>
+                  <Typography
+                    variant="h6"
+                    noWrap
+                    component="a"
+                    href={`/user/${user!.username}`}
+                    sx={{
+                      display: { xs: "none", md: "flex" },
+                      fontWeight: 775,
+                      fontSize: 20,
+                      color: "#E2B808",
+                      textDecoration: "none",
+                      alignItems: "center",
+                      marginRight: 2,
+                    }}
+                  >
+                    {user!.username}
+                  </Typography>
+                  <IconButton
+                    sx={{ p: 0 }}
+                    onClick={() => router.push(`/user/${user!.username}`)}
+                  >
+                    <Avatar>
+                      <Image
+                        src={user!.avatar}
+                        alt={`Avatar ${user!.username}`}
+                        width={40}
+                        height={40}
+                      />
+                    </Avatar>
+                  </IconButton>
+                </>
+              ) : (
+                <>
+                  <CustomButton
+                    variant="contained"
+                    type="button"
+                    onClick={() => router.push("/login")}
+                    sx={{
+                      paddingLeft: 5,
+                      paddingRight: 5,
+                      borderRadius: 1.5,
+                      color: "black",
+                    }}
+                  >
+                    Masuk
+                  </CustomButton>
+                </>
+              ))}
           </Toolbar>
         </Container>
       </AppBar>

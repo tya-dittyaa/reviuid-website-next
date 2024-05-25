@@ -1,8 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   images: {
-    domains: ["drive.google.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "drive.google.com",
+        port: "",
+        pathname: "/**",
+      },
+    ],
   },
 };
 
