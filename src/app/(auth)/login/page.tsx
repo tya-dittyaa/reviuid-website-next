@@ -2,7 +2,7 @@
 
 import { CustomButton } from "@/components";
 import { UserLogin } from "@/types";
-import { FetchUserLogin } from "@/utils";
+import { FetchRefreshToken, FetchUserLogin } from "@/utils";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import KeyIcon from "@mui/icons-material/Key";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { FormEvent, MouseEvent, useState } from "react";
+import { FormEvent, MouseEvent, useEffect, useState } from "react";
 import { Toaster, toast } from "sonner";
 import styles from "./page.module.css";
 
@@ -194,6 +194,16 @@ function White() {
 }
 
 export default function Login() {
+  const router = useRouter();
+
+  useEffect(() => {
+    async function checkLogin() {
+      const refresh = await FetchRefreshToken();
+      if (refresh) router.replace("/");
+    }
+    checkLogin();
+  }, [router]);
+
   return (
     <div className={styles.container}>
       <White />
