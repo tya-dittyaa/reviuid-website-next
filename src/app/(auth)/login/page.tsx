@@ -14,6 +14,7 @@ import {
   OutlinedInput,
 } from "@mui/material";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { FormEvent, MouseEvent, useState } from "react";
 import { Toaster, toast } from "sonner";
 import styles from "./page.module.css";
@@ -38,6 +39,9 @@ function Red() {
 }
 
 function White() {
+  // Next.js Router
+  const router = useRouter();
+
   // Form State Management for Submit Button
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -86,7 +90,7 @@ function White() {
     toastPromise()
       .then(() => {
         setTimeout(() => {
-          window.location.replace("/");
+          router.replace("/");
         }, 2000);
       })
       .catch(() => {
