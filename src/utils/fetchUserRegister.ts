@@ -5,6 +5,7 @@ import { RegisterResult, UserRegister } from "@/types";
 export const FetchUserRegister = async (
   data: UserRegister
 ): Promise<RegisterResult> => {
+  // Get the environment variables
   const BACKEND_URL = process.env.BACKEND_URL as string;
   const HEADER_API_KEY = process.env.HEADER_API_KEY as string;
 
@@ -38,6 +39,7 @@ export const FetchUserRegister = async (
   }
 
   try {
+    // Fetching the user register data
     const res = await fetch(`${BACKEND_URL}/auth/user/signup`, {
       method: "POST",
       headers: {
@@ -51,8 +53,10 @@ export const FetchUserRegister = async (
       }),
     });
 
+    // Get the result
     const result = await res.json();
 
+    // Email already exists
     if (result.message === "Email already exists") {
       return {
         code: 400,
@@ -61,6 +65,7 @@ export const FetchUserRegister = async (
       };
     }
 
+    // Username already exists
     if (result.message === "Username already exists") {
       return {
         code: 400,
@@ -69,12 +74,14 @@ export const FetchUserRegister = async (
       };
     }
 
+    // Return the result
     return {
       code: 200,
       success: true,
       message: `Registrasi berhasil!`,
     };
   } catch (error) {
+    // Return the error
     return {
       code: 500,
       success: false,

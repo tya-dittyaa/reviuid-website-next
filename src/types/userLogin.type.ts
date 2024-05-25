@@ -4,14 +4,6 @@ export type UserLogin = {
 };
 
 export type LoginResult = {
-  user: {
-    id: string;
-    username: string;
-    email: string;
-    role: string;
-  };
-  tokens: {
-    accessToken: string;
-    refreshToken: string;
-  };
+  accessToken: string;
+  refreshToken: string;
 };

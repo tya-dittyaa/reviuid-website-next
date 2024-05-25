@@ -1,28 +1,28 @@
 "use server";
 
-import { LoginResult, UserLogin } from "@/types";
+import { LoginResult } from "@/types";
 import { cookies } from "next/headers";
 
-export const FetchUserLogin = async (data: UserLogin): Promise<number> => {
+export const FetchRefreshToken = async (rt: string): Promise<string | null> => {
   // Get the environment variables
   const BACKEND_URL = process.env.BACKEND_URL as string;
   const HEADER_API_KEY = process.env.HEADER_API_KEY as string;
 
   try {
-    // Fetching the user login data
-    const res = await fetch(`${BACKEND_URL}/auth/user/signin`, {
-      method: "POST",
+    // Fetch the user login
+    const res = await fetch(`${BACKEND_URL}/auth/user/refresh`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${rt}`,
         "x-api-key": HEADER_API_KEY,
       },
-      body: JSON.stringify({
-        email: data.email,
-        password: data.password,
-      }),
     });
 
-    // Get the result
+    // If not 200, return false
+    if (res.status !== 200) return null;
+
+    // Parse the response
     const result: LoginResult = await res.json();
 
     // Set the cookies
@@ -41,10 +41,9 @@ export const FetchUserLogin = async (data: UserLogin): Promise<number> => {
       maxAge: 60 * 60 * 24 * 7,
     });
 
-    // Return the status code
-    return res.status;
+    // Return the access token
+    return result.accessToken;
   } catch (error) {
-    // Return the error
-    return 500;
+    return null;
   }
 };
