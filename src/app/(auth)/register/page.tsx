@@ -8,6 +8,7 @@ import KeyIcon from "@mui/icons-material/Key";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import {
+  CircularProgress,
   FormControl,
   IconButton,
   InputAdornment,
@@ -35,6 +36,14 @@ function Red() {
       <a href="/" className={styles.link}>
         <h1 className={styles.title}>Reviu.ID</h1>
       </a>
+    </div>
+  );
+}
+
+function WhiteLoading() {
+  return (
+    <div className={styles.white}>
+      <CircularProgress sx={{ color: "#E2B808" }} />
     </div>
   );
 }
@@ -277,11 +286,13 @@ function White() {
 
 export default function Login() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function checkLogin() {
       const refresh = await FetchRefreshToken();
       if (refresh) router.replace("/");
+      else setIsLoading(false);
     }
     checkLogin();
   }, [router]);
@@ -289,7 +300,7 @@ export default function Login() {
   return (
     <div className={styles.container}>
       <Red />
-      <White />
+      {isLoading ? <WhiteLoading /> : <White />}
       <Toaster richColors position="bottom-left" />
     </div>
   );
