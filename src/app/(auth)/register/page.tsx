@@ -256,7 +256,7 @@ function White() {
                 className={styles.button}
                 disabled={isSubmitting ? true : false}
               >
-                DAFTAR
+                {isSubmitting ? "Mendaftarkan..." : "Daftar"}
               </CustomButton>
             </FormControl>
           </FormControl>

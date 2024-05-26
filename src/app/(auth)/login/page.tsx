@@ -175,7 +175,7 @@ function White() {
               className={styles.button}
               disabled={isSubmitting ? true : false}
             >
-              MASUK
+              {isSubmitting ? "Memproses..." : "Masuk"}
             </CustomButton>
           </FormControl>
         </div>
