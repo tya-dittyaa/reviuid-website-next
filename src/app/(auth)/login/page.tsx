@@ -1,225 +1,322 @@
 "use client";
 
-import { CustomButton } from "@/components";
-import { UserLogin } from "@/types";
+import { useWindowSize } from "@/hooks";
+import { LogoConfig, UserLogin } from "@/types";
 import { FetchRefreshToken, FetchUserLogin } from "@/utils";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import KeyIcon from "@mui/icons-material/Key";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import { KeyOutlined, MailOutlined } from "@ant-design/icons";
 import {
-  CircularProgress,
-  FormControl,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-} from "@mui/material";
-import Image from "next/image";
+  Alert,
+  Avatar,
+  Button,
+  Col,
+  Flex,
+  Form,
+  Image,
+  Input,
+  Spin,
+  Typography,
+} from "antd";
 import { useRouter } from "next/navigation";
-import { FormEvent, MouseEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Toaster, toast } from "sonner";
-import styles from "./page.module.css";
 
-function Red() {
+const { Text } = Typography;
+
+function ReviuIDLogo(logoConfig: LogoConfig) {
   return (
-    <div className={styles.red}>
-      <a href="/" className={styles.link}>
-        <Image
-          className={styles.logo}
-          src="/logo.png"
-          alt="Reviu.ID Logo"
-          width={75}
-          height={75}
-        />
-      </a>
-      <a href="/" className={styles.link}>
-        <h1 className={styles.title}>Reviu.ID</h1>
-      </a>
-    </div>
+    <a
+      href="/"
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        textDecoration: "none",
+      }}
+    >
+      <Avatar
+        size={logoConfig.AvatarSize}
+        src={<Image src="/logo.png" alt="Reviu.ID Logo" preview={false} />}
+      />
+      <Text
+        strong
+        style={{
+          color: "#E2B808",
+          fontSize: logoConfig.FontSize,
+          marginLeft: 20,
+        }}
+      >
+        <b style={{ fontWeight: "bold" }}>Reviu.ID</b>
+      </Text>
+    </a>
   );
 }
 
-function WhiteLoading() {
-  return (
-    <div className={styles.white}>
-      <CircularProgress sx={{ color: "#E2B808" }} />
-    </div>
-  );
-}
-
-function White() {
-  // Next.js Router
+function LoginForm() {
   const router = useRouter();
+  const [form] = Form.useForm();
 
-  // Form State Management for Submit Button
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setSubmitting] = useState<boolean>();
+  const [isError, setError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
-  // Form State Management and Submission Handler for Password Visibility
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
+  const onFinish = async (values: UserLogin) => {
+    setSubmitting(true);
 
-  // Form State Management and Submission Handler for Email and Password
-  const [formData, setFormData] = useState<UserLogin>({
-    email: "",
-    password: "",
-  });
-  const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsSubmitting(true);
-
-    // Fetch User Login Data
-    const login = await FetchUserLogin(formData);
-
-    // Promise for Toast Notification
     const toastPromise = (): Promise<void> =>
       new Promise((resolve, reject) =>
-        setTimeout(() => {
-          if (login === 201) resolve();
-          else reject(login);
+        setTimeout(async () => {
+          const login = await FetchUserLogin(values);
+          setError(false);
+          setErrorMessage("");
+
+          switch (login) {
+            case 201:
+              resolve();
+              break;
+
+            case 500:
+              setSubmitting(false);
+              setError(true);
+              setErrorMessage(
+                "Terjadi kesalahan pada server! Silakan coba nanti!"
+              );
+              reject();
+              break;
+
+            default:
+              setSubmitting(false);
+              setError(true);
+              setErrorMessage(
+                "Email atau kata sandi yang Anda masukkan salah! Silakan coba lagi!"
+              );
+              reject();
+              break;
+          }
         }, 2000)
       );
 
-    // Toast Notification
     toast.promise(toastPromise, {
       loading: "Sedang memproses...",
-      success: () => {
-        return `Selamat datang! Anda berhasil masuk! Sedang mengalihkan ke halaman utama...`;
-      },
-      error: (data: number) => {
-        if (data === 500)
-          return "Terjadi kesalahan pada server! Silakan coba lagi nanti!";
-        else return "Email atau password salah! Silakan coba lagi!";
-      },
+      success: "Sukses masuk!",
+      error: "Gagal masuk! Silakan coba lagi!",
     });
 
-    // Redirect to Home Page after 2 seconds
     toastPromise()
       .then(() => {
-        setTimeout(() => {
-          router.replace("/");
-        }, 2000);
+        router.push("/");
       })
-      .catch(() => {
-        setIsSubmitting(false);
-      });
+      .catch(() => {});
   };
 
   return (
-    <div className={styles.white}>
-      <h2 className={styles.login}>Masuk</h2>
+    <Flex vertical style={{ width: "100%", margin: "0 10% 0 10%" }}>
+      <Col style={{ fontSize: 30, fontWeight: "bold" }}>Masuk</Col>
 
-      <form onSubmit={handleFormSubmit}>
-        <div className={styles.input}>
-          <FormControl fullWidth sx={{ width: "40ch" }}>
-            <InputLabel htmlFor="input-email" size="small" required>
-              Email
-            </InputLabel>
-            <OutlinedInput
-              id="input-email"
-              label="Email"
-              type="email"
-              required
-              size="small"
-              placeholder="name@email.com"
-              value={formData.email}
-              disabled={isSubmitting ? true : false}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-              startAdornment={
-                <InputAdornment position="start">
-                  <MailOutlineIcon />
-                </InputAdornment>
-              }
+      <Col style={{ margin: "30px 0 15px 0", color: "#969AB8" }}>
+        <Form
+          form={form}
+          initialValues={{ remember: true }}
+          autoComplete="off"
+          autoCapitalize="off"
+          autoSave="off"
+          autoCorrect="off"
+          onFinish={onFinish}
+        >
+          <Form.Item
+            name="email"
+            hasFeedback
+            rules={[
+              {
+                type: "email",
+                message: "Input tidak valid! Masukkan alamat email yang benar!",
+              },
+              {
+                required: true,
+                message: "Silakan masukkan alamat email Anda!",
+              },
+            ]}
+          >
+            <Input
+              size="large"
+              placeholder="nama@email.com"
+              disabled={isSubmitting}
+              addonBefore={<MailOutlined style={{ color: "#969AB8" }} />}
             />
-          </FormControl>
-        </div>
+          </Form.Item>
 
-        <div className={styles.input}>
-          <FormControl fullWidth>
-            <InputLabel htmlFor="input-password" size="small" required>
-              Password
-            </InputLabel>
-            <OutlinedInput
-              id="input-password"
-              label="Password"
-              type={showPassword ? "text" : "password"}
-              required
-              size="small"
-              placeholder="********"
-              value={formData.password}
-              disabled={isSubmitting ? true : false}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-              startAdornment={
-                <InputAdornment position="start">
-                  <KeyIcon />
-                </InputAdornment>
-              }
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    disabled={isSubmitting ? true : false}
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
+          <Form.Item
+            name="password"
+            hasFeedback
+            rules={[
+              {
+                required: true,
+                message: "Silakan masukkan kata sandi Anda!",
+              },
+            ]}
+          >
+            <Input.Password
+              size="large"
+              placeholder="******"
+              disabled={isSubmitting}
+              addonBefore={<KeyOutlined style={{ color: "#969AB8" }} />}
             />
-          </FormControl>
-        </div>
+          </Form.Item>
 
-        <div>
-          <FormControl fullWidth>
-            <CustomButton
-              variant="contained"
-              type="submit"
-              className={styles.button}
-              disabled={isSubmitting ? true : false}
+          <Form.Item>
+            <Button
+              block
+              size="large"
+              type="primary"
+              htmlType="submit"
+              loading={isSubmitting}
+              style={{
+                backgroundColor: "#E2B808",
+              }}
             >
-              {isSubmitting ? "Memproses..." : "Masuk"}
-            </CustomButton>
-          </FormControl>
-        </div>
-      </form>
+              Masuk
+            </Button>
+          </Form.Item>
+        </Form>
+
+        {isError && (
+          <Alert
+            message="Error"
+            description={errorMessage}
+            type="error"
+            showIcon
+          />
+        )}
+      </Col>
 
       {!isSubmitting && (
-        <p className={styles.RegisterRef}>
-          Belum punya akun?{" "}
-          <a href="/register" className={styles.RegisterText}>
+        <Col style={{ color: "#969AB8" }}>
+          Tidak punya akun?{" "}
+          <a
+            href="/register"
+            style={{
+              textDecoration: "none",
+              color: "#E2B808",
+              fontWeight: "bold",
+            }}
+          >
             Daftar Sekarang!
           </a>
-        </p>
+        </Col>
       )}
+    </Flex>
+  );
+}
+
+function RedBoxVertical() {
+  return (
+    <div
+      style={{
+        flex: "0 0 15%",
+        backgroundColor: "#9E140F",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+      }}
+    >
+      <ReviuIDLogo AvatarSize={50} FontSize={35} />
     </div>
   );
 }
 
-export default function Login() {
+function WhiteBoxVertical() {
+  return (
+    <div
+      style={{
+        flex: 1,
+        backgroundColor: "white",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        color: "#E2B808",
+        width: "100%",
+      }}
+    >
+      <LoginForm />
+    </div>
+  );
+}
+
+function RedBoxHorizontal() {
+  return (
+    <Col
+      flex="auto"
+      style={{
+        height: "100svh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <ReviuIDLogo AvatarSize={70} FontSize={55} />
+    </Col>
+  );
+}
+
+function WhiteBoxHorizontal() {
+  return (
+    <Col
+      flex="45%"
+      style={{
+        backgroundColor: "white",
+        color: "#E2B808",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100svh",
+      }}
+    >
+      <LoginForm />
+    </Col>
+  );
+}
+
+export default function LoginPage() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
+  const size = useWindowSize();
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [value, setValue] = useState<"vertical" | "horizontal">("horizontal");
 
   useEffect(() => {
-    async function checkLogin() {
+    if (size.width && size.width < 800) {
+      setValue("vertical");
+    } else {
+      setValue("horizontal");
+    }
+
+    setTimeout(async () => {
       const refresh = await FetchRefreshToken();
       if (refresh) router.replace("/");
       else setIsLoading(false);
-    }
-    checkLogin();
-  }, [router]);
+    }, 1000);
+  }, [router, size]);
 
   return (
-    <div className={styles.container}>
-      {isLoading ? <WhiteLoading /> : <White />}
-      <Red />
+    <>
+      {isLoading ? (
+        <Spin fullscreen />
+      ) : (
+        <>
+          {value === "vertical" ? (
+            <Flex vertical={true} align="start" style={{ height: "100svh" }}>
+              <RedBoxVertical />
+              <WhiteBoxVertical />
+            </Flex>
+          ) : (
+            <Flex vertical={false} align="start" style={{ width: "100%" }}>
+              <WhiteBoxHorizontal />
+              <RedBoxHorizontal />
+            </Flex>
+          )}
+        </>
+      )}
       <Toaster richColors position="bottom-right" />
-    </div>
+    </>
   );
 }

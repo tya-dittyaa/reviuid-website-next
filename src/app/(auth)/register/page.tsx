@@ -1,307 +1,379 @@
 "use client";
 
-import { CustomButton } from "@/components";
-import { RegisterResult, UserRegister } from "@/types";
+import { useWindowSize } from "@/hooks";
+import { UserRegister } from "@/types";
 import { FetchRefreshToken, FetchUserRegister } from "@/utils";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import KeyIcon from "@mui/icons-material/Key";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import { KeyOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 import {
-  CircularProgress,
-  FormControl,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-} from "@mui/material";
-import Image from "next/image";
+  Alert,
+  Avatar,
+  Button,
+  Col,
+  Flex,
+  Form,
+  Image,
+  Input,
+  Layout,
+  Spin,
+  Typography,
+} from "antd";
 import { useRouter } from "next/navigation";
-import { FormEvent, MouseEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Toaster, toast } from "sonner";
-import styles from "./page.module.css";
 
-function Red() {
+const { Text } = Typography;
+const { Header } = Layout;
+
+type LogoConfig = {
+  AvatarSize: number;
+  FontSize: number;
+};
+
+function ReviuIDLogo(logoConfig: LogoConfig) {
   return (
-    <div className={styles.red}>
-      <a href="/" className={styles.link}>
-        <Image
-          className={styles.logo}
-          src="/logo.png"
-          alt="Reviu.ID Logo"
-          width={75}
-          height={75}
-        />
-      </a>
-      <a href="/" className={styles.link}>
-        <h1 className={styles.title}>Reviu.ID</h1>
-      </a>
-    </div>
+    <a
+      href="/"
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        textDecoration: "none",
+      }}
+    >
+      <Avatar
+        size={logoConfig.AvatarSize}
+        src={<Image src="/logo.png" alt="Reviu.ID Logo" preview={false} />}
+      />
+      <Text
+        strong
+        style={{
+          color: "#E2B808",
+          fontSize: logoConfig.FontSize,
+          marginLeft: 20,
+          fontWeight: "bolder",
+        }}
+      >
+        <b style={{ fontWeight: "bold" }}>Reviu.ID</b>
+      </Text>
+    </a>
   );
 }
 
-function WhiteLoading() {
-  return (
-    <div className={styles.white}>
-      <CircularProgress sx={{ color: "#E2B808" }} />
-    </div>
-  );
-}
-
-function White() {
-  // Next.js Router
+function RegisterForm() {
   const router = useRouter();
+  const [form] = Form.useForm();
 
-  // Form State Management for Submit Button
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setSubmitting] = useState<boolean>();
+  const [isError, setError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
-  // Form State Management and Submission Handler for Password Visibility
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
+  const onFinish = async (values: UserRegister) => {
+    setSubmitting(true);
 
-  // Form State Management and Submission Handler for Confirm Password Visibility
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const handleClickShowConfirmPassword = () =>
-    setShowConfirmPassword((show) => !show);
-  const handleMouseDownConfirmPassword = (
-    event: MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
-  };
+    const toastPromise = (): Promise<void> =>
+      new Promise((resolve, reject) =>
+        setTimeout(async () => {
+          const register = await FetchUserRegister(values);
+          setError(false);
+          setErrorMessage("");
 
-  // Form State Management and Submission Handler for Username, Email, Password, and Confirm Password
-  const [formData, setFormData] = useState<UserRegister>({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsSubmitting(true);
+          switch (register.code) {
+            case 200:
+              resolve();
+              break;
 
-    // Fetch User Register Data
-    const registerResult = await FetchUserRegister(formData);
-
-    // Promise for Toast Notification
-    const toastPromise = (): Promise<RegisterResult> =>
-      new Promise<RegisterResult>((resolve, reject) =>
-        setTimeout(() => {
-          if (registerResult.success) resolve(registerResult);
-          else reject(registerResult);
+            default:
+              setSubmitting(false);
+              setError(true);
+              setErrorMessage(register.message);
+              reject();
+              break;
+          }
         }, 2000)
       );
 
-    // Toast Notification
     toast.promise(toastPromise, {
-      loading: "Sedang mendaftarkan...",
-      success: (data) => {
-        return "Selamat datang! Anda berhasil mendaftar! Sedang mengalihkan ke halaman utama...";
-      },
-      error: (error) => {
-        if (error.code === 500)
-          return "Terjadi kesalahan pada server! Silakan coba lagi nanti!";
-        else if (error.code === 400) return `Gagal mendaftar! ${error.message}`;
-        else return `Gagal mendaftar! Silakan coba lagi nanti!`;
-      },
+      loading: "Sedang memproses...",
+      success: "Sukses mendaftar!",
+      error: "Gagal mendaftar! Silakan coba lagi!",
     });
 
-    // Redirect to Home Page after 2 seconds
     toastPromise()
       .then(() => {
-        setTimeout(() => {
-          router.replace("/");
-        }, 2000);
+        router.push("/");
       })
-      .catch(() => {
-        setIsSubmitting(false);
-      });
+      .catch(() => {});
   };
 
   return (
-    <div className={styles.white}>
-      <h2 className={styles.register}>Daftar</h2>
+    <Flex vertical style={{ width: "100%", margin: "0 10% 0 10%" }}>
+      <Col style={{ fontSize: 30, fontWeight: "bold" }}>Daftar</Col>
 
-      <form onSubmit={handleFormSubmit}>
-        <div className={styles.input}>
-          <FormControl fullWidth sx={{ width: "40ch" }}>
-            <InputLabel htmlFor="input-username" size="small" required>
-              Username
-            </InputLabel>
-            <OutlinedInput
-              id="input-username"
-              label="Username"
-              required
-              size="small"
-              placeholder="username"
-              value={formData.username}
-              disabled={isSubmitting ? true : false}
-              onChange={(event) =>
-                setFormData({ ...formData, username: event.target.value })
-              }
-              startAdornment={
-                <InputAdornment position="start">
-                  <PersonOutlineIcon />
-                </InputAdornment>
-              }
+      <Col style={{ margin: "30px 0 15px 0", color: "#969AB8" }}>
+        <Form
+          form={form}
+          initialValues={{ remember: true }}
+          autoComplete="off"
+          autoCapitalize="off"
+          autoSave="off"
+          autoCorrect="off"
+          onFinish={onFinish}
+        >
+          <Form.Item
+            name="username"
+            hasFeedback
+            rules={[
+              {
+                required: true,
+                message: "Silakan masukkan nama pengguna Anda!",
+              },
+              {
+                min: 3,
+                message: "Nama pengguna minimal 3 karakter!",
+              },
+              {
+                max: 20,
+                message: "Nama pengguna maksimal 20 karakter!",
+              },
+            ]}
+          >
+            <Input
+              size="large"
+              placeholder="Username Anda"
+              disabled={isSubmitting}
+              addonBefore={<UserOutlined style={{ color: "#969AB8" }} />}
             />
-          </FormControl>
-        </div>
+          </Form.Item>
 
-        <div className={styles.input}>
-          <FormControl fullWidth sx={{ width: "40ch" }}>
-            <InputLabel htmlFor="input-email" size="small" required>
-              Email
-            </InputLabel>
-            <OutlinedInput
-              id="input-email"
-              label="Email"
-              type="email"
-              required
-              size="small"
-              placeholder="name@email.com"
-              value={formData.email}
-              disabled={isSubmitting ? true : false}
-              onChange={(event) =>
-                setFormData({ ...formData, email: event.target.value })
-              }
-              startAdornment={
-                <InputAdornment position="start">
-                  <MailOutlineIcon />
-                </InputAdornment>
-              }
+          <Form.Item
+            name="email"
+            hasFeedback
+            rules={[
+              {
+                type: "email",
+                message: "Input tidak valid! Masukkan alamat email yang benar!",
+              },
+              {
+                required: true,
+                message: "Silakan masukkan alamat email Anda!",
+              },
+            ]}
+          >
+            <Input
+              size="large"
+              placeholder="Email Anda"
+              disabled={isSubmitting}
+              addonBefore={<MailOutlined style={{ color: "#969AB8" }} />}
             />
-          </FormControl>
-        </div>
+          </Form.Item>
 
-        <div className={styles.input}>
-          <FormControl fullWidth>
-            <InputLabel htmlFor="input-password" size="small" required>
-              Password
-            </InputLabel>
-            <OutlinedInput
-              id="input-password"
-              label="Password"
-              type={showPassword ? "text" : "password"}
-              required
-              size="small"
-              placeholder="********"
-              value={formData.password}
-              disabled={isSubmitting ? true : false}
-              onChange={(event) =>
-                setFormData({ ...formData, password: event.target.value })
-              }
-              startAdornment={
-                <InputAdornment position="start">
-                  <KeyIcon />
-                </InputAdornment>
-              }
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    disabled={isSubmitting ? true : false}
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
+          <Form.Item
+            name="password"
+            hasFeedback
+            rules={[
+              {
+                required: true,
+                message: "Silakan masukkan kata sandi Anda!",
+              },
+              {
+                pattern:
+                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[*.!@#$%^&(){}[\]:;<>,.?/~_+\-=|\\])[A-Za-z\d*.!@#$%^&(){}[\]:;<>,.?/~_+\-=|\\]{8,32}$/,
+                message: `Password harus memiliki 1 angka, huruf kecil, huruf kapital, karakter khusus, dan panjang 8-32 karakter!`,
+              },
+            ]}
+          >
+            <Input.Password
+              size="large"
+              placeholder="Password Anda"
+              disabled={isSubmitting}
+              addonBefore={<KeyOutlined style={{ color: "#969AB8" }} />}
             />
-          </FormControl>
-        </div>
+          </Form.Item>
 
-        <div className={styles.input}>
-          <FormControl fullWidth>
-            <InputLabel htmlFor="input-confirm-password" size="small" required>
-              Confirm Password
-            </InputLabel>
-            <OutlinedInput
-              id="input-confirm-password"
-              label="Confirm Password"
-              type={showConfirmPassword ? "text" : "password"}
-              required
-              size="small"
-              placeholder="********"
-              value={formData.confirmPassword}
-              disabled={isSubmitting ? true : false}
-              onChange={(event) =>
-                setFormData({
-                  ...formData,
-                  confirmPassword: event.target.value,
-                })
-              }
-              startAdornment={
-                <InputAdornment position="start">
-                  <KeyIcon />
-                </InputAdornment>
-              }
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    disabled={isSubmitting ? true : false}
-                    onClick={handleClickShowConfirmPassword}
-                    onMouseDown={handleMouseDownConfirmPassword}
-                    edge="end"
-                  >
-                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
+          <Form.Item
+            name="repeatPassword"
+            hasFeedback
+            dependencies={["password"]}
+            rules={[
+              {
+                required: true,
+                message: "Silakan masukkan ulang kata sandi Anda!",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("Kata sandi yang Anda masukkan tidak sama!")
+                  );
+                },
+              }),
+            ]}
+          >
+            <Input.Password
+              size="large"
+              placeholder="Ulangi Password Anda"
+              disabled={isSubmitting}
+              addonBefore={<KeyOutlined style={{ color: "#969AB8" }} />}
             />
-          </FormControl>
-        </div>
+          </Form.Item>
 
-        <div>
-          <FormControl fullWidth>
-            <FormControl fullWidth>
-              <CustomButton
-                variant="contained"
-                type="submit"
-                className={styles.button}
-                disabled={isSubmitting ? true : false}
-              >
-                {isSubmitting ? "Mendaftarkan..." : "Daftar"}
-              </CustomButton>
-            </FormControl>
-          </FormControl>
-        </div>
-      </form>
+          <Form.Item>
+            <Button
+              block
+              size="large"
+              type="primary"
+              htmlType="submit"
+              loading={isSubmitting}
+              style={{
+                backgroundColor: "#E2B808",
+              }}
+            >
+              Daftar
+            </Button>
+          </Form.Item>
+        </Form>
+
+        {isError && (
+          <Alert
+            message="Error"
+            description={errorMessage}
+            type="error"
+            showIcon
+          />
+        )}
+      </Col>
 
       {!isSubmitting && (
-        <p className={styles.LoginRef}>
+        <Col style={{ color: "#969AB8" }}>
           Sudah punya akun?{" "}
-          <a href="/login" className={styles.LoginText}>
+          <a
+            href="/login"
+            style={{
+              textDecoration: "none",
+              color: "#E2B808",
+              fontWeight: "bold",
+            }}
+          >
             Masuk Sekarang!
           </a>
-        </p>
+        </Col>
       )}
+    </Flex>
+  );
+}
+
+function RedBoxVertical() {
+  return (
+    <div
+      style={{
+        flex: "0 0 15%",
+        backgroundColor: "#9E140F",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+      }}
+    >
+      <ReviuIDLogo AvatarSize={50} FontSize={35} />
     </div>
   );
 }
 
-export default function Login() {
+function WhiteBoxVertical() {
+  return (
+    <div
+      style={{
+        flex: 1,
+        backgroundColor: "white",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        color: "#E2B808",
+        width: "100%",
+      }}
+    >
+      <RegisterForm />
+    </div>
+  );
+}
+
+function RedBoxHorizontal() {
+  return (
+    <Col
+      flex="auto"
+      style={{
+        height: "100svh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <ReviuIDLogo AvatarSize={70} FontSize={55} />
+    </Col>
+  );
+}
+
+function WhiteBoxHorizontal() {
+  return (
+    <Col
+      flex="45%"
+      style={{
+        backgroundColor: "white",
+        color: "#E2B808",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100svh",
+      }}
+    >
+      <RegisterForm />
+    </Col>
+  );
+}
+
+export default function RegisterPage() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
+  const size = useWindowSize();
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [value, setValue] = useState<"vertical" | "horizontal">("horizontal");
 
   useEffect(() => {
-    async function checkLogin() {
+    if (size.width && size.width < 800) {
+      setValue("vertical");
+    } else {
+      setValue("horizontal");
+    }
+
+    setTimeout(async () => {
       const refresh = await FetchRefreshToken();
       if (refresh) router.replace("/");
       else setIsLoading(false);
-    }
-    checkLogin();
-  }, [router]);
+    }, 1000);
+  }, [router, size]);
 
   return (
-    <div className={styles.container}>
-      <Red />
-      {isLoading ? <WhiteLoading /> : <White />}
+    <>
+      {isLoading ? (
+        <Spin fullscreen />
+      ) : (
+        <>
+          {value === "vertical" ? (
+            <Flex vertical={true} align="start" style={{ height: "100svh" }}>
+              <RedBoxVertical />
+              <WhiteBoxVertical />
+            </Flex>
+          ) : (
+            <Flex vertical={false} align="start" style={{ width: "100%" }}>
+              <RedBoxHorizontal />
+              <WhiteBoxHorizontal />
+            </Flex>
+          )}
+        </>
+      )}
       <Toaster richColors position="bottom-left" />
-    </div>
+    </>
   );
 }

@@ -1,5 +1,4 @@
-import CustomButton from "./CustomButton";
-import Footer from "./Footer";
-import Header from "./Header";
+import FooterLayout from "./FooterLayout";
+import HeaderLayout from "./HeaderLayout";
 
-export { CustomButton, Footer, Header };
+export { FooterLayout, HeaderLayout };

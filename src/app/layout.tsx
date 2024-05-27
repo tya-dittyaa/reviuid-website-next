@@ -1,13 +1,8 @@
+import { AntdRegistry } from "@ant-design/nextjs-registry";
+import "@fontsource/poppins";
+import { ConfigProvider } from "antd";
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
 import "./globals.css";
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-poppins",
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-});
 
 export const metadata: Metadata = {
   title: {
@@ -24,7 +19,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={poppins.className}>{children}</body>
+      <body>
+        <ConfigProvider
+          theme={{
+            token: {
+              fontFamily: "Poppins",
+            },
+          }}
+        >
+          <AntdRegistry>{children}</AntdRegistry>
+        </ConfigProvider>
+      </body>
     </html>
   );
 }

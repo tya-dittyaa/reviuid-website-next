@@ -1,19 +1,11 @@
 "use client";
 
 import { FetchUserLogout } from "@/utils";
-import { CircularProgress, Container } from "@mui/material";
+import { Spin } from "antd";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-function WhiteLoading() {
-  return (
-    <>
-      <CircularProgress sx={{ color: "whitesmoke" }} />
-    </>
-  );
-}
-
-export default function Logout() {
+export default function LogoutPage() {
   const router = useRouter();
 
   useEffect(() => {
@@ -28,15 +20,8 @@ export default function Logout() {
   }, [router]);
 
   return (
-    <Container
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <WhiteLoading />
-    </Container>
+    <>
+      <Spin fullscreen />
+    </>
   );
 }

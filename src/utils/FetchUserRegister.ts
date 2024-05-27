@@ -1,41 +1,21 @@
 "use server";
 
-import { LoginResult, RegisterResult, UserRegister } from "@/types";
+import { RegisterResult, TokenData, UserRegister } from "@/types";
 import { cookies } from "next/headers";
 
-export const FetchUserRegister = async (
+export async function FetchUserRegister(
   data: UserRegister
-): Promise<RegisterResult> => {
+): Promise<RegisterResult> {
   // Get the environment variables
   const BACKEND_URL = process.env.BACKEND_URL as string;
   const HEADER_API_KEY = process.env.HEADER_API_KEY as string;
 
-  // Check if username has at least 3 characters and does not contain spaces
-  if (data.username.length < 3 || data.username.includes(" ")) {
+  // Check if username does not contain spaces
+  if (data.username.includes(" ")) {
     return {
       code: 400,
       success: false,
-      message: `Username harus memiliki setidaknya 3 huruf dan tidak mengandung spasi!`,
-    };
-  }
-
-  // Check if password meets the requirements
-  const regex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[*.!@#$%^&(){}[\]:;<>,.?/~_+\-=|\\])[A-Za-z\d*.!@#$%^&(){}[\]:;<>,.?/~_+\-=|\\]{8,32}$/;
-  if (!regex.test(data.password)) {
-    return {
-      code: 400,
-      success: false,
-      message: `Password harus terdiri dari setidaknya 1 angka, 1 huruf kecil, 1 huruf kapital, 1 karakter khusus, dan memiliki panjang antara 8 hingga 32 karakter!`,
-    };
-  }
-
-  // Check if password and confirm password are the same
-  if (data.password !== data.confirmPassword) {
-    return {
-      code: 400,
-      success: false,
-      message: `Password dan Confirm Password tidak cocok!`,
+      message: `Username tidak boleh mengandung spasi!`,
     };
   }
 
@@ -55,10 +35,10 @@ export const FetchUserRegister = async (
     });
 
     // Get the result
-    const result: RegisterResult = await res.json();
+    const result: RegisterResult | TokenData = await res.json();
 
     // Email already exists
-    if (result.message === "Email already exists") {
+    if ((result as RegisterResult).message === "Email already exists") {
       return {
         code: 400,
         success: false,
@@ -67,7 +47,7 @@ export const FetchUserRegister = async (
     }
 
     // Username already exists
-    if (result.message === "Username already exists") {
+    if ((result as RegisterResult).message === "Username already exists") {
       return {
         code: 400,
         success: false,
@@ -75,20 +55,19 @@ export const FetchUserRegister = async (
       };
     }
 
-    // Get the result if success
-    const resultSuccess: LoginResult = await res.json();
-
     // Set the cookies
     cookies().set({
       name: "at",
-      value: resultSuccess.accessToken,
+      path: "/",
+      value: (result as TokenData).accessToken,
       httpOnly: true,
       secure: true,
       maxAge: 60 * 15,
     });
     cookies().set({
       name: "rt",
-      value: resultSuccess.refreshToken,
+      path: "/",
+      value: (result as TokenData).refreshToken,
       httpOnly: true,
       secure: true,
       maxAge: 60 * 60 * 24 * 7,
@@ -101,6 +80,7 @@ export const FetchUserRegister = async (
       message: `Registrasi berhasil!`,
     };
   } catch (error) {
+    console.log(error);
     // Return the error
     return {
       code: 500,
@@ -108,4 +88,4 @@ export const FetchUserRegister = async (
       message: `Terjadi kesalahan pada server! Silakan coba lagi nanti!`,
     };
   }
-};
+}

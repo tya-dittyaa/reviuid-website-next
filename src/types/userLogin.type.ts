@@ -3,7 +3,7 @@ export type UserLogin = {
   password: string;
 };
 
-export type LoginResult = {
+export type TokenData = {
   accessToken: string;
   refreshToken: string;
 };

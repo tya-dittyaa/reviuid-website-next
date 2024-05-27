@@ -1,6 +1,6 @@
 {
-  "name": "reviuid-website",
-  "version": "1.0.0",
+  "name": "reviuid-website-next-test",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev -p 4000",
@@ -9,11 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.5",
-    "@mui/icons-material": "^5.15.18",
-    "@mui/material": "^5.15.18",
-    "argon2": "^0.40.1",
+    "@ant-design/icons": "^5.3.7",
+    "@ant-design/nextjs-registry": "^1.0.0",
+    "@fontsource/poppins": "^5.0.14",
+    "antd": "^5.17.3",
     "jose": "^5.3.0",
     "next": "14.2.3",
     "react": "^18",
@@ -26,6 +25,8 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }
 }

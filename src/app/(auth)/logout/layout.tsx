@@ -4,8 +4,8 @@ import { ConfigProvider } from "antd";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Masuk",
-  description: "Masuk ke akun Reviu.ID untuk melanjutkan.",
+  title: "Keluar",
+  description: "Keluar dari akun Reviu.ID.",
 };
 
 export default function RootLayout({
