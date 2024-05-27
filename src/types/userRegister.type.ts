@@ -2,7 +2,7 @@ export type UserRegister = {
   username: string;
   email: string;
   password: string;
-  confirmPassword: string;
+  repeatPassword: string;
 };
 
 export type RegisterResult = {

@@ -1,9 +1,9 @@
 "use server";
 
-import { LoginResult } from "@/types";
+import { TokenData } from "@/types";
 import { cookies } from "next/headers";
 
-export const FetchRefreshToken = async (): Promise<string | null> => {
+export async function FetchRefreshToken(): Promise<string | null> {
   // Get the environment variables
   const BACKEND_URL = process.env.BACKEND_URL as string;
   const HEADER_API_KEY = process.env.HEADER_API_KEY as string;
@@ -27,11 +27,12 @@ export const FetchRefreshToken = async (): Promise<string | null> => {
     if (res.status !== 200) return null;
 
     // Parse the response
-    const result: LoginResult = await res.json();
+    const result: TokenData = await res.json();
 
     // Set the cookies
     cookies().set({
       name: "at",
+      path: "/",
       value: result.accessToken,
       httpOnly: true,
       secure: true,
@@ -39,6 +40,7 @@ export const FetchRefreshToken = async (): Promise<string | null> => {
     });
     cookies().set({
       name: "rt",
+      path: "/",
       value: result.refreshToken,
       httpOnly: true,
       secure: true,
@@ -50,4 +52,4 @@ export const FetchRefreshToken = async (): Promise<string | null> => {
   } catch (error) {
     return null;
   }
-};
+}

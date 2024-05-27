@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { FetchRefreshToken } from "./FetchRefreshToken";
 
-export const FetchUserLogout = async (): Promise<void> => {
+export async function FetchUserLogout(): Promise<void> {
   // Get the environment variables
   const BACKEND_URL = process.env.BACKEND_URL as string;
   const HEADER_API_KEY = process.env.HEADER_API_KEY as string;
@@ -37,4 +37,4 @@ export const FetchUserLogout = async (): Promise<void> => {
   } catch (error) {
     return;
   }
-};
+}

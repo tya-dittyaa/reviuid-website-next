@@ -1,9 +1,9 @@
 "use server";
 
-import { LoginResult, UserLogin } from "@/types";
+import { TokenData, UserLogin } from "@/types";
 import { cookies } from "next/headers";
 
-export const FetchUserLogin = async (data: UserLogin): Promise<number> => {
+export async function FetchUserLogin(data: UserLogin): Promise<number> {
   // Get the environment variables
   const BACKEND_URL = process.env.BACKEND_URL as string;
   const HEADER_API_KEY = process.env.HEADER_API_KEY as string;
@@ -23,12 +23,13 @@ export const FetchUserLogin = async (data: UserLogin): Promise<number> => {
     });
 
     // Get the result
-    const result: LoginResult = await res.json();
+    const result: TokenData = await res.json();
 
     // Set the cookies
     if (res.status === 201) {
       cookies().set({
         name: "at",
+        path: "/",
         value: result.accessToken,
         httpOnly: true,
         secure: true,
@@ -36,6 +37,7 @@ export const FetchUserLogin = async (data: UserLogin): Promise<number> => {
       });
       cookies().set({
         name: "rt",
+        path: "/",
         value: result.refreshToken,
         httpOnly: true,
         secure: true,
@@ -49,4 +51,4 @@ export const FetchUserLogin = async (data: UserLogin): Promise<number> => {
     // Return the error
     return 500;
   }
-};
+}
