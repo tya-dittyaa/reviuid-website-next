@@ -70,39 +70,35 @@ function RegisterForm() {
   const onFinish = async (values: UserRegister) => {
     setSubmitting(true);
 
-    const toastPromise = (): Promise<void> =>
-      new Promise((resolve, reject) =>
-        setTimeout(async () => {
-          const register = await FetchUserRegister(values);
-          setError(false);
-          setErrorMessage("");
+    const toastPromise = new Promise<void>((resolve, reject) => {
+      setTimeout(async () => {
+        const register = await FetchUserRegister(values);
+        setError(false);
+        setErrorMessage("");
 
-          switch (register.code) {
-            case 200:
-              resolve();
-              break;
+        switch (register.code) {
+          case 200:
+            setTimeout(() => {
+              router.replace("/");
+            }, 4000);
+            resolve();
+            break;
 
-            default:
-              setSubmitting(false);
-              setError(true);
-              setErrorMessage(register.message);
-              reject();
-              break;
-          }
-        }, 2000)
-      );
+          default:
+            setSubmitting(false);
+            setError(true);
+            setErrorMessage(register.message);
+            reject();
+            break;
+        }
+      }, 2000);
+    });
 
     toast.promise(toastPromise, {
       loading: "Sedang memproses...",
       success: "Sukses mendaftar!",
       error: "Gagal mendaftar! Silakan coba lagi!",
     });
-
-    toastPromise()
-      .then(() => {
-        router.push("/");
-      })
-      .catch(() => {});
   };
 
   return (

@@ -80,7 +80,6 @@ export async function FetchUserRegister(
       message: `Registrasi berhasil!`,
     };
   } catch (error) {
-    console.log(error);
     // Return the error
     return {
       code: 500,
