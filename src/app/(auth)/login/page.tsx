@@ -62,50 +62,46 @@ function LoginForm() {
   const onFinish = async (values: UserLogin) => {
     setSubmitting(true);
 
-    const toastPromise = (): Promise<void> =>
-      new Promise((resolve, reject) =>
-        setTimeout(async () => {
-          const login = await FetchUserLogin(values);
-          setError(false);
-          setErrorMessage("");
+    const toastPromise = new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        const login = await FetchUserLogin(values);
+        setError(false);
+        setErrorMessage("");
 
-          switch (login) {
-            case 201:
-              resolve();
-              break;
+        switch (login) {
+          case 201:
+            setTimeout(() => {
+              router.replace("/");
+            }, 4000);
+            resolve("Sukses masuk!");
+            break;
 
-            case 500:
-              setSubmitting(false);
-              setError(true);
-              setErrorMessage(
-                "Terjadi kesalahan pada server! Silakan coba nanti!"
-              );
-              reject();
-              break;
+          case 500:
+            setSubmitting(false);
+            setError(true);
+            setErrorMessage(
+              "Terjadi kesalahan pada server! Silakan coba nanti!"
+            );
+            reject("Gagal masuk! Silakan coba lagi!");
+            break;
 
-            default:
-              setSubmitting(false);
-              setError(true);
-              setErrorMessage(
-                "Email atau kata sandi yang Anda masukkan salah! Silakan coba lagi!"
-              );
-              reject();
-              break;
-          }
-        }, 2000)
-      );
+          default:
+            setSubmitting(false);
+            setError(true);
+            setErrorMessage(
+              "Email atau kata sandi yang Anda masukkan salah! Silakan coba lagi!"
+            );
+            reject("Gagal masuk! Silakan coba lagi!");
+            break;
+        }
+      }, 2000);
+    });
 
     toast.promise(toastPromise, {
       loading: "Sedang memproses...",
       success: "Sukses masuk!",
       error: "Gagal masuk! Silakan coba lagi!",
     });
-
-    toastPromise()
-      .then(() => {
-        router.push("/");
-      })
-      .catch(() => {});
   };
 
   return (
