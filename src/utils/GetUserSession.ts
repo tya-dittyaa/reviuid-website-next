@@ -9,8 +9,6 @@ export async function GetUserSession(): Promise<UserSession | null> {
   // Get the environment variables
   const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET as string;
 
-  console.log(cookies().getAll());
-
   // Get the refresh token
   const rt = cookies().get("rt");
   if (!rt) return null;
