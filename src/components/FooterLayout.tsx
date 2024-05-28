@@ -24,19 +24,19 @@ function Vertical() {
     >
       <Space
         direction="horizontal"
-        style={{ margin: "10px 0 10px 0", gap: 40 }}
+        style={{ margin: "15px 0 15px 0", gap: 20 }}
       >
         <Link href="#" style={{ color: "white", listStyle: "none" }}>
           <InstagramOutlined style={{ fontSize: 35 }} />
         </Link>
         <Link href="#" style={{ color: "white", listStyle: "none" }}>
-          <XOutlined style={{ fontSize: 35 }} />{" "}
+          <XOutlined style={{ fontSize: 35 }} />
         </Link>
         <Link href="#" style={{ color: "white", listStyle: "none" }}>
-          <FacebookOutlined style={{ fontSize: 35 }} />{" "}
+          <FacebookOutlined style={{ fontSize: 35 }} />
         </Link>
         <Link href="#" style={{ color: "white", listStyle: "none" }}>
-          <DiscordOutlined style={{ fontSize: 35 }} />{" "}
+          <DiscordOutlined style={{ fontSize: 35 }} />
         </Link>
       </Space>
 
@@ -44,11 +44,12 @@ function Vertical() {
         direction="horizontal"
         style={{
           margin: "10px 0 10px 0",
-          gap: 40,
+          gap: 20,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           textAlign: "center",
+          width: "100%",
         }}
       >
         <Space direction="vertical">
@@ -77,7 +78,7 @@ function Vertical() {
             Kebijakan Privasi
           </Link>
         </Space>
-        <Space direction="vertical" style={{}}>
+        <Space direction="vertical">
           <Link
             href="#"
             style={{ color: "white", listStyle: "none", fontSize: "15px" }}
@@ -101,7 +102,7 @@ function Vertical() {
 
       <Space
         direction="horizontal"
-        style={{ margin: "10px 0 10px 0", gap: 40 }}
+        style={{ margin: "15px 0 15px 0", gap: 40 }}
       >
         <Text style={{ color: "white" }}>© 2024, oleh Reviu Film ID, Inc.</Text>
       </Space>
@@ -122,7 +123,7 @@ function Horizontal() {
     >
       <Space
         direction="horizontal"
-        style={{ margin: "10px 0 10px 0", gap: 40 }}
+        style={{ margin: "15px 0 15px 0", gap: 40 }}
       >
         <Link href="#" style={{ color: "white", listStyle: "none" }}>
           <InstagramOutlined style={{ fontSize: 35 }} />
@@ -138,7 +139,7 @@ function Horizontal() {
         </Link>
       </Space>
 
-      <Space direction="horizontal" style={{ margin: "10px 0 5px 0", gap: 40 }}>
+      <Space direction="horizontal" style={{ margin: "15px 0 5px 0", gap: 40 }}>
         <Link href="#" style={{ color: "white", listStyle: "none" }}>
           Bantuan
         </Link>
@@ -156,7 +157,7 @@ function Horizontal() {
         </Link>
       </Space>
 
-      <Space direction="horizontal" style={{ margin: "5px 0 10px 0", gap: 40 }}>
+      <Space direction="horizontal" style={{ margin: "5px 0 15px 0", gap: 40 }}>
         <Link href="#" style={{ color: "white", listStyle: "none" }}>
           Developer Reviu.ID
         </Link>
@@ -167,7 +168,7 @@ function Horizontal() {
 
       <Space
         direction="horizontal"
-        style={{ margin: "10px 0 10px 0", gap: 40 }}
+        style={{ margin: "15px 0 15px 0", gap: 40 }}
       >
         <Text style={{ color: "white" }}>© 2024, oleh Reviu Film ID, Inc.</Text>
       </Space>
