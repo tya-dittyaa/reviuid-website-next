@@ -72,7 +72,7 @@ function LoginForm() {
           case 201:
             setTimeout(() => {
               router.replace("/");
-            }, 4000);
+            }, 2000);
             resolve("Sukses masuk!");
             break;
 
@@ -94,7 +94,7 @@ function LoginForm() {
             reject("Gagal masuk! Silakan coba lagi!");
             break;
         }
-      }, 2000);
+      }, 1000);
     });
 
     toast.promise(toastPromise, {
