@@ -160,6 +160,9 @@ function RegisterForm() {
               placeholder="Email Anda"
               disabled={isSubmitting}
               addonBefore={<MailOutlined style={{ color: "#969AB8" }} />}
+              onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
+                (e.target.value = e.target.value.toLowerCase())
+              }
             />
           </Form.Item>
 
