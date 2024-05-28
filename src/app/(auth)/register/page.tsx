@@ -80,7 +80,7 @@ function RegisterForm() {
           case 200:
             setTimeout(() => {
               router.replace("/");
-            }, 4000);
+            }, 2000);
             resolve();
             break;
 
@@ -91,7 +91,7 @@ function RegisterForm() {
             reject();
             break;
         }
-      }, 2000);
+      }, 1000);
     });
 
     toast.promise(toastPromise, {
