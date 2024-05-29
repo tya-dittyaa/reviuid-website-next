@@ -116,11 +116,20 @@ function UserHasLogin() {
   const items: MenuProps["items"] = [
     {
       key: "1",
+      label: `Halo, ${userData.username} !`,
+      disabled: true,
+      style: { color: "#E2B808", fontWeight: "bold" },
+    },
+    {
+      type: "divider",
+    },
+    {
+      key: "2",
       label: <a href={`/user/${userData.username}`}>Profil</a>,
       icon: <UserOutlined />,
     },
     {
-      key: "2",
+      key: "3",
       label: <a href={`/logout`}>Keluar</a>,
       icon: <LogoutOutlined />,
       danger: true,
