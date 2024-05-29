@@ -14,16 +14,14 @@ export default function Home() {
     }, 1000);
   }, []);
 
+  if (isLoading) {
+    return <Spin fullscreen />;
+  }
+
   return (
-    <>
-      {isLoading ? (
-        <Spin fullscreen />
-      ) : (
-        <Layout>
-          <HeaderLayout />
-          <FooterLayout />
-        </Layout>
-      )}
-    </>
+    <Layout>
+      <HeaderLayout />
+      <FooterLayout />
+    </Layout>
   );
 }

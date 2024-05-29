@@ -353,25 +353,28 @@ export default function RegisterPage() {
     }, 1000);
   }, [router, size]);
 
+  if (isLoading) {
+    return <Spin fullscreen />;
+  }
+
+  if (value === "vertical") {
+    return (
+      <>
+        <Flex vertical={true} align="start" style={{ height: "100svh" }}>
+          <RedBoxVertical />
+          <WhiteBoxVertical />
+        </Flex>
+        <Toaster richColors position="bottom-center" />
+      </>
+    );
+  }
+
   return (
     <>
-      {isLoading ? (
-        <Spin fullscreen />
-      ) : (
-        <>
-          {value === "vertical" ? (
-            <Flex vertical={true} align="start" style={{ height: "100svh" }}>
-              <RedBoxVertical />
-              <WhiteBoxVertical />
-            </Flex>
-          ) : (
-            <Flex vertical={false} align="start" style={{ width: "100%" }}>
-              <RedBoxHorizontal />
-              <WhiteBoxHorizontal />
-            </Flex>
-          )}
-        </>
-      )}
+      <Flex vertical={false} align="start" style={{ width: "100%" }}>
+        <RedBoxHorizontal />
+        <WhiteBoxHorizontal />
+      </Flex>
       <Toaster richColors position="bottom-left" />
     </>
   );

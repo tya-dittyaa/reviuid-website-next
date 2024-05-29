@@ -137,7 +137,9 @@ function LoginForm() {
               placeholder="nama@email.com"
               disabled={isSubmitting}
               addonBefore={<MailOutlined style={{ color: "#969AB8" }} />}
-              onInput={(e: React.ChangeEvent<HTMLInputElement>) => (e.target.value = e.target.value.toLowerCase())}
+              onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
+                (e.target.value = e.target.value.toLowerCase())
+              }
             />
           </Form.Item>
 
@@ -294,25 +296,26 @@ export default function LoginPage() {
     }, 1000);
   }, [router, size]);
 
+  if (isLoading) {
+    return <Spin fullscreen />;
+  }
+
+  if (value === "vertical") {
+    <>
+      <Flex vertical={true} align="start" style={{ height: "100svh" }}>
+        <RedBoxVertical />
+        <WhiteBoxVertical />
+      </Flex>
+      <Toaster richColors position="bottom-center" />
+    </>;
+  }
+
   return (
     <>
-      {isLoading ? (
-        <Spin fullscreen />
-      ) : (
-        <>
-          {value === "vertical" ? (
-            <Flex vertical={true} align="start" style={{ height: "100svh" }}>
-              <RedBoxVertical />
-              <WhiteBoxVertical />
-            </Flex>
-          ) : (
-            <Flex vertical={false} align="start" style={{ width: "100%" }}>
-              <WhiteBoxHorizontal />
-              <RedBoxHorizontal />
-            </Flex>
-          )}
-        </>
-      )}
+      <Flex vertical={false} align="start" style={{ width: "100%" }}>
+        <WhiteBoxHorizontal />
+        <RedBoxHorizontal />
+      </Flex>
       <Toaster richColors position="bottom-right" />
     </>
   );
