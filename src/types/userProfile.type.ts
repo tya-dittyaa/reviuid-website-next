@@ -5,3 +5,9 @@ export type UserSession = {
   avatar: string;
   role: "ADMIN" | "USER";
 };
+
+export type UserProfile = {
+  username: string;
+  avatar: string;
+  biography: string | null;
+};

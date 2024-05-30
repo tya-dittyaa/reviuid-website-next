@@ -288,26 +288,30 @@ export default function LoginPage() {
     } else {
       setValue("horizontal");
     }
+  }, [size.width]);
 
+  useEffect(() => {
     setTimeout(async () => {
       const refresh = await FetchRefreshToken();
       if (refresh) router.replace("/");
       else setIsLoading(false);
     }, 1000);
-  }, [router, size]);
+  }, [router]);
 
   if (isLoading) {
     return <Spin fullscreen />;
   }
 
   if (value === "vertical") {
-    <>
-      <Flex vertical={true} align="start" style={{ height: "100svh" }}>
-        <RedBoxVertical />
-        <WhiteBoxVertical />
-      </Flex>
-      <Toaster richColors position="bottom-center" />
-    </>;
+    return (
+      <>
+        <Flex vertical={true} align="start" style={{ height: "100svh" }}>
+          <RedBoxVertical />
+          <WhiteBoxVertical />
+        </Flex>
+        <Toaster richColors position="bottom-center" />
+      </>
+    );
   }
 
   return (

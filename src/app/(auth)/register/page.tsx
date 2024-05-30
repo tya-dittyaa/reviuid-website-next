@@ -128,8 +128,8 @@ function RegisterForm() {
                 message: "Nama pengguna minimal 3 karakter!",
               },
               {
-                max: 20,
-                message: "Nama pengguna maksimal 20 karakter!",
+                max: 16,
+                message: "Nama pengguna maksimal 16 karakter!",
               },
             ]}
           >
@@ -345,13 +345,15 @@ export default function RegisterPage() {
     } else {
       setValue("horizontal");
     }
+  }, [size.width]);
 
+  useEffect(() => {
     setTimeout(async () => {
       const refresh = await FetchRefreshToken();
       if (refresh) router.replace("/");
       else setIsLoading(false);
     }, 1000);
-  }, [router, size]);
+  }, [router]);
 
   if (isLoading) {
     return <Spin fullscreen />;

@@ -13,7 +13,9 @@ export default function LogoutPage() {
       await FetchUserLogout();
     }
     logout();
+  }, []);
 
+  useEffect(() => {
     setTimeout(() => {
       router.replace("/");
     }, 1000);
