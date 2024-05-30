@@ -85,6 +85,7 @@ function UserHasLogin() {
   const size = useWindowSize();
   const [isLoading, setIsLoading] = useState(true);
   const [value, setValue] = useState<"vertical" | "horizontal">("horizontal");
+  const [userData, setUserData] = useState<UserSession | null>(null);
 
   useEffect(() => {
     if (size.width && size.width < 800) {
@@ -92,9 +93,7 @@ function UserHasLogin() {
     } else {
       setValue("horizontal");
     }
-  }, [size]);
-
-  const [userData, setUserData] = useState<UserSession | null>(null);
+  }, [size.width]);
 
   useEffect(() => {
     const getUserData = async () => {
@@ -141,6 +140,7 @@ function UserHasLogin() {
       <a
         onClick={(e) => e.preventDefault()}
         style={{
+          position: "sticky",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -186,7 +186,7 @@ export default function HeaderLayout() {
     } else {
       setValue("horizontal");
     }
-  }, [size]);
+  }, [size.width]);
 
   return (
     <Header

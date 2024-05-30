@@ -80,13 +80,13 @@ export default function FooterLayout() {
     } else {
       setValue("horizontal");
     }
-  }, [size]);
+  }, [size.width]);
 
   return (
     <Footer
       style={{
+        flexShrink: 1,
         backgroundColor: "black",
-        position: "fixed",
         bottom: 0,
         zIndex: 1,
         width: "100%",
