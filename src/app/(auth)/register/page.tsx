@@ -303,7 +303,7 @@ function RedBoxHorizontal() {
     <Col
       flex="auto"
       style={{
-        height: "100svh",
+        height: "100dvh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -324,7 +324,7 @@ function WhiteBoxHorizontal() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "100svh",
+        minHeight: "100dvh",
       }}
     >
       <RegisterForm />
@@ -362,7 +362,7 @@ export default function RegisterPage() {
   if (value === "vertical") {
     return (
       <>
-        <Flex vertical={true} align="start" style={{ height: "100svh" }}>
+        <Flex vertical={true} align="start" style={{ height: "100dvh" }}>
           <RedBoxVertical />
           <WhiteBoxVertical />
         </Flex>
