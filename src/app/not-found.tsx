@@ -2,7 +2,8 @@
 
 import { FooterLayout, HeaderLayout } from "@/components";
 import { HomeOutlined, WarningOutlined } from "@ant-design/icons";
-import { Button, Layout, Typography } from "antd";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { Button, ConfigProvider, Layout, Typography } from "antd";
 
 const { Content } = Layout;
 const { Text } = Typography;
@@ -47,10 +48,20 @@ function UserNotFound() {
 
 export default function NotFound() {
   return (
-    <Layout style={{ minHeight: "100dvh" }}>
-      <HeaderLayout />
-      <UserNotFound />
-      <FooterLayout />
-    </Layout>
+    <ConfigProvider
+      theme={{
+        token: {
+          fontFamily: "Poppins",
+        },
+      }}
+    >
+      <AntdRegistry>
+        <Layout style={{ minHeight: "100dvh" }}>
+          <HeaderLayout />
+          <UserNotFound />
+          <FooterLayout />
+        </Layout>
+      </AntdRegistry>
+    </ConfigProvider>
   );
 }
