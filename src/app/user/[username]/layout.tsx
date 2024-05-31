@@ -1,7 +1,5 @@
 import { GetUserProfile } from "@/utils";
-import { AntdRegistry } from "@ant-design/nextjs-registry";
 import "@fontsource/poppins";
-import { ConfigProvider } from "antd";
 import { Metadata } from "next";
 
 export async function generateMetadata({
@@ -11,7 +9,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const response = await GetUserProfile(params.username);
 
-  if (typeof response !== "string") {
+  if (typeof response !== "number") {
     return {
       title: response.username,
       description: response.biography,
@@ -19,8 +17,8 @@ export async function generateMetadata({
   }
 
   return {
-    title: `Profil tidak ditemukan!`,
-    description: "Profil yang dicari tidak ditemukan!",
+    title: `Pengguna Tidak Ditemukan`,
+    description: "Halaman yang Anda cari tidak ditemukan.",
   };
 }
 
@@ -29,17 +27,5 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <section>
-      <ConfigProvider
-        theme={{
-          token: {
-            fontFamily: "Poppins",
-          },
-        }}
-      >
-        <AntdRegistry>{children}</AntdRegistry>
-      </ConfigProvider>
-    </section>
-  );
+  return <section>{children}</section>;
 }

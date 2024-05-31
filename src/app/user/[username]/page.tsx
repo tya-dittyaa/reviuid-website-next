@@ -4,11 +4,7 @@ import { FooterLayout, HeaderLayout } from "@/components";
 import { useWindowSize } from "@/hooks";
 import { UserProfile, ViewType } from "@/types";
 import { GetUserProfile } from "@/utils";
-import {
-  ArrowLeftOutlined,
-  HomeOutlined,
-  WarningOutlined,
-} from "@ant-design/icons";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import {
   Avatar,
   Button,
@@ -20,46 +16,11 @@ import {
   Typography,
 } from "antd";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const { Content } = Layout;
 const { Text, Title, Paragraph } = Typography;
-
-function UserNotFound({ errorResponse }: { errorResponse: string }) {
-  return (
-    <Content
-      style={{
-        flex: 1,
-        backgroundColor: "#9E140F",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "1rem",
-      }}
-    >
-      <WarningOutlined
-        style={{ fontSize: 60, color: "#fff", marginBottom: 15 }}
-      />
-      <Text style={{ fontSize: 25, justifyContent: "center", color: "#fff" }}>
-        Kesalahan Tidak Terduga
-      </Text>
-      <Text style={{ fontSize: 15, justifyContent: "center", color: "#fff" }}>
-        {errorResponse}
-      </Text>
-      <Button
-        type="primary"
-        shape="round"
-        icon={<HomeOutlined />}
-        size={"large"}
-        style={{ marginTop: 25, backgroundColor: "#E2B808", color: "black" }}
-        href="/"
-      >
-        Kembali ke Beranda
-      </Button>
-    </Content>
-  );
-}
 
 function DisplayUserVertical({ user }: { user: UserProfile }) {
   return (
@@ -201,7 +162,7 @@ function UserFound({ layout, user }: { layout: ViewType; user: UserProfile }) {
         backgroundColor: "#9E140F",
         display: "flex",
         flexDirection: "column",
-        padding: "2rem",
+        padding: layout === "horizontal" ? "2rem" : "1rem",
       }}
     >
       <ButtonBackAndProfile layout={layout} />
@@ -234,7 +195,6 @@ export default function ProfilePage({
   const [layout, setLayout] = useState<"vertical" | "horizontal">("horizontal");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userData, setUserData] = useState<UserProfile | null>(null);
-  const [errorResponse, setErrorResponse] = useState<string>("");
 
   useEffect(() => {
     if (size.width && size.width < 800) {
@@ -247,11 +207,9 @@ export default function ProfilePage({
   useEffect(() => {
     const getUserData = async () => {
       const response = await GetUserProfile(params.username);
-      if (typeof response === "string") {
-        setErrorResponse(response);
-        return;
+      if (typeof response !== "number") {
+        setUserData(response);
       }
-      setUserData(response);
       return;
     };
     getUserData();
@@ -268,13 +226,7 @@ export default function ProfilePage({
   }
 
   if (!userData) {
-    return (
-      <Layout style={{ minHeight: "100dvh" }}>
-        <HeaderLayout />
-        <UserNotFound errorResponse={errorResponse} />
-        <FooterLayout />
-      </Layout>
-    );
+    return notFound();
   }
 
   return (
