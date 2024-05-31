@@ -17,7 +17,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: `Halaman Tidak Ditemukan`,
+    title: `Pengguna Tidak Ditemukan`,
     description: "Halaman yang Anda cari tidak ditemukan.",
   };
 }

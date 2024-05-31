@@ -3,7 +3,9 @@
 import { FooterLayout, HeaderLayout } from "@/components";
 import { HomeOutlined, WarningOutlined } from "@ant-design/icons";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import { Button, ConfigProvider, Layout, Typography } from "antd";
+import "@fontsource/poppins";
+import { Button, ConfigProvider, Layout, Spin, Typography } from "antd";
+import { useEffect, useState } from "react";
 
 const { Content } = Layout;
 const { Text } = Typography;
@@ -47,6 +49,18 @@ function NotFoundView() {
 }
 
 export default function NotFound() {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  }, []);
+
+  if (isLoading) {
+    return <Spin fullscreen />;
+  }
+
   return (
     <ConfigProvider
       theme={{
