@@ -8,7 +8,7 @@ import { Button, ConfigProvider, Layout, Typography } from "antd";
 const { Content } = Layout;
 const { Text } = Typography;
 
-function UserNotFound() {
+function NotFoundView() {
   return (
     <Content
       style={{
@@ -58,7 +58,7 @@ export default function NotFound() {
       <AntdRegistry>
         <Layout style={{ minHeight: "100dvh" }}>
           <HeaderLayout />
-          <UserNotFound />
+          <NotFoundView />
           <FooterLayout />
         </Layout>
       </AntdRegistry>
