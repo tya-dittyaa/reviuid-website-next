@@ -4,7 +4,7 @@ import { UserProfile } from "@/types";
 
 export async function GetUserProfile(
   username: string
-): Promise<UserProfile | string> {
+): Promise<UserProfile | number> {
   // Get the environment variables
   const BACKEND_URL = process.env.BACKEND_URL as string;
   const HEADER_API_KEY = process.env.HEADER_API_KEY as string;
@@ -22,16 +22,16 @@ export async function GetUserProfile(
       }
     );
 
-    // If not 200, return false
-    if (resProfile.status !== 200) return "Akun yang dicari tidak ditemukan!";
+    // Response is 200
+    if (resProfile.status === 200) {
+      const profile: UserProfile = await resProfile.json();
+      return profile;
+    }
 
-    // Get the user profile
-    const profile: UserProfile = await resProfile.json();
-
-    // Return the user profile
-    return profile;
+    // Return the status
+    return resProfile.status;
   } catch (error) {
     // Return false
-    return "Server sedang mengalami gangguan! Coba lagi nanti!";
+    return 500;
   }
 }
