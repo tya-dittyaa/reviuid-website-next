@@ -9,7 +9,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const response = await GetUserProfile(params.username);
 
-  if (typeof response !== "string") {
+  if (typeof response !== "number") {
     return {
       title: response.username,
       description: response.biography,
@@ -17,8 +17,8 @@ export async function generateMetadata({
   }
 
   return {
-    title: `Profil tidak ditemukan!`,
-    description: "Profil yang dicari tidak ditemukan!",
+    title: `Halaman Tidak Ditemukan`,
+    description: "Halaman yang Anda cari tidak ditemukan.",
   };
 }
 
