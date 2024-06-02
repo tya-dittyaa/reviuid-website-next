@@ -30,13 +30,17 @@ export default function Home() {
           flex: 1,
           backgroundColor: "#9E140F",
           display: "flex",
+          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
           padding: "1rem",
+          textAlign: "center",
         }}
       >
         <Text style={{ fontSize: 25, justifyContent: "center", color: "#fff" }}>
-          Konten sedang dirakit 🥹🥹
+          Konten sedang dirakit
+          <br />
+          🥹🥹
         </Text>
       </Content>
 
