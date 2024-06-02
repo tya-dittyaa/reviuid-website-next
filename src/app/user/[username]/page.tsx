@@ -5,16 +5,7 @@ import { useWindowSize } from "@/hooks";
 import { UserProfile, ViewType } from "@/types";
 import { GetUserProfile } from "@/utils";
 import { UserOutlined } from "@ant-design/icons";
-import {
-  Avatar,
-  Button,
-  Col,
-  Divider,
-  Flex,
-  Layout,
-  Spin,
-  Typography,
-} from "antd";
+import { Avatar, Col, Divider, Flex, Layout, Spin, Typography } from "antd";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -118,21 +109,16 @@ function ProfileText({ layout }: { layout: ViewType }) {
           textDecoration: "none",
         }}
       >
-        <Button
-          type="primary"
-          shape="circle"
-          size={layout === "horizontal" ? "large" : "middle"}
-          icon={
-            <UserOutlined
-              style={{ fontSize: layout === "horizontal" ? "25px" : "20px" }}
-            />
-          }
+        <Avatar
+          size={layout === "horizontal" ? "large" : "default"}
+          icon={<UserOutlined />}
           style={{
             backgroundColor: "#E2B808",
             color: "black",
             marginRight: "1rem",
           }}
         />
+
         <Text
           strong
           style={{
@@ -165,7 +151,7 @@ function UserFound({ layout, user }: { layout: ViewType; user: UserProfile }) {
         style={{
           borderColor: "black",
           borderWidth: 2,
-          margin: "10px 0 10px 0",
+          margin: "20px 0 20px 0",
         }}
       />
 
@@ -180,7 +166,7 @@ function UserFound({ layout, user }: { layout: ViewType; user: UserProfile }) {
         style={{
           borderColor: "black",
           borderWidth: 2,
-          margin: "10px 0 10px 0",
+          margin: "20px 0 20px 0",
         }}
       />
     </Content>

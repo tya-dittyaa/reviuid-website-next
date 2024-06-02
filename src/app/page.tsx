@@ -18,11 +18,11 @@ function TemporaryContent() {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        padding: "1rem",
         textAlign: "center",
+        padding: "1rem",
       }}
     >
-      <Text style={{ fontSize: 25, justifyContent: "center", color: "#fff" }}>
+      <Text style={{ fontSize: 25, color: "#fff" }}>
         Konten sedang dirakit
         <br />
         🥹🥹

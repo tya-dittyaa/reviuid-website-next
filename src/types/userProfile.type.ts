@@ -11,3 +11,11 @@ export type UserProfile = {
   avatar: string;
   biography: string | null;
 };
+
+export type UserSettings = {
+  username: string;
+  email: string;
+  avatar: string;
+  biography: string | null;
+  role: "ADMIN" | "USER";
+};
