@@ -88,15 +88,33 @@ function DrawerLayout({ view }: { view: ViewType }) {
           color: "black",
         }}
       >
-        <Button type="text" size="large" block style={{ marginBottom: "15px" }}>
+        <Button
+          type="text"
+          size="large"
+          block
+          href="/"
+          style={{ marginBottom: "15px" }}
+        >
           Beranda
         </Button>
 
-        <Button type="text" size="large" block style={{ marginBottom: "15px" }}>
+        <Button
+          type="text"
+          size="large"
+          href="/film"
+          block
+          style={{ marginBottom: "15px" }}
+        >
           Film
         </Button>
 
-        <Button type="text" size="large" block style={{ marginBottom: "15px" }}>
+        <Button
+          type="text"
+          size="large"
+          href="/forum"
+          block
+          style={{ marginBottom: "15px" }}
+        >
           Forum
         </Button>
       </Drawer>
