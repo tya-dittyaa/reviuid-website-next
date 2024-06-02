@@ -78,10 +78,10 @@ function DrawerLayout({ view }: { view: ViewType }) {
       />
 
       <Drawer
-        title="Reviu.ID - Menu Drawer"
+        title="Reviu.ID - Menu"
         footer="© 2024, oleh Reviu Film ID, Inc."
         placement="left"
-        width={300}
+        width={250}
         onClose={onClose}
         open={open}
         style={{
