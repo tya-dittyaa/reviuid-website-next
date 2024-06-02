@@ -1,7 +1,7 @@
 import { LogoConfig } from "./logo.type";
 import { ViewType, WindowSize } from "./responsive.type";
 import { TokenData, UserLogin } from "./userLogin.type";
-import { UserProfile, UserSession } from "./userProfile.type";
+import { UserProfile, UserSession, UserSettings } from "./userProfile.type";
 import { RegisterResult, UserRegister } from "./userRegister.type";
 
 export type {
@@ -12,6 +12,7 @@ export type {
   UserProfile,
   UserRegister,
   UserSession,
+  UserSettings,
   ViewType,
   WindowSize,
 };
