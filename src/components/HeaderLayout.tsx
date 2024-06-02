@@ -1,7 +1,12 @@
 import { useWindowSize } from "@/hooks";
 import { LogoConfig, UserSession, ViewType } from "@/types";
 import { GetUserSession } from "@/utils";
-import { LogoutOutlined, MenuOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  LogoutOutlined,
+  MenuOutlined,
+  SettingOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import {
   Avatar,
   Button,
@@ -213,6 +218,11 @@ function UserHasLogin() {
     },
     {
       key: "3",
+      label: <a href={`/user/${userData.username}/settings`}>Pengaturan</a>,
+      icon: <SettingOutlined />,
+    },
+    {
+      key: "4",
       label: <a href={`/logout`}>Keluar</a>,
       icon: <LogoutOutlined />,
       danger: true,

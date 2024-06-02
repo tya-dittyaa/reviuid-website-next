@@ -4,7 +4,7 @@ import { FooterLayout, HeaderLayout } from "@/components";
 import { useWindowSize } from "@/hooks";
 import { UserProfile, ViewType } from "@/types";
 import { GetUserProfile } from "@/utils";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 import {
   Avatar,
   Button,
@@ -107,7 +107,7 @@ function DisplayUserHorizontal({ user }: { user: UserProfile }) {
   );
 }
 
-function ButtonBackAndProfile({ layout }: { layout: ViewType }) {
+function ProfileText({ layout }: { layout: ViewType }) {
   return (
     <Flex vertical style={{ width: "100%" }}>
       <Col
@@ -122,29 +122,22 @@ function ButtonBackAndProfile({ layout }: { layout: ViewType }) {
           type="primary"
           shape="circle"
           size={layout === "horizontal" ? "large" : "middle"}
-          href="/"
-          icon={<ArrowLeftOutlined />}
+          icon={
+            <UserOutlined
+              style={{ fontSize: layout === "horizontal" ? "25px" : "20px" }}
+            />
+          }
           style={{
             backgroundColor: "#E2B808",
             color: "black",
+            marginRight: "1rem",
           }}
         />
         <Text
           strong
           style={{
             color: "#E2B808",
-            fontSize: layout === "horizontal" ? 30 : 20,
-            marginLeft: layout === "horizontal" ? 30 : 15,
-            marginRight: layout === "horizontal" ? 30 : 15,
-          }}
-        >
-          |
-        </Text>
-        <Text
-          strong
-          style={{
-            color: "#E2B808",
-            fontSize: layout === "horizontal" ? 30 : 20,
+            fontSize: 30,
           }}
         >
           <b style={{ fontWeight: "bold" }}>Profil User</b>
@@ -165,11 +158,15 @@ function UserFound({ layout, user }: { layout: ViewType; user: UserProfile }) {
         padding: layout === "horizontal" ? "2rem" : "1rem",
       }}
     >
-      <ButtonBackAndProfile layout={layout} />
+      <ProfileText layout={layout} />
 
       <Divider
         orientation="center"
-        style={{ borderColor: "black", borderWidth: 2 }}
+        style={{
+          borderColor: "black",
+          borderWidth: 2,
+          margin: "10px 0 10px 0",
+        }}
       />
 
       {layout === "vertical" ? (
@@ -180,7 +177,11 @@ function UserFound({ layout, user }: { layout: ViewType; user: UserProfile }) {
 
       <Divider
         orientation="center"
-        style={{ borderColor: "black", borderWidth: 2 }}
+        style={{
+          borderColor: "black",
+          borderWidth: 2,
+          margin: "10px 0 10px 0",
+        }}
       />
     </Content>
   );

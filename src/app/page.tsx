@@ -8,6 +8,29 @@ import { useEffect, useState } from "react";
 const { Content } = Layout;
 const { Text } = Typography;
 
+function TemporaryContent() {
+  return (
+    <Content
+      style={{
+        flex: 1,
+        backgroundColor: "#9E140F",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "1rem",
+        textAlign: "center",
+      }}
+    >
+      <Text style={{ fontSize: 25, justifyContent: "center", color: "#fff" }}>
+        Konten sedang dirakit
+        <br />
+        🥹🥹
+      </Text>
+    </Content>
+  );
+}
+
 export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -24,26 +47,7 @@ export default function Home() {
   return (
     <Layout style={{ minHeight: "100dvh" }}>
       <HeaderLayout />
-
-      <Content
-        style={{
-          flex: 1,
-          backgroundColor: "#9E140F",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "1rem",
-          textAlign: "center",
-        }}
-      >
-        <Text style={{ fontSize: 25, justifyContent: "center", color: "#fff" }}>
-          Konten sedang dirakit
-          <br />
-          🥹🥹
-        </Text>
-      </Content>
-
+      <TemporaryContent />
       <FooterLayout />
     </Layout>
   );

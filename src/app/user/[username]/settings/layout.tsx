@@ -1,6 +1,5 @@
 import { GetUserProfile } from "@/utils";
-import "@fontsource/poppins";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 export async function generateMetadata({
   params,
@@ -11,19 +10,13 @@ export async function generateMetadata({
 
   if (typeof response !== "number") {
     return {
-      title: {
-        default: `${response.username}`,
-        template: "%s » Reviu.ID",
-      },
-      description: response.biography,
+      title: "Pengaturan Akun",
+      description: "Keluar dari akun Reviu.ID.",
     };
   }
 
   return {
-    title: {
-      default: `Pengguna Tidak Ditemukan}`,
-      template: "%s » Reviu.ID",
-    },
+    title: `Pengguna Tidak Ditemukan`,
     description: "Halaman yang Anda cari tidak ditemukan.",
   };
 }
