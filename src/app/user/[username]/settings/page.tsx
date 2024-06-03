@@ -3,12 +3,22 @@
 import { FooterLayout, HeaderLayout } from "@/components";
 import { useWindowSize } from "@/hooks";
 import { UserProfile, UserSession, UserSettings, ViewType } from "@/types";
-import { FetchUploadAvatar, GetUserProfile, GetUserSession } from "@/utils";
+import {
+  CheckAvailableEmail,
+  CheckAvailableUsername,
+  FetchChangeEmail,
+  FetchChangeUsername,
+  FetchUploadAvatar,
+  GetUserProfile,
+  GetUserSession,
+} from "@/utils";
 import {
   DeleteOutlined,
   EditOutlined,
+  MailOutlined,
   SettingOutlined,
   UploadOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import {
   Avatar,
@@ -16,7 +26,9 @@ import {
   Col,
   Divider,
   Flex,
+  Form,
   GetProp,
+  Input,
   Layout,
   Modal,
   Spin,
@@ -26,7 +38,7 @@ import {
   UploadProps,
 } from "antd";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Toaster, toast } from "sonner";
 
@@ -117,7 +129,7 @@ function EditAvatar() {
 
       <Modal
         centered
-        title="Ganti Foto Profil"
+        title="Ubah Foto Profil"
         open={open}
         onOk={handleOk}
         confirmLoading={confirmLoading}
@@ -133,6 +145,9 @@ function EditAvatar() {
 }
 
 function EditUsername() {
+  const router = useRouter();
+  const [form] = Form.useForm();
+
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
@@ -141,13 +156,43 @@ function EditUsername() {
   };
 
   const handleCancel = () => {
+    form.resetFields();
     setOpen(false);
   };
 
-  const handleOk = async () => {
+  const updateUsername = async (values: { username: string }) => {
+    let isSuccessful = false;
     setConfirmLoading(true);
-    setOpen(false);
-    setConfirmLoading(false);
+
+    const response = await FetchChangeUsername(values.username);
+
+    if (response === undefined) {
+      toast.error("Terjadi kesalahan pada server!");
+    } else if (response) {
+      isSuccessful = true;
+      toast.success("Berhasil memperbarui nama pengguna.");
+    } else {
+      toast.error("Gagal memperbarui nama pengguna!");
+    }
+
+    setTimeout(() => {
+      setOpen(false);
+      setConfirmLoading(false);
+      if (isSuccessful) {
+        router.push(`/user/${values.username}/settings`);
+      }
+    }, 2000);
+  };
+
+  const handleOk = async () => {
+    form
+      .validateFields()
+      .then((values) => {
+        updateUsername(values);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -165,12 +210,58 @@ function EditUsername() {
 
       <Modal
         centered
-        title="Ganti Nama Pengguna"
+        title="Ubah Nama Pengguna"
         open={open}
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
-      ></Modal>
+      >
+        <Form
+          form={form}
+          initialValues={{ remember: true }}
+          autoComplete="off"
+          autoCapitalize="off"
+          autoSave="off"
+          autoCorrect="off"
+        >
+          <Form.Item
+            name="username"
+            hasFeedback
+            rules={[
+              {
+                required: true,
+                message: "Silakan masukkan nama pengguna baru Anda!",
+              },
+              {
+                min: 3,
+                message: "Nama pengguna minimal 3 karakter!",
+              },
+              {
+                max: 16,
+                message: "Nama pengguna maksimal 16 karakter!",
+              },
+              {
+                validator: async (_, value) => {
+                  const response = await CheckAvailableUsername(value);
+                  if (response === true) {
+                    return Promise.resolve();
+                  }
+                  if (response === false) {
+                    return Promise.reject("Nama pengguna sudah digunakan!");
+                  }
+                  return Promise.reject("Terjadi kesalahan pada server!");
+                },
+              },
+            ]}
+          >
+            <Input
+              size="large"
+              placeholder="Username Baru Anda"
+              addonBefore={<UserOutlined style={{ color: "#969AB8" }} />}
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
     </>
   );
 }
@@ -208,7 +299,7 @@ function EditBiography() {
 
       <Modal
         centered
-        title="Ganti Biografi Pengguna"
+        title="Ubah Biografi Pengguna"
         open={open}
         onOk={handleOk}
         confirmLoading={confirmLoading}
@@ -219,6 +310,8 @@ function EditBiography() {
 }
 
 function EditEmail() {
+  const [form] = Form.useForm();
+
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
@@ -227,13 +320,43 @@ function EditEmail() {
   };
 
   const handleCancel = () => {
+    form.resetFields();
     setOpen(false);
   };
 
-  const handleOk = async () => {
+  const updateEmail = async (values: { email: string }) => {
+    let isSuccessful = false;
     setConfirmLoading(true);
-    setOpen(false);
-    setConfirmLoading(false);
+
+    const response = await FetchChangeEmail(values.email);
+
+    if (response === undefined) {
+      toast.error("Terjadi kesalahan pada server!");
+    } else if (response) {
+      isSuccessful = true;
+      toast.success("Berhasil memperbarui alamat email.");
+    } else {
+      toast.error("Gagal memperbarui alamat email!");
+    }
+
+    setTimeout(() => {
+      setOpen(false);
+      setConfirmLoading(false);
+      if (isSuccessful) {
+        forceRefresh();
+      }
+    }, 2000);
+  };
+
+  const handleOk = async () => {
+    form
+      .validateFields()
+      .then((values) => {
+        updateEmail(values);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -251,12 +374,54 @@ function EditEmail() {
 
       <Modal
         centered
-        title="Ganti Email"
+        title="Ubah Email"
         open={open}
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
-      ></Modal>
+      >
+        <Form
+          form={form}
+          initialValues={{ remember: true }}
+          autoComplete="off"
+          autoCapitalize="off"
+          autoSave="off"
+          autoCorrect="off"
+        >
+          <Form.Item
+            name="email"
+            hasFeedback
+            rules={[
+              {
+                type: "email",
+                message: "Input tidak valid! Masukkan alamat email yang benar!",
+              },
+              {
+                required: true,
+                message: "Silakan masukkan alamat email Anda!",
+              },
+              {
+                validator: async (_, value) => {
+                  const response = await CheckAvailableEmail(value);
+                  if (response === true) {
+                    return Promise.resolve();
+                  }
+                  if (response === false) {
+                    return Promise.reject("Alamat email sudah digunakan!");
+                  }
+                  return Promise.reject("Terjadi kesalahan pada server!");
+                },
+              },
+            ]}
+          >
+            <Input
+              size="large"
+              placeholder="Email Baru Anda"
+              addonBefore={<MailOutlined style={{ color: "#969AB8" }} />}
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
     </>
   );
 }
@@ -294,7 +459,7 @@ function EditPassword() {
 
       <Modal
         centered
-        title="Ganti Kata Sandi"
+        title="Ubah Kata Sandi"
         open={open}
         onOk={handleOk}
         confirmLoading={confirmLoading}
