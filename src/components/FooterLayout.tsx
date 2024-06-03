@@ -1,10 +1,4 @@
 import { useWindowSize } from "@/hooks";
-import {
-  DiscordOutlined,
-  FacebookOutlined,
-  InstagramOutlined,
-  XOutlined,
-} from "@ant-design/icons";
 import { Flex, Layout, Space, Typography } from "antd";
 import { useEffect, useState } from "react";
 
@@ -24,26 +18,7 @@ function Vertical() {
     >
       <Space
         direction="horizontal"
-        style={{ margin: "15px 0 15px 0", gap: 20 }}
-      >
-        <Link href="#" style={{ color: "white", listStyle: "none" }}>
-          <InstagramOutlined style={{ fontSize: 35 }} />
-        </Link>
-        <Link href="#" style={{ color: "white", listStyle: "none" }}>
-          <XOutlined style={{ fontSize: 35 }} />
-        </Link>
-        <Link href="#" style={{ color: "white", listStyle: "none" }}>
-          <FacebookOutlined style={{ fontSize: 35 }} />
-        </Link>
-        <Link href="#" style={{ color: "white", listStyle: "none" }}>
-          <DiscordOutlined style={{ fontSize: 35 }} />
-        </Link>
-      </Space>
-
-      <Space
-        direction="horizontal"
         style={{
-          margin: "10px 0 10px 0",
           gap: 20,
           display: "flex",
           justifyContent: "center",
@@ -53,57 +28,18 @@ function Vertical() {
         }}
       >
         <Space direction="vertical">
-          <Link
-            href="#"
-            style={{ color: "white", listStyle: "none", fontSize: "15px" }}
-          >
-            Bantuan
-          </Link>
-          <Link
-            href="#"
-            style={{ color: "white", listStyle: "none", fontSize: "15px" }}
-          >
+          <Link href="/about-us" style={{ color: "white", listStyle: "none" }}>
             Tentang Kami
-          </Link>
-          <Link
-            href="#"
-            style={{ color: "white", listStyle: "none", fontSize: "15px" }}
-          >
-            Kondisi Penggunaan
-          </Link>
-          <Link
-            href="#"
-            style={{ color: "white", listStyle: "none", fontSize: "15px" }}
-          >
-            Kebijakan Privasi
           </Link>
         </Space>
         <Space direction="vertical">
-          <Link
-            href="#"
-            style={{ color: "white", listStyle: "none", fontSize: "15px" }}
-          >
-            Developer Reviu.ID
-          </Link>
-          <Link
-            href="#"
-            style={{ color: "white", listStyle: "none", fontSize: "15px" }}
-          >
-            Pilihan Privasi Iklan
-          </Link>
-          <Link
-            href="#"
-            style={{ color: "white", listStyle: "none", fontSize: "15px" }}
-          >
-            Periklanan
+          <Link href="/developer" style={{ color: "white", listStyle: "none" }}>
+            Developer
           </Link>
         </Space>
       </Space>
 
-      <Space
-        direction="horizontal"
-        style={{ margin: "15px 0 15px 0", gap: 40 }}
-      >
+      <Space direction="horizontal" style={{ marginTop: 10 }}>
         <Text style={{ color: "white" }}>© 2024, oleh Reviu Film ID, Inc.</Text>
       </Space>
     </Flex>
@@ -121,56 +57,14 @@ function Horizontal() {
         width: "100%",
       }}
     >
-      <Space
-        direction="horizontal"
-        style={{ margin: "15px 0 15px 0", gap: 40 }}
-      >
-        <Link href="#" style={{ color: "white", listStyle: "none" }}>
-          <InstagramOutlined style={{ fontSize: 35 }} />
-        </Link>
-        <Link href="#" style={{ color: "white", listStyle: "none" }}>
-          <XOutlined style={{ fontSize: 35 }} />{" "}
-        </Link>
-        <Link href="#" style={{ color: "white", listStyle: "none" }}>
-          <FacebookOutlined style={{ fontSize: 35 }} />{" "}
-        </Link>
-        <Link href="#" style={{ color: "white", listStyle: "none" }}>
-          <DiscordOutlined style={{ fontSize: 35 }} />{" "}
-        </Link>
-      </Space>
-
-      <Space direction="horizontal" style={{ margin: "15px 0 5px 0", gap: 40 }}>
-        <Link href="#" style={{ color: "white", listStyle: "none" }}>
-          Bantuan
-        </Link>
-        <Link href="#" style={{ color: "white", listStyle: "none" }}>
+      <Space direction="horizontal" style={{ gap: 50 }}>
+        <Text style={{ color: "white" }}>© 2024, oleh Reviu Film ID, Inc.</Text>
+        <Link href="/about-us" style={{ color: "white", listStyle: "none" }}>
           Tentang Kami
         </Link>
-        <Link href="#" style={{ color: "white", listStyle: "none" }}>
-          Kondisi Penggunaan
+        <Link href="/developer" style={{ color: "white", listStyle: "none" }}>
+          Developer
         </Link>
-        <Link href="#" style={{ color: "white", listStyle: "none" }}>
-          Kebijakan Privasi
-        </Link>
-        <Link href="#" style={{ color: "white", listStyle: "none" }}>
-          Periklanan
-        </Link>
-      </Space>
-
-      <Space direction="horizontal" style={{ margin: "5px 0 15px 0", gap: 40 }}>
-        <Link href="#" style={{ color: "white", listStyle: "none" }}>
-          Developer Reviu.ID
-        </Link>
-        <Link href="#" style={{ color: "white", listStyle: "none" }}>
-          Pilihan Privasi Iklan
-        </Link>
-      </Space>
-
-      <Space
-        direction="horizontal"
-        style={{ margin: "15px 0 15px 0", gap: 40 }}
-      >
-        <Text style={{ color: "white" }}>© 2024, oleh Reviu Film ID, Inc.</Text>
       </Space>
     </Flex>
   );
@@ -186,13 +80,13 @@ export default function FooterLayout() {
     } else {
       setValue("horizontal");
     }
-  }, [size]);
+  }, [size.width]);
 
   return (
     <Footer
       style={{
+        flexShrink: 1,
         backgroundColor: "black",
-        position: "fixed",
         bottom: 0,
         zIndex: 1,
         width: "100%",

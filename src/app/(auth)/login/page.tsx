@@ -137,6 +137,9 @@ function LoginForm() {
               placeholder="nama@email.com"
               disabled={isSubmitting}
               addonBefore={<MailOutlined style={{ color: "#969AB8" }} />}
+              onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
+                (e.target.value = e.target.value.toLowerCase())
+              }
             />
           </Form.Item>
 
@@ -243,7 +246,7 @@ function RedBoxHorizontal() {
     <Col
       flex="auto"
       style={{
-        height: "100svh",
+        height: "100dvh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -264,7 +267,7 @@ function WhiteBoxHorizontal() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "100svh",
+        minHeight: "100dvh",
       }}
     >
       <LoginForm />
@@ -285,33 +288,38 @@ export default function LoginPage() {
     } else {
       setValue("horizontal");
     }
+  }, [size.width]);
 
+  useEffect(() => {
     setTimeout(async () => {
       const refresh = await FetchRefreshToken();
       if (refresh) router.replace("/");
       else setIsLoading(false);
     }, 1000);
-  }, [router, size]);
+  }, [router]);
+
+  if (isLoading) {
+    return <Spin fullscreen />;
+  }
+
+  if (value === "vertical") {
+    return (
+      <>
+        <Flex vertical={true} align="start" style={{ height: "100dvh" }}>
+          <RedBoxVertical />
+          <WhiteBoxVertical />
+        </Flex>
+        <Toaster richColors position="bottom-center" />
+      </>
+    );
+  }
 
   return (
     <>
-      {isLoading ? (
-        <Spin fullscreen />
-      ) : (
-        <>
-          {value === "vertical" ? (
-            <Flex vertical={true} align="start" style={{ height: "100svh" }}>
-              <RedBoxVertical />
-              <WhiteBoxVertical />
-            </Flex>
-          ) : (
-            <Flex vertical={false} align="start" style={{ width: "100%" }}>
-              <WhiteBoxHorizontal />
-              <RedBoxHorizontal />
-            </Flex>
-          )}
-        </>
-      )}
+      <Flex vertical={false} align="start" style={{ width: "100%" }}>
+        <WhiteBoxHorizontal />
+        <RedBoxHorizontal />
+      </Flex>
       <Toaster richColors position="bottom-right" />
     </>
   );

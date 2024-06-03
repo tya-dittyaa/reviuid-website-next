@@ -1,11 +1,17 @@
 import { useWindowSize } from "@/hooks";
-import { LogoConfig, UserSession } from "@/types";
+import { LogoConfig, UserSession, ViewType } from "@/types";
 import { GetUserSession } from "@/utils";
-import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  LogoutOutlined,
+  MenuOutlined,
+  SettingOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import {
   Avatar,
   Button,
   Col,
+  Drawer,
   Dropdown,
   Layout,
   MenuProps,
@@ -54,6 +60,89 @@ function ReviuIDLogo(logoConfig: LogoConfig) {
   );
 }
 
+function DrawerLayout({ view }: { view: ViewType }) {
+  const [open, setOpen] = useState(false);
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <Col
+      flex="45px"
+      style={{
+        display: "flex",
+        justifyContent: "flex-start",
+        alignItems: "center",
+      }}
+    >
+      <Button
+        type="text"
+        icon={<MenuOutlined style={{ color: "#E2B808", fontSize: "25px" }} />}
+        onClick={() => setOpen(!open)}
+      />
+
+      <Drawer
+        title="Reviu.ID - Menu"
+        footer="© 2024, oleh Reviu Film ID, Inc."
+        placement="left"
+        width={250}
+        onClose={onClose}
+        open={open}
+        style={{
+          color: "black",
+        }}
+      >
+        <Button
+          type="text"
+          size="large"
+          block
+          href="/"
+          style={{ marginBottom: "15px" }}
+        >
+          Beranda
+        </Button>
+
+        <Button
+          type="text"
+          size="large"
+          href="/film"
+          block
+          style={{ marginBottom: "15px" }}
+        >
+          Film
+        </Button>
+
+        <Button
+          type="text"
+          size="large"
+          href="/forum"
+          block
+          style={{ marginBottom: "15px" }}
+        >
+          Forum
+        </Button>
+      </Drawer>
+    </Col>
+  );
+}
+
+function LogoLayout() {
+  return (
+    <Col
+      flex="auto"
+      style={{
+        display: "flex",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        color: "white",
+      }}
+    >
+      <ReviuIDLogo AvatarSize={40} FontSize={30} />
+    </Col>
+  );
+}
+
 function UserNotLogin() {
   return (
     <Col
@@ -85,6 +174,7 @@ function UserHasLogin() {
   const size = useWindowSize();
   const [isLoading, setIsLoading] = useState(true);
   const [value, setValue] = useState<"vertical" | "horizontal">("horizontal");
+  const [userData, setUserData] = useState<UserSession | null>(null);
 
   useEffect(() => {
     if (size.width && size.width < 800) {
@@ -92,9 +182,7 @@ function UserHasLogin() {
     } else {
       setValue("horizontal");
     }
-  }, [size]);
-
-  const [userData, setUserData] = useState<UserSession | null>(null);
+  }, [size.width]);
 
   useEffect(() => {
     const getUserData = async () => {
@@ -116,11 +204,25 @@ function UserHasLogin() {
   const items: MenuProps["items"] = [
     {
       key: "1",
+      label: `Halo, ${userData.username} !`,
+      disabled: true,
+      style: { color: "#E2B808", fontWeight: "bold" },
+    },
+    {
+      type: "divider",
+    },
+    {
+      key: "2",
       label: <a href={`/user/${userData.username}`}>Profil</a>,
       icon: <UserOutlined />,
     },
     {
-      key: "2",
+      key: "3",
+      label: <a href={`/user/${userData.username}/settings`}>Pengaturan</a>,
+      icon: <SettingOutlined />,
+    },
+    {
+      key: "4",
       label: <a href={`/logout`}>Keluar</a>,
       icon: <LogoutOutlined />,
       danger: true,
@@ -132,6 +234,7 @@ function UserHasLogin() {
       <a
         onClick={(e) => e.preventDefault()}
         style={{
+          position: "sticky",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -177,7 +280,7 @@ export default function HeaderLayout() {
     } else {
       setValue("horizontal");
     }
-  }, [size]);
+  }, [size.width]);
 
   return (
     <Header
@@ -190,21 +293,11 @@ export default function HeaderLayout() {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: `${value === "horizontal" ? "0 50px" : "0 20px"}`,
+        padding: value === "horizontal" ? "0 25px" : "0 15px",
       }}
     >
-      <Col
-        flex="auto"
-        style={{
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          color: "white",
-        }}
-      >
-        <ReviuIDLogo AvatarSize={40} FontSize={30} />
-      </Col>
-
+      <DrawerLayout view={value} />
+      <LogoLayout />
       <UserHasLogin />
     </Header>
   );
