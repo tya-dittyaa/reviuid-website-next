@@ -8,6 +8,7 @@ import {
   CheckAvailableUsername,
   FetchChangeBiography,
   FetchChangeEmail,
+  FetchChangePassword,
   FetchChangeUsername,
   FetchUploadAvatar,
   GetUserProfile,
@@ -16,6 +17,7 @@ import {
 import {
   DeleteOutlined,
   EditOutlined,
+  KeyOutlined,
   MailOutlined,
   SettingOutlined,
   UploadOutlined,
@@ -219,7 +221,6 @@ function EditUsername() {
       >
         <Form
           form={form}
-          initialValues={{ remember: true }}
           autoComplete="off"
           autoCapitalize="off"
           autoSave="off"
@@ -449,7 +450,6 @@ function EditEmail() {
       >
         <Form
           form={form}
-          initialValues={{ remember: true }}
           autoComplete="off"
           autoCapitalize="off"
           autoSave="off"
@@ -494,6 +494,8 @@ function EditEmail() {
 }
 
 function EditPassword() {
+  const [form] = Form.useForm();
+
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
@@ -502,13 +504,39 @@ function EditPassword() {
   };
 
   const handleCancel = () => {
+    form.resetFields();
     setOpen(false);
   };
 
-  const handleOk = async () => {
+  const updatePassword = async (values: { password: string }) => {
     setConfirmLoading(true);
-    setOpen(false);
-    setConfirmLoading(false);
+
+    const response = await FetchChangePassword(values.password);
+
+    if (response === undefined) {
+      toast.error("Terjadi kesalahan pada server!");
+    } else if (response) {
+      toast.success("Berhasil memperbarui kata sandi.");
+    } else {
+      toast.error("Gagal memperbarui kata sandi!");
+    }
+
+    setTimeout(() => {
+      setOpen(false);
+      setConfirmLoading(false);
+      forceRefresh();
+    }, 2000);
+  };
+
+  const handleOk = async () => {
+    form
+      .validateFields()
+      .then((values) => {
+        updatePassword(values);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -531,7 +559,65 @@ function EditPassword() {
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
-      ></Modal>
+      >
+        <Form
+          form={form}
+          autoComplete="off"
+          autoCapitalize="off"
+          autoSave="off"
+          autoCorrect="off"
+        >
+          <Form.Item
+            name="password"
+            hasFeedback
+            rules={[
+              {
+                required: true,
+                message: "Silakan masukkan kata sandi baru Anda!",
+              },
+              {
+                pattern:
+                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[*.!@#$%^&(){}[\]:;<>,.?/~_+\-=|\\])[A-Za-z\d*.!@#$%^&(){}[\]:;<>,.?/~_+\-=|\\]{8,32}$/,
+                message: `Password harus memiliki 1 angka, huruf kecil, huruf kapital, karakter khusus, dan panjang 8-32 karakter!`,
+              },
+            ]}
+          >
+            <Input.Password
+              size="large"
+              placeholder="Kata Sandi Baru Anda"
+              addonBefore={<KeyOutlined style={{ color: "#969AB8" }} />}
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="repeatPassword"
+            hasFeedback
+            dependencies={["password"]}
+            rules={[
+              {
+                required: true,
+                message: "Silakan masukkan ulang kata sandi baru Anda!",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("Kata sandi yang Anda masukkan tidak sama!")
+                  );
+                },
+              }),
+            ]}
+          >
+            <Input.Password
+              size="large"
+              placeholder="Ulangi Kata Sandi Baru Anda"
+              addonBefore={<KeyOutlined style={{ color: "#969AB8" }} />}
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
     </>
   );
 }
