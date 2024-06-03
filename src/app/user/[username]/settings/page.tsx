@@ -3,18 +3,28 @@
 import { FooterLayout, HeaderLayout } from "@/components";
 import { useWindowSize } from "@/hooks";
 import { UserProfile, UserSession, UserSettings, ViewType } from "@/types";
-import { GetUserProfile, GetUserSession } from "@/utils";
-import { EditOutlined, SettingOutlined } from "@ant-design/icons";
+import { FetchUploadAvatar, GetUserProfile, GetUserSession } from "@/utils";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  SettingOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import {
   Avatar,
   Button,
   Col,
   Divider,
   Flex,
+  GetProp,
   Layout,
   Modal,
   Spin,
   Typography,
+  Upload,
+  UploadFile,
+  UploadProps,
+  message,
 } from "antd";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -22,9 +32,75 @@ import { useEffect, useState } from "react";
 
 const { Content } = Layout;
 const { Text, Title, Paragraph } = Typography;
+const forceRefresh = () => window.location.reload();
+
+type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
 function EditAvatar() {
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [fileImage, setFileImage] = useState<UploadFile | null>(null);
+
+  const showModal = () => {
+    setOpen(true);
+  };
+
+  const handleOk = async () => {
+    setConfirmLoading(true);
+
+    const formData = new FormData();
+    formData.append("avatar", fileImage as FileType);
+
+    // Upload the avatar
+    const response = await FetchUploadAvatar(formData);
+
+    if (response) {
+      message.success("Foto profil berhasil diperbarui.");
+    } else {
+      message.error("Gagal memperbarui foto profil.");
+    }
+
+    setTimeout(() => {
+      setOpen(false);
+      setConfirmLoading(false);
+      setFileImage(null);
+      forceRefresh();
+    }, 2000);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+    setFileImage(null);
+  };
+
+  const beforeUpload = (file: FileType) => {
+    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+    if (!isJpgOrPng) {
+      message.error("You can only upload JPG/PNG file!");
+    }
+
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error("Image must smaller than 2MB!");
+    }
+
+    const isImage = isJpgOrPng && isLt2M;
+    if (isImage) {
+      setFileImage(file);
+    }
+
+    return isImage || Upload.LIST_IGNORE;
+  };
+
+  const uploadProps: UploadProps = {
+    maxCount: 1,
+    listType: "picture",
+    showUploadList: fileImage ? true : false,
+    beforeUpload: beforeUpload,
+    onRemove: () => {
+      setFileImage(null);
+    },
+  };
 
   return (
     <>
@@ -34,19 +110,23 @@ function EditAvatar() {
         shape="round"
         icon={<EditOutlined />}
         size="large"
-        onClick={() => setModalOpen(true)}
+        onClick={showModal}
       >
         Foto Profil
       </Button>
 
       <Modal
-        title="Ganti Foto Profil"
         centered
-        open={modalOpen}
-        onOk={() => setModalOpen(false)}
-        onCancel={() => setModalOpen(false)}
+        title="Ganti Foto Profil"
+        open={open}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+        okButtonProps={{ disabled: fileImage === null }}
       >
-        <p>some contents...</p>
+        <Upload {...uploadProps}>
+          <Button icon={<UploadOutlined />}>Klik untuk Mengunggah</Button>
+        </Upload>
       </Modal>
     </>
   );
@@ -221,7 +301,7 @@ function ButtonSetting({ layout }: { layout: ViewType }) {
           danger
           type="default"
           shape="round"
-          icon={<EditOutlined />}
+          icon={<DeleteOutlined />}
           size="large"
         >
           Hapus Akun
