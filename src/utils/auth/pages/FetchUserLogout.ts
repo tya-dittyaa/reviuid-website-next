@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { FetchRefreshToken } from "./FetchRefreshToken";
+import { FetchRefreshToken } from "../session/FetchRefreshToken";
 
 export async function FetchUserLogout(): Promise<void> {
   // Get the environment variables
