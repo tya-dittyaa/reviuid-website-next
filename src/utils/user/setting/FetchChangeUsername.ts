@@ -20,9 +20,8 @@ export async function CheckAvailableUsername(
       body: JSON.stringify({ username }),
     });
 
-    const data: boolean = await res.json();
-
     // Check the response
+    const data: boolean = await res.json();
     if (data === true) return false;
     return true;
   } catch (error) {
