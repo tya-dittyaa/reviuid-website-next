@@ -27,7 +27,7 @@ function DisplayUserVertical({ user }: { user: UserProfile }) {
         }}
       >
         <Avatar
-          size={75}
+          size={100}
           icon={
             <Image
               src={user.avatar}
@@ -70,7 +70,7 @@ function DisplayUserHorizontal({ user }: { user: UserProfile }) {
     >
       <div>
         <Avatar
-          size={100}
+          size={125}
           icon={
             <Image
               src={user.avatar}
