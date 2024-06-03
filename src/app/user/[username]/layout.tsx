@@ -21,7 +21,7 @@ export async function generateMetadata({
 
   return {
     title: {
-      default: `Pengguna Tidak Ditemukan}`,
+      default: `Pengguna Tidak Ditemukan`,
       template: "%s » Reviu.ID",
     },
     description: "Halaman yang Anda cari tidak ditemukan.",
