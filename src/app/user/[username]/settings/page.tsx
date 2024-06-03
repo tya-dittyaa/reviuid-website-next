@@ -6,6 +6,7 @@ import { UserProfile, UserSession, UserSettings, ViewType } from "@/types";
 import {
   CheckAvailableEmail,
   CheckAvailableUsername,
+  FetchChangeBiography,
   FetchChangeEmail,
   FetchChangeUsername,
   FetchUploadAvatar,
@@ -267,6 +268,8 @@ function EditUsername() {
 }
 
 function EditBiography() {
+  const [form] = Form.useForm();
+
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
@@ -275,13 +278,51 @@ function EditBiography() {
   };
 
   const handleCancel = () => {
+    form.resetFields();
     setOpen(false);
   };
 
-  const handleOk = async () => {
+  const updateBiography = async (values: { biography: string | undefined }) => {
     setConfirmLoading(true);
-    setOpen(false);
-    setConfirmLoading(false);
+
+    let isSuccessful = false;
+    let newBiography: string | null;
+
+    if (values.biography === undefined || values.biography === "") {
+      newBiography = null;
+    } else {
+      newBiography = values.biography;
+    }
+
+    const response = await FetchChangeBiography(newBiography);
+
+    if (response === undefined) {
+      toast.error("Terjadi kesalahan pada server!");
+    } else if (response) {
+      isSuccessful = true;
+      toast.success("Berhasil memperbarui deskripsi pengguna.");
+    } else {
+      toast.error("Gagal memperbarui deskripsi pengguna!");
+    }
+
+    setTimeout(() => {
+      setOpen(false);
+      setConfirmLoading(false);
+      if (isSuccessful) {
+        forceRefresh();
+      }
+    }, 2000);
+  };
+
+  const handleOk = async () => {
+    form
+      .validateFields()
+      .then((values) => {
+        updateBiography(values);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -304,7 +345,33 @@ function EditBiography() {
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
-      ></Modal>
+      >
+        <Form
+          form={form}
+          autoComplete="off"
+          autoCapitalize="off"
+          autoSave="off"
+          autoCorrect="off"
+        >
+          <Form.Item
+            name="biography"
+            hasFeedback
+            rules={[
+              {
+                max: 160,
+                message: "Biografi maksimal 160 karakter!",
+              },
+            ]}
+          >
+            <Input.TextArea
+              rows={4}
+              placeholder="Deskripsi Pengguna"
+              showCount
+              maxLength={160}
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
     </>
   );
 }
