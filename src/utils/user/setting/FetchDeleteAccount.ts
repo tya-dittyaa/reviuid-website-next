@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 
-export async function FetchUploadAvatar(formData: FormData): Promise<boolean> {
+export async function FetchDeleteAccount(): Promise<boolean | undefined> {
   // Get the environment variables
   const BACKEND_URL = process.env.BACKEND_URL as string;
   const HEADER_API_KEY = process.env.HEADER_API_KEY as string;
@@ -12,22 +12,19 @@ export async function FetchUploadAvatar(formData: FormData): Promise<boolean> {
   if (!at) return false;
 
   try {
-    // Fetch the user avatar
-    const res = await fetch(`${BACKEND_URL}/users/update/avatar`, {
-      method: "PATCH",
+    // Fetch the user account
+    const res = await fetch(`${BACKEND_URL}/users/delete/profile`, {
+      method: "DELETE",
       headers: {
         Authorization: `Bearer ${at.value}`,
         "x-api-key": HEADER_API_KEY,
       },
-      body: formData,
     });
 
-    // If not 200, return false
-    if (res.status !== 200) return false;
-
-    // Return true
+    // Check the response
+    if (!res.ok) return false;
     return true;
   } catch (error) {
-    return false;
+    return undefined;
   }
 }

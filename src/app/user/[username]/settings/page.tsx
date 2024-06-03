@@ -10,15 +10,20 @@ import {
   FetchChangeEmail,
   FetchChangePassword,
   FetchChangeUsername,
+  FetchDeleteAccount,
+  FetchDeleteAvatar,
   FetchUploadAvatar,
   GetUserProfile,
   GetUserSession,
 } from "@/utils";
 import {
+  CloudUploadOutlined,
   DeleteOutlined,
   EditOutlined,
+  ExclamationCircleOutlined,
   KeyOutlined,
   MailOutlined,
+  SaveOutlined,
   SettingOutlined,
   UploadOutlined,
   UserOutlined,
@@ -58,6 +63,7 @@ function isEmptyOrWhitespace(input: string): boolean {
 function EditAvatar() {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const [fileImage, setFileImage] = useState<UploadFile | null>(null);
 
   const showModal = () => {
@@ -70,19 +76,56 @@ function EditAvatar() {
     const formData = new FormData();
     formData.append("avatar", fileImage as FileType);
 
-    // Upload the avatar
-    const response = await FetchUploadAvatar(formData);
+    const promise = () =>
+      new Promise((resolve, reject) =>
+        setTimeout(async () => {
+          const response = await FetchUploadAvatar(formData);
 
-    if (response) {
-      toast.success("Berhasil memperbarui foto profil.");
-    } else {
-      toast.error("Gagal memperbarui foto profil.");
-    }
+          if (response === undefined) {
+            reject("Terjadi kesalahan pada server!");
+          } else if (response) {
+            resolve("Berhasil mengunggah foto profil.");
+          } else {
+            reject("Gagal mengunggah foto profil!");
+          }
+        }, 1000)
+      );
+
+    toast.promise(promise, {
+      loading: "Memproses perubahan...",
+      success: (data) => {
+        return `${data}`;
+      },
+      error: (error) => {
+        return `${error}`;
+      },
+    });
 
     setTimeout(() => {
       setOpen(false);
       setConfirmLoading(false);
       setFileImage(null);
+      forceRefresh();
+    }, 2000);
+  };
+
+  const handleDelete = async () => {
+    setConfirmDelete(true);
+
+    // Upload the avatar
+    const response = await FetchDeleteAvatar();
+
+    if (response === undefined) {
+      toast.error("Terjadi kesalahan pada server!");
+    } else if (response) {
+      toast.success("Berhasil menghapus foto profil.");
+    } else {
+      toast.error("Gagal menghapus foto profil.");
+    }
+
+    setTimeout(() => {
+      setOpen(false);
+      setConfirmDelete(false);
       forceRefresh();
     }, 2000);
   };
@@ -141,7 +184,30 @@ function EditAvatar() {
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
-        okButtonProps={{ disabled: fileImage === null }}
+        okText="Simpan"
+        cancelText="Batal"
+        okButtonProps={{
+          disabled: fileImage === null || confirmLoading || confirmDelete,
+          icon: <CloudUploadOutlined />,
+        }}
+        cancelButtonProps={{
+          disabled: confirmLoading || confirmDelete,
+        }}
+        footer={(_, { OkBtn, CancelBtn }) => (
+          <>
+            <CancelBtn />
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              onClick={handleDelete}
+              loading={confirmDelete}
+              disabled={confirmLoading}
+            >
+              Hapus
+            </Button>
+            <OkBtn />
+          </>
+        )}
       >
         <Upload {...uploadProps}>
           <Button icon={<UploadOutlined />}>Klik untuk Mengunggah</Button>
@@ -168,27 +234,38 @@ function EditUsername() {
   };
 
   const updateUsername = async (values: { username: string }) => {
-    let isSuccessful = false;
     setConfirmLoading(true);
 
-    const response = await FetchChangeUsername(values.username);
+    const promise = () =>
+      new Promise((resolve, reject) =>
+        setTimeout(async () => {
+          const response = await FetchChangeUsername(values.username);
 
-    if (response === undefined) {
-      toast.error("Terjadi kesalahan pada server!");
-    } else if (response) {
-      isSuccessful = true;
-      toast.success("Berhasil memperbarui nama pengguna.");
-    } else {
-      toast.error("Gagal memperbarui nama pengguna!");
-    }
+          if (response === undefined) {
+            reject("Terjadi kesalahan pada server!");
+          } else if (response) {
+            resolve("Berhasil memperbarui nama pengguna.");
+          } else {
+            reject("Gagal memperbarui nama pengguna!");
+          }
+        }, 1000)
+      );
+
+    toast.promise(promise, {
+      loading: "Memproses perubahan...",
+      success: (data) => {
+        return `${data}`;
+      },
+      error: (error) => {
+        return `${error}`;
+      },
+    });
 
     setTimeout(() => {
       setOpen(false);
       setConfirmLoading(false);
-      if (isSuccessful) {
-        router.push(`/user/${values.username}/settings`);
-      }
-    }, 2000);
+      router.push(`/user/${values.username}/settings`);
+    }, 3000);
   };
 
   const handleOk = async () => {
@@ -222,6 +299,15 @@ function EditUsername() {
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
+        okText="Simpan"
+        cancelText="Batal"
+        okButtonProps={{
+          disabled: confirmLoading,
+          icon: <SaveOutlined />,
+        }}
+        cancelButtonProps={{
+          disabled: confirmLoading,
+        }}
       >
         <Form
           form={form}
@@ -277,6 +363,7 @@ function EditBiography() {
 
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const showModal = () => {
     setOpen(true);
@@ -287,38 +374,73 @@ function EditBiography() {
     setOpen(false);
   };
 
-  const updateBiography = async (values: { biography: string | undefined }) => {
+  const updateBiography = async (values: { biography: string }) => {
     setConfirmLoading(true);
 
-    let isSuccessful = false;
-    let newBiography: string | null;
+    const promise = () =>
+      new Promise((resolve, reject) =>
+        setTimeout(async () => {
+          const response = await FetchChangeBiography(values.biography);
 
-    if (
-      values.biography === undefined ||
-      isEmptyOrWhitespace(values.biography)
-    ) {
-      newBiography = null;
-    } else {
-      newBiography = values.biography;
-    }
+          if (response === undefined) {
+            reject("Terjadi kesalahan pada server!");
+          } else if (response) {
+            resolve("Berhasil memperbarui deskripsi pengguna.");
+          } else {
+            reject("Gagal memperbarui deskripsi pengguna!");
+          }
+        }, 1000)
+      );
 
-    const response = await FetchChangeBiography(newBiography);
-
-    if (response === undefined) {
-      toast.error("Terjadi kesalahan pada server!");
-    } else if (response) {
-      isSuccessful = true;
-      toast.success("Berhasil memperbarui deskripsi pengguna.");
-    } else {
-      toast.error("Gagal memperbarui deskripsi pengguna!");
-    }
+    toast.promise(promise, {
+      loading: "Memproses perubahan...",
+      success: (data) => {
+        return `${data}`;
+      },
+      error: (error) => {
+        return `${error}`;
+      },
+    });
 
     setTimeout(() => {
       setOpen(false);
       setConfirmLoading(false);
-      if (isSuccessful) {
-        forceRefresh();
-      }
+      forceRefresh();
+    }, 2000);
+  };
+
+  const updateEmptyBiography = async () => {
+    setConfirmDelete(true);
+
+    const promise = () =>
+      new Promise((resolve, reject) =>
+        setTimeout(async () => {
+          const response = await FetchChangeBiography(null);
+
+          if (response === undefined) {
+            reject("Terjadi kesalahan pada server!");
+          } else if (response) {
+            resolve("Berhasil menghapus deskripsi pengguna.");
+          } else {
+            reject("Gagal menghapus deskripsi pengguna!");
+          }
+        }, 1000)
+      );
+
+    toast.promise(promise, {
+      loading: "Memproses perubahan...",
+      success: (data) => {
+        return `${data}`;
+      },
+      error: (error) => {
+        return `${error}`;
+      },
+    });
+
+    setTimeout(() => {
+      setOpen(false);
+      setConfirmDelete(false);
+      forceRefresh();
     }, 2000);
   };
 
@@ -353,6 +475,30 @@ function EditBiography() {
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
+        okText="Simpan"
+        cancelText="Batal"
+        okButtonProps={{
+          disabled: confirmLoading || confirmDelete,
+          icon: <SaveOutlined />,
+        }}
+        cancelButtonProps={{
+          disabled: confirmLoading || confirmDelete,
+        }}
+        footer={(_, { OkBtn, CancelBtn }) => (
+          <>
+            <CancelBtn />
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              onClick={updateEmptyBiography}
+              loading={confirmDelete}
+              disabled={confirmLoading}
+            >
+              Hapus
+            </Button>
+            <OkBtn />
+          </>
+        )}
       >
         <Form
           form={form}
@@ -365,6 +511,10 @@ function EditBiography() {
             name="biography"
             hasFeedback
             rules={[
+              {
+                required: true,
+                message: "Silakan masukkan deskripsi Anda!",
+              },
               {
                 max: 160,
                 message: "Biografi maksimal 160 karakter!",
@@ -400,26 +550,37 @@ function EditEmail() {
   };
 
   const updateEmail = async (values: { email: string }) => {
-    let isSuccessful = false;
     setConfirmLoading(true);
 
-    const response = await FetchChangeEmail(values.email);
+    const promise = () =>
+      new Promise((resolve, reject) =>
+        setTimeout(async () => {
+          const response = await FetchChangeEmail(values.email);
 
-    if (response === undefined) {
-      toast.error("Terjadi kesalahan pada server!");
-    } else if (response) {
-      isSuccessful = true;
-      toast.success("Berhasil memperbarui alamat email.");
-    } else {
-      toast.error("Gagal memperbarui alamat email!");
-    }
+          if (response === undefined) {
+            reject("Terjadi kesalahan pada server!");
+          } else if (response) {
+            resolve("Berhasil memperbarui alamat email.");
+          } else {
+            reject("Gagal memperbarui alamat email!");
+          }
+        }, 1000)
+      );
+
+    toast.promise(promise, {
+      loading: "Memproses perubahan...",
+      success: (data) => {
+        return `${data}`;
+      },
+      error: (error) => {
+        return `${error}`;
+      },
+    });
 
     setTimeout(() => {
       setOpen(false);
       setConfirmLoading(false);
-      if (isSuccessful) {
-        forceRefresh();
-      }
+      forceRefresh();
     }, 2000);
   };
 
@@ -454,6 +615,15 @@ function EditEmail() {
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
+        okText="Simpan"
+        cancelText="Batal"
+        okButtonProps={{
+          disabled: confirmLoading,
+          icon: <SaveOutlined />,
+        }}
+        cancelButtonProps={{
+          disabled: confirmLoading,
+        }}
       >
         <Form
           form={form}
@@ -518,15 +688,30 @@ function EditPassword() {
   const updatePassword = async (values: { password: string }) => {
     setConfirmLoading(true);
 
-    const response = await FetchChangePassword(values.password);
+    const promise = () =>
+      new Promise((resolve, reject) =>
+        setTimeout(async () => {
+          const response = await FetchChangePassword(values.password);
 
-    if (response === undefined) {
-      toast.error("Terjadi kesalahan pada server!");
-    } else if (response) {
-      toast.success("Berhasil memperbarui kata sandi.");
-    } else {
-      toast.error("Gagal memperbarui kata sandi!");
-    }
+          if (response === undefined) {
+            reject("Terjadi kesalahan pada server!");
+          } else if (response) {
+            resolve("Berhasil memperbarui kata sandi.");
+          } else {
+            reject("Gagal memperbarui kata sandi!");
+          }
+        }, 1000)
+      );
+
+    toast.promise(promise, {
+      loading: "Memproses perubahan...",
+      success: (data) => {
+        return `${data}`;
+      },
+      error: (error) => {
+        return `${error}`;
+      },
+    });
 
     setTimeout(() => {
       setOpen(false);
@@ -566,6 +751,15 @@ function EditPassword() {
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
+        okText="Simpan"
+        cancelText="Batal"
+        okButtonProps={{
+          disabled: confirmLoading,
+          icon: <SaveOutlined />,
+        }}
+        cancelButtonProps={{
+          disabled: confirmLoading,
+        }}
       >
         <Form
           form={form}
@@ -630,21 +824,58 @@ function EditPassword() {
 }
 
 function DeleteAccount() {
-  const [open, setOpen] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-
-  const showModal = () => {
-    setOpen(true);
-  };
-
-  const handleCancel = () => {
-    setOpen(false);
-  };
+  const router = useRouter();
+  const [modal, contextHolder] = Modal.useModal();
 
   const handleOk = async () => {
-    setConfirmLoading(true);
-    setOpen(false);
-    setConfirmLoading(false);
+    const promise = () =>
+      new Promise((resolve, reject) =>
+        setTimeout(async () => {
+          const response = await FetchDeleteAccount();
+
+          if (response === undefined) {
+            reject("Terjadi kesalahan pada server!");
+          } else if (response) {
+            resolve("Berhasil menghapus akun Anda.");
+          } else {
+            reject("Gagal menghapus akun Anda!");
+          }
+        }, 1000)
+      );
+
+    toast.promise(promise, {
+      loading: "Memproses penghapusan...",
+      success: (data) => {
+        return `${data}`;
+      },
+      error: (error) => {
+        return `${error}`;
+      },
+    });
+
+    setTimeout(() => {
+      router.push(`/`);
+    }, 3000);
+  };
+
+  const confirm = () => {
+    modal.confirm({
+      centered: true,
+      title: "Konfirmasi Penghapusan Akun",
+      icon: <ExclamationCircleOutlined />,
+      content: (
+        <>
+          <p>Apakah Anda yakin ingin menghapus akun Anda?</p>
+          <br />
+          <b>Perhatian:</b>
+          <p>Tindakan ini tidak dapat dibatalkan!</p>
+        </>
+      ),
+      okText: "Hapus Akun",
+      cancelText: "Batal",
+      okButtonProps: { icon: <DeleteOutlined />, danger: true },
+      onOk: handleOk,
+    });
   };
 
   return (
@@ -656,19 +887,12 @@ function DeleteAccount() {
         shape="round"
         icon={<DeleteOutlined />}
         size="large"
-        onClick={showModal}
+        onClick={confirm}
       >
         Hapus Akun
       </Button>
 
-      <Modal
-        centered
-        title="Hapus Akun"
-        open={open}
-        onOk={handleOk}
-        confirmLoading={confirmLoading}
-        onCancel={handleCancel}
-      ></Modal>
+      {contextHolder}
     </>
   );
 }
