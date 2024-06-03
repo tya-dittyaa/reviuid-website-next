@@ -460,12 +460,12 @@ function EditEmail() {
             hasFeedback
             rules={[
               {
-                type: "email",
-                message: "Input tidak valid! Masukkan alamat email yang benar!",
+                required: true,
+                message: "Silakan masukkan alamat email baru Anda!",
               },
               {
-                required: true,
-                message: "Silakan masukkan alamat email Anda!",
+                type: "email",
+                message: "Input tidak valid! Masukkan alamat email yang benar!",
               },
               {
                 validator: async (_, value) => {
