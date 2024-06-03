@@ -246,6 +246,13 @@ function EditUsername() {
     setOpen(false);
   };
 
+  function hasSpace(input: any): boolean {
+    if (typeof input !== "string") {
+      return false;
+    }
+    return input.includes(" ");
+  }
+
   const updateUsername = async (values: { username: string }) => {
     setConfirmLoading(true);
 
@@ -351,7 +358,7 @@ function EditUsername() {
               },
               {
                 validator: async (_, value) => {
-                  if (value.includes(" ")) {
+                  if (hasSpace(value)) {
                     return Promise.reject(
                       "Nama pengguna tidak boleh mengandung spasi!"
                     );
