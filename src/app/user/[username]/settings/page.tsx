@@ -24,11 +24,11 @@ import {
   Upload,
   UploadFile,
   UploadProps,
-  message,
 } from "antd";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Toaster, toast } from "sonner";
 
 const { Content } = Layout;
 const { Text, Title, Paragraph } = Typography;
@@ -55,9 +55,9 @@ function EditAvatar() {
     const response = await FetchUploadAvatar(formData);
 
     if (response) {
-      message.success("Foto profil berhasil diperbarui.");
+      toast.success("Berhasil memperbarui foto profil.");
     } else {
-      message.error("Gagal memperbarui foto profil.");
+      toast.error("Gagal memperbarui foto profil.");
     }
 
     setTimeout(() => {
@@ -76,12 +76,12 @@ function EditAvatar() {
   const beforeUpload = (file: FileType) => {
     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
     if (!isJpgOrPng) {
-      message.error("You can only upload JPG/PNG file!");
+      toast.error("Foto profil harus berformat JPG atau PNG.");
     }
 
-    const isLt2M = file.size / 1024 / 1024 < 2;
+    const isLt2M = file.size / 1024 / 1024 < 10;
     if (!isLt2M) {
-      message.error("Image must smaller than 2MB!");
+      toast.error("Gambar harus lebih kecil dari 10MB.");
     }
 
     const isImage = isJpgOrPng && isLt2M;
@@ -194,7 +194,7 @@ function DisplayUserHorizontal({ user }: { user: UserSettings }) {
     >
       <div>
         <Avatar
-          size={150}
+          size={125}
           icon={
             <Image
               src={user.avatar}
@@ -458,6 +458,7 @@ export default function SettingsPage({
       <HeaderLayout />
       <UserFound layout={layout} user={userSettings} />
       <FooterLayout />
+      <Toaster richColors position="bottom-right" />
     </Layout>
   );
 }
