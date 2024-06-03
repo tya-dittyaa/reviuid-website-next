@@ -132,6 +132,222 @@ function EditAvatar() {
   );
 }
 
+function EditUsername() {
+  const [open, setOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  const showModal = () => {
+    setOpen(true);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+  };
+
+  const handleOk = async () => {
+    setConfirmLoading(true);
+    setOpen(false);
+    setConfirmLoading(false);
+  };
+
+  return (
+    <>
+      <Button
+        block
+        type="default"
+        shape="round"
+        icon={<EditOutlined />}
+        size="large"
+        onClick={showModal}
+      >
+        Nama Pengguna
+      </Button>
+
+      <Modal
+        centered
+        title="Ganti Nama Pengguna"
+        open={open}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+      ></Modal>
+    </>
+  );
+}
+
+function EditBiography() {
+  const [open, setOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  const showModal = () => {
+    setOpen(true);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+  };
+
+  const handleOk = async () => {
+    setConfirmLoading(true);
+    setOpen(false);
+    setConfirmLoading(false);
+  };
+
+  return (
+    <>
+      <Button
+        block
+        type="default"
+        shape="round"
+        icon={<EditOutlined />}
+        size="large"
+        onClick={showModal}
+      >
+        Biografi Pengguna
+      </Button>
+
+      <Modal
+        centered
+        title="Ganti Biografi Pengguna"
+        open={open}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+      ></Modal>
+    </>
+  );
+}
+
+function EditEmail() {
+  const [open, setOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  const showModal = () => {
+    setOpen(true);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+  };
+
+  const handleOk = async () => {
+    setConfirmLoading(true);
+    setOpen(false);
+    setConfirmLoading(false);
+  };
+
+  return (
+    <>
+      <Button
+        block
+        type="default"
+        shape="round"
+        icon={<EditOutlined />}
+        size="large"
+        onClick={showModal}
+      >
+        Email
+      </Button>
+
+      <Modal
+        centered
+        title="Ganti Email"
+        open={open}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+      ></Modal>
+    </>
+  );
+}
+
+function EditPassword() {
+  const [open, setOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  const showModal = () => {
+    setOpen(true);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+  };
+
+  const handleOk = async () => {
+    setConfirmLoading(true);
+    setOpen(false);
+    setConfirmLoading(false);
+  };
+
+  return (
+    <>
+      <Button
+        block
+        type="default"
+        shape="round"
+        icon={<EditOutlined />}
+        size="large"
+        onClick={showModal}
+      >
+        Kata Sandi
+      </Button>
+
+      <Modal
+        centered
+        title="Ganti Kata Sandi"
+        open={open}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+      ></Modal>
+    </>
+  );
+}
+
+function DeleteAccount() {
+  const [open, setOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  const showModal = () => {
+    setOpen(true);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+  };
+
+  const handleOk = async () => {
+    setConfirmLoading(true);
+    setOpen(false);
+    setConfirmLoading(false);
+  };
+
+  return (
+    <>
+      <Button
+        block
+        danger
+        type="default"
+        shape="round"
+        icon={<DeleteOutlined />}
+        size="large"
+        onClick={showModal}
+      >
+        Hapus Akun
+      </Button>
+
+      <Modal
+        centered
+        title="Hapus Akun"
+        open={open}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+      ></Modal>
+    </>
+  );
+}
+
 function DisplayUserVertical({ user }: { user: UserSettings }) {
   return (
     <>
@@ -257,55 +473,14 @@ function ButtonSetting({ layout }: { layout: ViewType }) {
 
       <Flex vertical gap="10px" style={{ width: "100%" }}>
         <EditAvatar />
-        <Button
-          block
-          type="default"
-          shape="round"
-          icon={<EditOutlined />}
-          size="large"
-        >
-          Nama Pengguna
-        </Button>
-        <Button
-          block
-          type="default"
-          shape="round"
-          icon={<EditOutlined />}
-          size="large"
-        >
-          Biografi Pengguna
-        </Button>
+        <EditUsername />
+        <EditBiography />
       </Flex>
 
       <Flex vertical gap="10px" style={{ width: "100%" }}>
-        <Button
-          block
-          type="default"
-          shape="round"
-          icon={<EditOutlined />}
-          size="large"
-        >
-          Email
-        </Button>
-        <Button
-          block
-          type="default"
-          shape="round"
-          icon={<EditOutlined />}
-          size="large"
-        >
-          Kata Sandi
-        </Button>
-        <Button
-          block
-          danger
-          type="default"
-          shape="round"
-          icon={<DeleteOutlined />}
-          size="large"
-        >
-          Hapus Akun
-        </Button>
+        <EditEmail />
+        <EditPassword />
+        <DeleteAccount />
       </Flex>
     </Flex>
   );
