@@ -51,6 +51,10 @@ const forceRefresh = () => window.location.reload();
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
+function isEmptyOrWhitespace(input: string): boolean {
+  return input.trim().length === 0;
+}
+
 function EditAvatar() {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -289,7 +293,10 @@ function EditBiography() {
     let isSuccessful = false;
     let newBiography: string | null;
 
-    if (values.biography === undefined || values.biography === "") {
+    if (
+      values.biography === undefined ||
+      isEmptyOrWhitespace(values.biography)
+    ) {
       newBiography = null;
     } else {
       newBiography = values.biography;
