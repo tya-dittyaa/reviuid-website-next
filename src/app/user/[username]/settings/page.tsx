@@ -934,7 +934,7 @@ function DisplayUserVertical({ user }: { user: UserSettings }) {
         vertical
         justify="center"
         style={{
-          backgroundColor: "whitesmoke",
+          backgroundColor: "#E2E0D8",
           borderRadius: 10,
           boxShadow: "2px 2px 10px rgba(0, 0, 0, 0.25)",
           padding: "2rem",
@@ -981,7 +981,7 @@ function DisplayUserHorizontal({ user }: { user: UserSettings }) {
       vertical={false}
       align="center"
       style={{
-        backgroundColor: "whitesmoke",
+        backgroundColor: "#E2E0D8",
         borderRadius: 10,
         boxShadow: "2px 2px 10px rgba(0, 0, 0, 0.25)",
         padding: "2rem",
@@ -1030,7 +1030,7 @@ function ButtonSetting({ layout }: { layout: ViewType }) {
       align="center"
       justify="center"
       style={{
-        backgroundColor: "whitesmoke",
+        backgroundColor: "#E2E0D8",
         borderRadius: 10,
         boxShadow: "2px 2px 10px rgba(0, 0, 0, 0.25)",
         padding: "1rem",
