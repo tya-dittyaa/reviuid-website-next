@@ -106,7 +106,7 @@ function DrawerLayout({ view }: { view: ViewType }) {
         <Button
           type="text"
           size="large"
-          href="/film"
+          href="/film/filmId"
           block
           style={{ marginBottom: "15px" }}
         >
