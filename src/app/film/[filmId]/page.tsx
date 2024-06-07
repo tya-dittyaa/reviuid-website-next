@@ -21,6 +21,15 @@ import {
 import { useState } from 'react';
 import { UserSettings } from "@/types/userProfile.type";
 import Title from "antd/es/typography/Title";
+import { 
+  UserOutlined,
+  LikeOutlined,
+  DislikeOutlined,
+  FlagOutlined,
+  ShareAltOutlined,
+  LikeFilled,
+  DislikeFilled
+ } from '@ant-design/icons';
 const { Content } = Layout;
 const { Text, Paragraph } = Typography;
 const { TextArea } = Input;
@@ -107,15 +116,15 @@ const AddRating: React.FC = () => {
       setOpen(false);
     }, 3000);
 
-  const isSuccess = true; // add logic
+    const isSuccess = true; // add logic
 
-  if(isSuccess == true){
-    Sukses();
-  }
-  else {
-    Error();
-  }
-};
+    if(isSuccess == true){
+      Sukses();
+    }
+    else {
+      Error();
+    }
+  };
 
   const handleCancel = () => {
     setOpen(false);
@@ -246,6 +255,28 @@ function DisplayUserVertical({ user }: { user: UserSettings }) {
 }
 
 function FilmPageContent() {
+  const [liked, setLiked] = useState(false);
+  const [disliked, setDisliked] = useState(false);
+
+  const handleLikeClick = () => {
+    if(liked) {
+      setLiked(false);
+    } else {
+      setLiked(true);
+      setDisliked(false);
+    }
+  };
+
+  const handleDislikeClick = () => {
+    if(disliked) {
+      setDisliked(false);
+    }
+    else {
+      setDisliked(true);
+      setLiked(false);
+    }
+  };
+
   return (
     <Content
       style={{
@@ -265,25 +296,19 @@ function FilmPageContent() {
     <Flex
       gap="middle"
       vertical={false}
-      // align="center"
       style={{
         paddingLeft: "2.8rem",
-        // paddingTop: "50px"
-        // marginLeft: 20,
-        // marginRight: 50,
       }}>
 
       <Flex 
         vertical
-        // justify="flex-start"
         align="center"
         style={{
-          // padding: 0,
           paddingTop: '25px',
           marginLeft: 30
         }}> 
 
-          <Text style={{ fontSize: 25, color: "white", fontWeight:'bold', textAlign:'center', paddingTop: '15px'}}>
+          <Text style={{ fontSize: 25, color: "white", fontWeight:'bold', textAlign:'center', paddingTop: 0}}>
             JUDUL FILM DISINI
           </Text>
           <img src="/ex_poster.jpg"  style={{width:'1500px', borderRadius:10}}/> 
@@ -301,7 +326,7 @@ function FilmPageContent() {
           // margin: 30
         }}> 
 
-        <Text style={{ fontSize: 25, color: "#E2B808", fontWeight:'bold', textAlign:"left", paddingBottom: 5}}>
+        <Text style={{ fontSize: 25, color: "#E2B808", fontWeight:'bold', textAlign:"left", paddingBottom: 5, paddingTop: '9px'}}>
           Cuplikan Film
         </Text>
 
@@ -353,9 +378,87 @@ function FilmPageContent() {
 
       </Flex>
       
-      {/* <Flex>
-        <DisplayUserVertical user={user} />
-      </Flex> */}
+      <Flex 
+        vertical style={{
+        paddingTop: '100px',
+        alignContent: 'start',
+        paddingLeft: '80px',
+        paddingRight: '80px',
+        gap: 'middle',
+      }}>
+        <Flex vertical style={{
+          backgroundColor: 'white',
+          alignItems: 'left',
+          paddingTop: '15px',
+          paddingBottom: '15px',
+          borderRadius: '10px',
+          textAlign: 'left',
+          marginRight: '30px'
+        }}>
+
+          <div style={{
+            paddingLeft: '30px',
+            display: 'flex',
+            alignItems: 'center'
+          }}>
+            <Avatar size="large" icon={<UserOutlined />} />
+            <Text style={{
+              paddingLeft: '15px',
+              textAlign: 'center',
+              fontWeight: 'bold',
+              fontSize: '20px',
+            }}>Username</Text>
+          </div>
+          
+          <Paragraph style={{
+            paddingTop: '10px',
+            paddingLeft: '30px',
+            paddingRight: '30px',
+            textAlign: 'justify'
+          }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et enim sit amet sapien pulvinar sodales. Fusce volutpat tempus tellus, laoreet aliquam velit mollis eget. Mauris porttitor eros tortor, a auctor lacus tempor sit amet. Vestibulum a tortor at velit blandit mattis. Donec ultricies ultricies massa, a ullamcorper arcu facilisis nec. Suspendisse potenti. Sed accumsan vel sapien eu tempus. Nam malesuada lacinia nulla eu faucibus.</Paragraph>
+        
+        </Flex>
+      
+        <Flex vertical style={{
+          backgroundColor: 'white',
+          alignItems: 'left',
+          paddingTop: '15px',
+          paddingBottom: '15px',
+          borderRadius: '10px',
+          textAlign: 'left',
+          marginRight: '30px',
+          marginTop: '15px'
+        }}>
+
+          <div style={{
+            paddingLeft: '30px',
+            display: 'flex',
+            alignItems: 'center'
+          }}>
+            <Avatar size="large" icon={<UserOutlined />} />
+            <Text style={{
+              paddingLeft: '15px',
+              textAlign: 'center',
+              fontWeight: 'bold',
+              fontSize: '20px',
+            }}>Username</Text>
+          </div>
+          
+          <Paragraph style={{
+            paddingTop: '10px',
+            paddingLeft: '30px',
+            paddingRight: '30px',
+            textAlign: 'justify'
+          }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et enim sit amet sapien pulvinar sodales. Fusce volutpat tempus tellus, laoreet aliquam velit mollis eget. Mauris porttitor eros tortor, a auctor lacus tempor sit amet. Vestibulum a tortor at velit blandit mattis. Donec ultricies ultricies massa, a ullamcorper arcu facilisis nec. Suspendisse potenti. Sed accumsan vel sapien eu tempus. Nam malesuada lacinia nulla eu faucibus.</Paragraph>
+        
+        </Flex>
+        
+        
+      
+      
+      {/* add another comment box */}
+        
+      </Flex>
         
 
     </Content>
