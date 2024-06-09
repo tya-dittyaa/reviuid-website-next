@@ -1,9 +1,16 @@
 "use client";
 
 import { FooterLayout, HeaderLayout } from "@/components";
+import {
+  UserProfileProvider,
+  UserSessionProvider,
+  ViewLayoutProvider,
+  useUserProfile,
+  useViewLayout,
+} from "@/context";
 import { useWindowSize } from "@/hooks";
-import { UserProfile, ViewType } from "@/types";
-import { GetUserProfile } from "@/utils";
+import { UserProfile, UserSession } from "@/types";
+import { GetUserProfile, GetUserSession } from "@/utils";
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Col, Divider, Flex, Layout, Spin, Typography } from "antd";
 import Image from "next/image";
@@ -13,7 +20,9 @@ import { useEffect, useState } from "react";
 const { Content } = Layout;
 const { Text, Title, Paragraph } = Typography;
 
-function DisplayUserVertical({ user }: { user: UserProfile }) {
+function DisplayUserVertical() {
+  const user = useUserProfile()!;
+
   return (
     <>
       <Flex
@@ -55,7 +64,9 @@ function DisplayUserVertical({ user }: { user: UserProfile }) {
   );
 }
 
-function DisplayUserHorizontal({ user }: { user: UserProfile }) {
+function DisplayUserHorizontal() {
+  const user = useUserProfile()!;
+
   return (
     <Flex
       gap="30px"
@@ -98,7 +109,9 @@ function DisplayUserHorizontal({ user }: { user: UserProfile }) {
   );
 }
 
-function ProfileText({ layout }: { layout: ViewType }) {
+function ProfileText() {
+  const layout = useViewLayout();
+
   return (
     <Flex vertical style={{ width: "100%" }}>
       <Col
@@ -133,7 +146,22 @@ function ProfileText({ layout }: { layout: ViewType }) {
   );
 }
 
-function UserFound({ layout, user }: { layout: ViewType; user: UserProfile }) {
+function DividerText() {
+  return (
+    <Divider
+      orientation="center"
+      style={{
+        borderColor: "black",
+        borderWidth: 2,
+        margin: "20px 0 20px 0",
+      }}
+    />
+  );
+}
+
+function UserFound() {
+  const layout = useViewLayout();
+
   return (
     <Content
       style={{
@@ -144,31 +172,16 @@ function UserFound({ layout, user }: { layout: ViewType; user: UserProfile }) {
         padding: layout === "horizontal" ? "2rem" : "1rem",
       }}
     >
-      <ProfileText layout={layout} />
-
-      <Divider
-        orientation="center"
-        style={{
-          borderColor: "black",
-          borderWidth: 2,
-          margin: "20px 0 20px 0",
-        }}
-      />
+      <ProfileText />
+      <DividerText />
 
       {layout === "vertical" ? (
-        <DisplayUserVertical user={user} />
+        <DisplayUserVertical />
       ) : (
-        <DisplayUserHorizontal user={user} />
+        <DisplayUserHorizontal />
       )}
 
-      <Divider
-        orientation="center"
-        style={{
-          borderColor: "black",
-          borderWidth: 2,
-          margin: "20px 0 20px 0",
-        }}
-      />
+      <DividerText />
     </Content>
   );
 }
@@ -179,9 +192,23 @@ export default function ProfilePage({
   params: { username: string };
 }) {
   const size = useWindowSize();
+
   const [layout, setLayout] = useState<"vertical" | "horizontal">("horizontal");
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [userData, setUserData] = useState<UserProfile | null>(null);
+  const [userSession, setUserSession] = useState<UserSession | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+
+  const getUserSession = async () => {
+    const user = await GetUserSession();
+    setUserSession(user);
+  };
+
+  const getUserProfile = async (username: string) => {
+    const response = await GetUserProfile(username);
+    if (typeof response !== "number") {
+      setUserProfile(response);
+    }
+  };
 
   useEffect(() => {
     if (size.width && size.width < 800) {
@@ -192,14 +219,8 @@ export default function ProfilePage({
   }, [size.width]);
 
   useEffect(() => {
-    const getUserData = async () => {
-      const response = await GetUserProfile(params.username);
-      if (typeof response !== "number") {
-        setUserData(response);
-      }
-      return;
-    };
-    getUserData();
+    getUserProfile(params.username);
+    getUserSession();
   }, [params.username]);
 
   useEffect(() => {
@@ -212,15 +233,21 @@ export default function ProfilePage({
     return <Spin fullscreen />;
   }
 
-  if (!userData) {
+  if (!userProfile) {
     return notFound();
   }
 
   return (
-    <Layout style={{ minHeight: "100dvh" }}>
-      <HeaderLayout />
-      <UserFound layout={layout} user={userData} />
-      <FooterLayout />
-    </Layout>
+    <ViewLayoutProvider view={layout}>
+      <UserSessionProvider user={userSession}>
+        <UserProfileProvider user={userProfile}>
+          <Layout style={{ minHeight: "100dvh" }}>
+            <HeaderLayout />
+            <UserFound />
+            <FooterLayout />
+          </Layout>
+        </UserProfileProvider>
+      </UserSessionProvider>
+    </ViewLayoutProvider>
   );
 }

@@ -168,9 +168,6 @@ function LoginForm() {
               type="primary"
               htmlType="submit"
               loading={isSubmitting}
-              style={{
-                backgroundColor: "#E2B808",
-              }}
             >
               Masuk
             </Button>

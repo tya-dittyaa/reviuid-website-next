@@ -225,9 +225,6 @@ function RegisterForm() {
               type="primary"
               htmlType="submit"
               loading={isSubmitting}
-              style={{
-                backgroundColor: "#E2B808",
-              }}
             >
               Daftar
             </Button>

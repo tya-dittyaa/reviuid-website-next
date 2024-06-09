@@ -1,933 +1,39 @@
 "use client";
 
-import { FooterLayout, HeaderLayout } from "@/components";
+import {
+  FooterLayout,
+  HeaderLayout,
+  UserDeleteAccount,
+  UserEditAvatar,
+  UserEditBiography,
+  UserEditEmail,
+  UserEditPassword,
+  UserEditUsername,
+} from "@/components";
+import {
+  UserProfileProvider,
+  UserSessionProvider,
+  UserSettingsProvider,
+  ViewLayoutProvider,
+  useUserSettings,
+  useViewLayout,
+} from "@/context";
 import { useWindowSize } from "@/hooks";
-import { UserProfile, UserSession, UserSettings, ViewType } from "@/types";
-import {
-  CheckAvailableEmail,
-  CheckAvailableUsername,
-  FetchChangeBiography,
-  FetchChangeEmail,
-  FetchChangePassword,
-  FetchChangeUsername,
-  FetchDeleteAccount,
-  FetchDeleteAvatar,
-  FetchUploadAvatar,
-  GetUserProfile,
-  GetUserSession,
-} from "@/utils";
-import {
-  CloudUploadOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  ExclamationCircleOutlined,
-  KeyOutlined,
-  MailOutlined,
-  SaveOutlined,
-  SettingOutlined,
-  UploadOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-import {
-  Avatar,
-  Button,
-  Col,
-  Divider,
-  Flex,
-  Form,
-  GetProp,
-  Input,
-  Layout,
-  Modal,
-  Spin,
-  Typography,
-  Upload,
-  UploadFile,
-  UploadProps,
-} from "antd";
+import { UserProfile, UserSession, UserSettings } from "@/types";
+import { GetUserProfile, GetUserSession } from "@/utils";
+import { SettingOutlined } from "@ant-design/icons";
+import { Avatar, Col, Divider, Flex, Layout, Spin, Typography } from "antd";
 import Image from "next/image";
-import { notFound, useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Toaster, toast } from "sonner";
+import { Toaster } from "sonner";
 
 const { Content } = Layout;
 const { Text, Title, Paragraph } = Typography;
-const forceRefresh = () => window.location.reload();
 
-type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
+function DisplayUserVertical() {
+  const user = useUserSettings()!;
 
-function EditAvatar() {
-  const [open, setOpen] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  const [fileImage, setFileImage] = useState<UploadFile | null>(null);
-
-  const showModal = () => {
-    setOpen(true);
-  };
-
-  const handleOk = async () => {
-    setConfirmLoading(true);
-
-    const promise = () =>
-      new Promise(async (resolve, reject) => {
-        setTimeout(async () => {
-          const formData = new FormData();
-          formData.append("avatar", fileImage as FileType);
-
-          const response = await FetchUploadAvatar(formData);
-
-          if (response === undefined) {
-            reject("Terjadi kesalahan pada server!");
-          } else if (response) {
-            resolve("Berhasil mengunggah foto profil.");
-          } else {
-            reject("Gagal mengunggah foto profil!");
-          }
-
-          setTimeout(() => {
-            setOpen(false);
-            setConfirmLoading(false);
-            setFileImage(null);
-            forceRefresh();
-          }, 1000);
-        }, 1000);
-      });
-
-    toast.promise(promise, {
-      loading: "Memproses perubahan...",
-      success: (data) => {
-        return `${data}`;
-      },
-      error: (error) => {
-        return `${error}`;
-      },
-    });
-  };
-
-  const handleDelete = async () => {
-    setConfirmDelete(true);
-
-    const promise = () =>
-      new Promise(async (resolve, reject) => {
-        setTimeout(async () => {
-          const formData = new FormData();
-          formData.append("avatar", fileImage as FileType);
-
-          const response = await FetchDeleteAvatar();
-
-          if (response === undefined) {
-            reject("Terjadi kesalahan pada server!");
-          } else if (response) {
-            resolve("Berhasil menghapus foto profil.");
-          } else {
-            reject("Gagal menghapus foto profil!");
-          }
-
-          setTimeout(() => {
-            setOpen(false);
-            setConfirmDelete(false);
-            forceRefresh();
-          }, 1000);
-        }, 1000);
-      });
-
-    toast.promise(promise, {
-      loading: "Memproses perubahan...",
-      success: (data) => {
-        return `${data}`;
-      },
-      error: (error) => {
-        return `${error}`;
-      },
-    });
-  };
-
-  const handleCancel = () => {
-    setOpen(false);
-    setFileImage(null);
-  };
-
-  const beforeUpload = (file: FileType) => {
-    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-    if (!isJpgOrPng) {
-      toast.error("Foto profil harus berformat JPG atau PNG.");
-    }
-
-    const isLowerSize = file.size / 1024 / 1024 < 10;
-    if (!isLowerSize) {
-      toast.error("Gambar harus lebih kecil dari 10MB.");
-    }
-
-    const isImage = isJpgOrPng && isLowerSize;
-    if (isImage) {
-      setFileImage(file);
-    }
-
-    return isImage || Upload.LIST_IGNORE;
-  };
-
-  const uploadProps: UploadProps = {
-    maxCount: 1,
-    listType: "picture",
-    showUploadList: fileImage ? true : false,
-    beforeUpload: beforeUpload,
-    onRemove: () => {
-      setFileImage(null);
-    },
-  };
-
-  return (
-    <>
-      <Button
-        block
-        type="default"
-        shape="round"
-        icon={<EditOutlined />}
-        size="large"
-        onClick={showModal}
-      >
-        Foto Profil
-      </Button>
-
-      <Modal
-        centered
-        title="Ubah Foto Profil"
-        open={open}
-        onOk={handleOk}
-        confirmLoading={confirmLoading}
-        onCancel={handleCancel}
-        okText="Simpan"
-        cancelText="Batal"
-        okButtonProps={{
-          disabled: fileImage === null || confirmLoading || confirmDelete,
-          icon: <CloudUploadOutlined />,
-        }}
-        cancelButtonProps={{
-          disabled: confirmLoading || confirmDelete,
-        }}
-        footer={(_, { OkBtn, CancelBtn }) => (
-          <>
-            <CancelBtn />
-            <Button
-              danger
-              icon={<DeleteOutlined />}
-              onClick={handleDelete}
-              loading={confirmDelete}
-              disabled={confirmLoading}
-            >
-              Hapus
-            </Button>
-            <OkBtn />
-          </>
-        )}
-      >
-        <Upload {...uploadProps}>
-          <Button icon={<UploadOutlined />}>Klik untuk Mengunggah</Button>
-        </Upload>
-      </Modal>
-    </>
-  );
-}
-
-function EditUsername() {
-  const router = useRouter();
-  const [form] = Form.useForm();
-
-  const [open, setOpen] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-
-  const showModal = () => {
-    setOpen(true);
-  };
-
-  const handleCancel = () => {
-    form.resetFields();
-    setOpen(false);
-  };
-
-  function hasSpace(input: any): boolean {
-    if (typeof input !== "string") {
-      return false;
-    }
-    return input.includes(" ");
-  }
-
-  const updateUsername = async (values: { username: string }) => {
-    setConfirmLoading(true);
-
-    const promise = () =>
-      new Promise(async (resolve, reject) => {
-        setTimeout(async () => {
-          let validResponse = false;
-          const response = await FetchChangeUsername(values.username);
-
-          if (response === undefined) {
-            reject("Terjadi kesalahan pada server!");
-          } else if (response) {
-            validResponse = true;
-            resolve("Berhasil memperbarui nama pengguna.");
-          } else {
-            reject("Gagal memperbarui nama pengguna!");
-          }
-
-          setTimeout(() => {
-            setOpen(false);
-            setConfirmLoading(false);
-            if (validResponse) {
-              router.push(`/user/${values.username}/settings`);
-            }
-          }, 1000);
-        }, 1000);
-      });
-
-    toast.promise(promise, {
-      loading: "Memproses perubahan...",
-      success: (data) => {
-        return `${data}`;
-      },
-      error: (error) => {
-        return `${error}`;
-      },
-    });
-  };
-
-  const handleOk = async () => {
-    form
-      .validateFields()
-      .then((values) => {
-        updateUsername(values);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  return (
-    <>
-      <Button
-        block
-        type="default"
-        shape="round"
-        icon={<EditOutlined />}
-        size="large"
-        onClick={showModal}
-      >
-        Nama Pengguna
-      </Button>
-
-      <Modal
-        centered
-        title="Ubah Nama Pengguna"
-        open={open}
-        onOk={handleOk}
-        confirmLoading={confirmLoading}
-        onCancel={handleCancel}
-        okText="Simpan"
-        cancelText="Batal"
-        okButtonProps={{
-          disabled: confirmLoading,
-          icon: <SaveOutlined />,
-        }}
-        cancelButtonProps={{
-          disabled: confirmLoading,
-        }}
-      >
-        <Form
-          form={form}
-          autoComplete="off"
-          autoCapitalize="off"
-          autoSave="off"
-          autoCorrect="off"
-        >
-          <Form.Item
-            name="username"
-            hasFeedback
-            rules={[
-              {
-                required: true,
-                message: "Silakan masukkan nama pengguna baru Anda!",
-              },
-              {
-                min: 3,
-                message: "Nama pengguna minimal 3 karakter!",
-              },
-              {
-                max: 16,
-                message: "Nama pengguna maksimal 16 karakter!",
-              },
-              {
-                validator: async (_, value) => {
-                  if (hasSpace(value)) {
-                    return Promise.reject(
-                      "Nama pengguna tidak boleh mengandung spasi!"
-                    );
-                  }
-
-                  const response = await CheckAvailableUsername(value);
-                  if (response === true) {
-                    return Promise.resolve();
-                  }
-                  if (response === false) {
-                    return Promise.reject("Nama pengguna sudah digunakan!");
-                  }
-                  return Promise.reject("Terjadi kesalahan pada server!");
-                },
-              },
-            ]}
-          >
-            <Input
-              size="large"
-              placeholder="Username Baru Anda"
-              addonBefore={<UserOutlined style={{ color: "#969AB8" }} />}
-            />
-          </Form.Item>
-        </Form>
-      </Modal>
-    </>
-  );
-}
-
-function EditBiography() {
-  const [form] = Form.useForm();
-
-  const [open, setOpen] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
-
-  const showModal = () => {
-    setOpen(true);
-  };
-
-  const handleCancel = () => {
-    form.resetFields();
-    setOpen(false);
-  };
-
-  const updateBiography = async (values: { biography: string }) => {
-    setConfirmLoading(true);
-
-    const promise = () =>
-      new Promise(async (resolve, reject) => {
-        setTimeout(async () => {
-          const response = await FetchChangeBiography(values.biography);
-
-          if (response === undefined) {
-            reject("Terjadi kesalahan pada server!");
-          } else if (response) {
-            resolve("Berhasil memperbarui deskripsi pengguna.");
-          } else {
-            reject("Gagal memperbarui deskripsi pengguna!");
-          }
-
-          setTimeout(() => {
-            setOpen(false);
-            setConfirmLoading(false);
-            forceRefresh();
-          }, 1000);
-        }, 1000);
-      });
-
-    toast.promise(promise, {
-      loading: "Memproses perubahan...",
-      success: (data) => {
-        return `${data}`;
-      },
-      error: (error) => {
-        return `${error}`;
-      },
-    });
-  };
-
-  const updateEmptyBiography = async () => {
-    setConfirmDelete(true);
-
-    const promise = () =>
-      new Promise((resolve, reject) =>
-        setTimeout(async () => {
-          const response = await FetchChangeBiography(null);
-
-          if (response === undefined) {
-            reject("Terjadi kesalahan pada server!");
-          } else if (response) {
-            resolve("Berhasil menghapus deskripsi pengguna.");
-          } else {
-            reject("Gagal menghapus deskripsi pengguna!");
-          }
-
-          setTimeout(() => {
-            setOpen(false);
-            setConfirmDelete(false);
-            forceRefresh();
-          }, 1000);
-        }, 1000)
-      );
-
-    toast.promise(promise, {
-      loading: "Memproses perubahan...",
-      success: (data) => {
-        return `${data}`;
-      },
-      error: (error) => {
-        return `${error}`;
-      },
-    });
-  };
-
-  const handleOk = async () => {
-    form
-      .validateFields()
-      .then((values) => {
-        updateBiography(values);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  return (
-    <>
-      <Button
-        block
-        type="default"
-        shape="round"
-        icon={<EditOutlined />}
-        size="large"
-        onClick={showModal}
-      >
-        Biografi Pengguna
-      </Button>
-
-      <Modal
-        centered
-        title="Ubah Biografi Pengguna"
-        open={open}
-        onOk={handleOk}
-        confirmLoading={confirmLoading}
-        onCancel={handleCancel}
-        okText="Simpan"
-        cancelText="Batal"
-        okButtonProps={{
-          disabled: confirmLoading || confirmDelete,
-          icon: <SaveOutlined />,
-        }}
-        cancelButtonProps={{
-          disabled: confirmLoading || confirmDelete,
-        }}
-        footer={(_, { OkBtn, CancelBtn }) => (
-          <>
-            <CancelBtn />
-            <Button
-              danger
-              icon={<DeleteOutlined />}
-              onClick={updateEmptyBiography}
-              loading={confirmDelete}
-              disabled={confirmLoading}
-            >
-              Hapus
-            </Button>
-            <OkBtn />
-          </>
-        )}
-      >
-        <Form
-          form={form}
-          autoComplete="off"
-          autoCapitalize="off"
-          autoSave="off"
-          autoCorrect="off"
-        >
-          <Form.Item
-            name="biography"
-            hasFeedback
-            rules={[
-              {
-                required: true,
-                message: "Silakan masukkan deskripsi Anda!",
-              },
-              {
-                max: 160,
-                message: "Biografi maksimal 160 karakter!",
-              },
-            ]}
-          >
-            <Input.TextArea
-              rows={4}
-              placeholder="Deskripsi Pengguna"
-              showCount
-              maxLength={160}
-            />
-          </Form.Item>
-        </Form>
-      </Modal>
-    </>
-  );
-}
-
-function EditEmail() {
-  const [form] = Form.useForm();
-
-  const [open, setOpen] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-
-  const showModal = () => {
-    setOpen(true);
-  };
-
-  const handleCancel = () => {
-    form.resetFields();
-    setOpen(false);
-  };
-
-  const updateEmail = async (values: { email: string }) => {
-    setConfirmLoading(true);
-
-    const promise = () =>
-      new Promise(async (resolve, reject) => {
-        setTimeout(async () => {
-          const response = await FetchChangeEmail(values.email);
-
-          if (response === undefined) {
-            reject("Terjadi kesalahan pada server!");
-          } else if (response) {
-            resolve("Berhasil memperbarui alamat email.");
-          } else {
-            reject("Gagal memperbarui alamat email!");
-          }
-
-          setTimeout(() => {
-            setOpen(false);
-            setConfirmLoading(false);
-            forceRefresh();
-          }, 1000);
-        }, 1000);
-      });
-
-    toast.promise(promise, {
-      loading: "Memproses perubahan...",
-      success: (data) => {
-        return `${data}`;
-      },
-      error: (error) => {
-        return `${error}`;
-      },
-    });
-  };
-
-  const handleOk = async () => {
-    form
-      .validateFields()
-      .then((values) => {
-        updateEmail(values);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  return (
-    <>
-      <Button
-        block
-        type="default"
-        shape="round"
-        icon={<EditOutlined />}
-        size="large"
-        onClick={showModal}
-      >
-        Email
-      </Button>
-
-      <Modal
-        centered
-        title="Ubah Email"
-        open={open}
-        onOk={handleOk}
-        confirmLoading={confirmLoading}
-        onCancel={handleCancel}
-        okText="Simpan"
-        cancelText="Batal"
-        okButtonProps={{
-          disabled: confirmLoading,
-          icon: <SaveOutlined />,
-        }}
-        cancelButtonProps={{
-          disabled: confirmLoading,
-        }}
-      >
-        <Form
-          form={form}
-          autoComplete="off"
-          autoCapitalize="off"
-          autoSave="off"
-          autoCorrect="off"
-        >
-          <Form.Item
-            name="email"
-            hasFeedback
-            rules={[
-              {
-                required: true,
-                message: "Silakan masukkan alamat email baru Anda!",
-              },
-              {
-                type: "email",
-                message: "Input tidak valid! Masukkan alamat email yang benar!",
-              },
-              {
-                validator: async (_, value) => {
-                  const response = await CheckAvailableEmail(value);
-                  if (response === true) {
-                    return Promise.resolve();
-                  }
-                  if (response === false) {
-                    return Promise.reject("Alamat email sudah digunakan!");
-                  }
-                  return Promise.reject("Terjadi kesalahan pada server!");
-                },
-              },
-            ]}
-          >
-            <Input
-              size="large"
-              placeholder="Email Baru Anda"
-              addonBefore={<MailOutlined style={{ color: "#969AB8" }} />}
-            />
-          </Form.Item>
-        </Form>
-      </Modal>
-    </>
-  );
-}
-
-function EditPassword() {
-  const [form] = Form.useForm();
-
-  const [open, setOpen] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-
-  const showModal = () => {
-    setOpen(true);
-  };
-
-  const handleCancel = () => {
-    form.resetFields();
-    setOpen(false);
-  };
-
-  const updatePassword = async (values: { password: string }) => {
-    setConfirmLoading(true);
-
-    const promise = () =>
-      new Promise(async (resolve, reject) => {
-        setTimeout(async () => {
-          const response = await FetchChangePassword(values.password);
-
-          if (response === undefined) {
-            reject("Terjadi kesalahan pada server!");
-          } else if (response) {
-            resolve("Berhasil memperbarui kata sandi.");
-          } else {
-            reject("Gagal memperbarui kata sandi!");
-          }
-
-          setTimeout(() => {
-            setOpen(false);
-            setConfirmLoading(false);
-            forceRefresh();
-          }, 1000);
-        }, 1000);
-      });
-
-    toast.promise(promise, {
-      loading: "Memproses perubahan...",
-      success: (data) => {
-        return `${data}`;
-      },
-      error: (error) => {
-        return `${error}`;
-      },
-    });
-  };
-
-  const handleOk = async () => {
-    form
-      .validateFields()
-      .then((values) => {
-        updatePassword(values);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  return (
-    <>
-      <Button
-        block
-        type="default"
-        shape="round"
-        icon={<EditOutlined />}
-        size="large"
-        onClick={showModal}
-      >
-        Kata Sandi
-      </Button>
-
-      <Modal
-        centered
-        title="Ubah Kata Sandi"
-        open={open}
-        onOk={handleOk}
-        confirmLoading={confirmLoading}
-        onCancel={handleCancel}
-        okText="Simpan"
-        cancelText="Batal"
-        okButtonProps={{
-          disabled: confirmLoading,
-          icon: <SaveOutlined />,
-        }}
-        cancelButtonProps={{
-          disabled: confirmLoading,
-        }}
-      >
-        <Form
-          form={form}
-          autoComplete="off"
-          autoCapitalize="off"
-          autoSave="off"
-          autoCorrect="off"
-        >
-          <Form.Item
-            name="password"
-            hasFeedback
-            rules={[
-              {
-                required: true,
-                message: "Silakan masukkan kata sandi baru Anda!",
-              },
-              {
-                pattern:
-                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[*.!@#$%^&(){}[\]:;<>,.?/~_+\-=|\\])[A-Za-z\d*.!@#$%^&(){}[\]:;<>,.?/~_+\-=|\\]{8,32}$/,
-                message: `Password harus memiliki 1 angka, huruf kecil, huruf kapital, karakter khusus, dan panjang 8-32 karakter!`,
-              },
-            ]}
-          >
-            <Input.Password
-              size="large"
-              placeholder="Kata Sandi Baru Anda"
-              addonBefore={<KeyOutlined style={{ color: "#969AB8" }} />}
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="repeatPassword"
-            hasFeedback
-            dependencies={["password"]}
-            rules={[
-              {
-                required: true,
-                message: "Silakan masukkan ulang kata sandi baru Anda!",
-              },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue("password") === value) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(
-                    new Error("Kata sandi yang Anda masukkan tidak sama!")
-                  );
-                },
-              }),
-            ]}
-          >
-            <Input.Password
-              size="large"
-              placeholder="Ulangi Kata Sandi Baru Anda"
-              addonBefore={<KeyOutlined style={{ color: "#969AB8" }} />}
-            />
-          </Form.Item>
-        </Form>
-      </Modal>
-    </>
-  );
-}
-
-function DeleteAccount() {
-  const router = useRouter();
-  const [modal, contextHolder] = Modal.useModal();
-
-  const handleOk = async () => {
-    const promise = () =>
-      new Promise((resolve, reject) =>
-        setTimeout(async () => {
-          const response = await FetchDeleteAccount();
-
-          if (response === undefined) {
-            reject("Terjadi kesalahan pada server!");
-          } else if (response) {
-            resolve("Berhasil menghapus akun Anda.");
-          } else {
-            reject("Gagal menghapus akun Anda!");
-          }
-
-          setTimeout(() => {
-            router.push(`/`);
-          }, 1000);
-        }, 1000)
-      );
-
-    toast.promise(promise, {
-      loading: "Memproses penghapusan...",
-      success: (data) => {
-        return `${data}`;
-      },
-      error: (error) => {
-        return `${error}`;
-      },
-    });
-  };
-
-  const confirm = () => {
-    modal.confirm({
-      centered: true,
-      title: "Konfirmasi Penghapusan Akun",
-      icon: <ExclamationCircleOutlined />,
-      content: (
-        <>
-          <p>Apakah Anda yakin ingin menghapus akun Anda?</p>
-          <br />
-          <b>Perhatian:</b>
-          <p>Tindakan ini tidak dapat dibatalkan!</p>
-        </>
-      ),
-      okText: "Hapus Akun",
-      cancelText: "Batal",
-      okButtonProps: { icon: <DeleteOutlined />, danger: true },
-      onOk: handleOk,
-    });
-  };
-
-  return (
-    <>
-      <Button
-        block
-        danger
-        type="default"
-        shape="round"
-        icon={<DeleteOutlined />}
-        size="large"
-        onClick={confirm}
-      >
-        Hapus Akun
-      </Button>
-
-      {contextHolder}
-    </>
-  );
-}
-
-function DisplayUserVertical({ user }: { user: UserSettings }) {
   return (
     <>
       <Flex
@@ -974,7 +80,9 @@ function DisplayUserVertical({ user }: { user: UserSettings }) {
   );
 }
 
-function DisplayUserHorizontal({ user }: { user: UserSettings }) {
+function DisplayUserHorizontal() {
+  const user = useUserSettings()!;
+
   return (
     <Flex
       gap="30px"
@@ -1022,7 +130,9 @@ function DisplayUserHorizontal({ user }: { user: UserSettings }) {
   );
 }
 
-function ButtonSetting({ layout }: { layout: ViewType }) {
+function ButtonSetting() {
+  const layout = useViewLayout();
+
   return (
     <Flex
       gap="10px"
@@ -1051,21 +161,23 @@ function ButtonSetting({ layout }: { layout: ViewType }) {
       </Flex>
 
       <Flex vertical gap="10px" style={{ width: "100%" }}>
-        <EditAvatar />
-        <EditUsername />
-        <EditBiography />
+        <UserEditAvatar />
+        <UserEditUsername />
+        <UserEditBiography />
       </Flex>
 
       <Flex vertical gap="10px" style={{ width: "100%" }}>
-        <EditEmail />
-        <EditPassword />
-        <DeleteAccount />
+        <UserEditEmail />
+        <UserEditPassword />
+        <UserDeleteAccount />
       </Flex>
     </Flex>
   );
 }
 
-function SettingText({ layout }: { layout: ViewType }) {
+function SettingText() {
+  const layout = useViewLayout();
+
   return (
     <Flex vertical style={{ width: "100%" }}>
       <Col
@@ -1100,7 +212,22 @@ function SettingText({ layout }: { layout: ViewType }) {
   );
 }
 
-function UserFound({ layout, user }: { layout: ViewType; user: UserSettings }) {
+function DividerText() {
+  return (
+    <Divider
+      orientation="center"
+      style={{
+        borderColor: "black",
+        borderWidth: 2,
+        margin: "20px 0 20px 0",
+      }}
+    />
+  );
+}
+
+function UserFound() {
+  const layout = useViewLayout();
+
   return (
     <Content
       style={{
@@ -1111,33 +238,17 @@ function UserFound({ layout, user }: { layout: ViewType; user: UserSettings }) {
         padding: layout === "horizontal" ? "2rem" : "1rem",
       }}
     >
-      <SettingText layout={layout} />
-
-      <Divider
-        orientation="center"
-        style={{
-          borderColor: "black",
-          borderWidth: 2,
-          margin: "20px 0 20px 0",
-        }}
-      />
+      <SettingText />
+      <DividerText />
 
       {layout === "vertical" ? (
-        <DisplayUserVertical user={user} />
+        <DisplayUserVertical />
       ) : (
-        <DisplayUserHorizontal user={user} />
+        <DisplayUserHorizontal />
       )}
 
-      <Divider
-        orientation="center"
-        style={{
-          borderColor: "black",
-          borderWidth: 2,
-          margin: "20px 0 20px 0",
-        }}
-      />
-
-      <ButtonSetting layout={layout} />
+      <DividerText />
+      <ButtonSetting />
     </Content>
   );
 }
@@ -1150,9 +261,21 @@ export default function SettingsPage({
   const size = useWindowSize();
   const [layout, setLayout] = useState<"vertical" | "horizontal">("horizontal");
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [userData, setUserData] = useState<UserProfile | null>(null);
   const [userSession, setUserSession] = useState<UserSession | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [userSettings, setUserSettings] = useState<UserSettings | null>(null);
+
+  const getUserSession = async () => {
+    const user = await GetUserSession();
+    setUserSession(user);
+  };
+
+  const getUserProfile = async (username: string) => {
+    const response = await GetUserProfile(username);
+    if (typeof response !== "number") {
+      setUserProfile(response);
+    }
+  };
 
   useEffect(() => {
     if (size.width && size.width < 800) {
@@ -1163,35 +286,25 @@ export default function SettingsPage({
   }, [size.width]);
 
   useEffect(() => {
-    const getUserData = async () => {
-      const response = await GetUserProfile(params.username);
-      if (typeof response !== "number") {
-        setUserData(response);
-      }
-      return;
-    };
-    getUserData();
+    getUserSession();
+    getUserProfile(params.username);
   }, [params.username]);
 
   useEffect(() => {
-    const getUserData = async () => {
-      const response = await GetUserSession();
-      setUserSession(response);
-    };
-    getUserData();
-  }, []);
-
-  useEffect(() => {
-    if (userData && userSession && userSession.username === params.username) {
+    if (
+      userProfile &&
+      userSession &&
+      userSession.username === params.username
+    ) {
       setUserSettings({
-        username: userData.username,
+        username: userProfile.username,
         email: userSession.email,
-        avatar: userData.avatar,
-        biography: userData.biography,
+        avatar: userProfile.avatar,
+        biography: userProfile.biography,
         role: userSession.role,
       });
     }
-  }, [params.username, userData, userSession]);
+  }, [params.username, userProfile, userSession]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -1208,11 +321,19 @@ export default function SettingsPage({
   }
 
   return (
-    <Layout style={{ minHeight: "100dvh" }}>
-      <HeaderLayout />
-      <UserFound layout={layout} user={userSettings} />
-      <FooterLayout />
-      <Toaster richColors position="bottom-right" />
-    </Layout>
+    <ViewLayoutProvider view={layout}>
+      <UserSessionProvider user={userSession}>
+        <UserProfileProvider user={userProfile}>
+          <UserSettingsProvider user={userSettings}>
+            <Layout style={{ minHeight: "100dvh" }}>
+              <HeaderLayout />
+              <UserFound />
+              <FooterLayout />
+              <Toaster richColors position="bottom-right" />
+            </Layout>
+          </UserSettingsProvider>
+        </UserProfileProvider>
+      </UserSessionProvider>
+    </ViewLayoutProvider>
   );
 }
