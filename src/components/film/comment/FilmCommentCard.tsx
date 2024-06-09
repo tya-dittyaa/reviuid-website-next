@@ -127,7 +127,7 @@ const FilmCommentCard: React.FC<{
   }
 
   return (
-    <Flex vertical gap={25} style={{ width: "100%" }}>
+    <Flex vertical gap={15} style={{ width: "100%" }}>
       {reviewData.map((review, index) => (
         <Found key={index} reviewData={review} />
       ))}
