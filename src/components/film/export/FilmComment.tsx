@@ -46,7 +46,7 @@ const FilmComment: React.FC = () => {
   }
 
   return (
-    <Flex vertical gap={25} style={{ width: "100%" }}>
+    <Flex vertical gap={15} style={{ width: "100%" }}>
       <FilmCommentHeader nowPage={nowPage} totalPage={totalPage} />
       <FilmCommentCard nowPage={nowPage} totalPage={totalPage} />
     </Flex>

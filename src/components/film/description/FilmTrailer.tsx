@@ -50,7 +50,7 @@ const FilmTrailer: React.FC = () => {
         allowFullScreen
         title="Embedded youtube"
         style={{
-          height: "100%",
+          height: layout === "horizontal" ? "100%" : 250,
           width: "100%",
           borderRadius: 20,
         }}
