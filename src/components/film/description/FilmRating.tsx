@@ -67,6 +67,7 @@ const FilmRating: React.FC = () => {
         >
           <Rate
             disabled
+            allowHalf
             defaultValue={filmData.rating}
             style={{
               fontSize: 30,
