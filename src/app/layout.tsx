@@ -24,6 +24,15 @@ export default function RootLayout({
           token: {
             fontFamily: "Poppins",
           },
+          components: {
+            Button: {
+              colorPrimary: "#E2B808",
+              colorPrimaryHover: "#CC9F07",
+              colorPrimaryActive: "#B38A06",
+              colorTextDisabled: "#B3B3B3",
+              fontWeight: "bold",
+            },
+          },
         }}
       >
         <AntdRegistry>

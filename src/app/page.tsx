@@ -1,6 +1,9 @@
 "use client";
 
 import { FooterLayout, HeaderLayout } from "@/components";
+import { UserSessionProvider } from "@/context";
+import { UserSession } from "@/types";
+import { GetUserSession } from "@/utils";
 import "@fontsource/poppins";
 import { Layout, Spin, Typography } from "antd";
 import { useEffect, useState } from "react";
@@ -13,7 +16,7 @@ function TemporaryContent() {
     <Content
       style={{
         flex: 1,
-        backgroundColor: "#9E140F",
+        backgroundColor: "#910D05",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -33,11 +36,16 @@ function TemporaryContent() {
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [userSession, setUserSession] = useState<UserSession | null>(null);
+
+  const getUserSession = async () => {
+    const user = await GetUserSession();
+    setUserSession(user);
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    getUserSession();
   }, []);
 
   if (isLoading) {
@@ -45,10 +53,12 @@ export default function Home() {
   }
 
   return (
-    <Layout style={{ minHeight: "100dvh" }}>
-      <HeaderLayout />
-      <TemporaryContent />
-      <FooterLayout />
-    </Layout>
+    <UserSessionProvider user={userSession}>
+      <Layout style={{ minHeight: "100dvh" }}>
+        <HeaderLayout />
+        <TemporaryContent />
+        <FooterLayout />
+      </Layout>
+    </UserSessionProvider>
   );
 }
