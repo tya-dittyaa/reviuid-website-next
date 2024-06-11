@@ -92,6 +92,7 @@ const UserEditEmail: React.FC = () => {
         okButtonProps={{
           disabled: confirmLoading,
           icon: <SaveOutlined />,
+          style: { color: "black" },
         }}
         cancelButtonProps={{
           disabled: confirmLoading,

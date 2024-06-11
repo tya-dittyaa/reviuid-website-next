@@ -26,7 +26,7 @@ const AddReview: React.FC = () => {
   const showModal = () => {
     if (!userSession) {
       toast.warning(
-        "Anda harus masuk terlebih dahulu sebelum anda dapat menambahkan review"
+        "Anda harus masuk terlebih dahulu sebelum anda dapat menambahkan komentar!"
       );
       return;
     }
@@ -53,9 +53,9 @@ const AddReview: React.FC = () => {
           if (response === undefined) {
             reject("Terjadi kesalahan pada server!");
           } else if (response) {
-            resolve("Berhasil menambahkan penilaian!");
+            resolve("Berhasil menambahkan komentar!");
           } else {
-            reject("Gagal menambahkan penilaian!");
+            reject("Gagal menambahkan komentar!");
           }
 
           setTimeout(() => {
@@ -67,7 +67,7 @@ const AddReview: React.FC = () => {
       });
 
     toast.promise(promise, {
-      loading: "Menambahkan penilaian...",
+      loading: "Menambahkan komentar...",
       success: (data) => {
         return `${data}`;
       },
@@ -92,9 +92,9 @@ const AddReview: React.FC = () => {
           if (response === undefined) {
             reject("Terjadi kesalahan pada server!");
           } else if (response) {
-            resolve("Berhasil memperbarui penilaian!");
+            resolve("Berhasil memperbarui komentar!");
           } else {
-            reject("Gagal memperbarui penilaian!");
+            reject("Gagal memperbarui komentar!");
           }
 
           setTimeout(() => {
@@ -106,7 +106,7 @@ const AddReview: React.FC = () => {
       });
 
     toast.promise(promise, {
-      loading: "Memperbarui penilaian...",
+      loading: "Memperbarui komentar...",
       success: (data) => {
         return `${data}`;
       },
@@ -127,9 +127,9 @@ const AddReview: React.FC = () => {
           if (response === undefined) {
             reject("Terjadi kesalahan pada server!");
           } else if (response) {
-            resolve("Berhasil menghapus penilaian!");
+            resolve("Berhasil menghapus komentar!");
           } else {
-            reject("Gagal menghapus penilaian!");
+            reject("Gagal menghapus komentar!");
           }
 
           setTimeout(() => {
@@ -141,7 +141,7 @@ const AddReview: React.FC = () => {
       });
 
     toast.promise(promise, {
-      loading: "Menghapus penilaian...",
+      loading: "Menghapus komentar...",
       success: (data) => {
         return `${data}`;
       },
@@ -175,12 +175,12 @@ const AddReview: React.FC = () => {
         onClick={showModal}
         style={{ color: "black" }}
       >
-        Penilaian
+        Komentar
       </Button>
 
       <Modal
         centered
-        title="Menambahkan Penilaian"
+        title="Menambahkan Komentar"
         open={open}
         onOk={handleReviewAction}
         confirmLoading={confirmLoading}
@@ -217,10 +217,10 @@ const AddReview: React.FC = () => {
       >
         <Form form={form} layout="vertical">
           <Form.Item
-            label="Penilaian"
+            label="Komentar"
             name="rating"
             initialValue={userComment?.rating}
-            rules={[{ required: true, message: "Penilaian harus diisi" }]}
+            rules={[{ required: true, message: "Komentar harus diisi" }]}
           >
             <Rate allowClear={false} />
           </Form.Item>
