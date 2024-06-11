@@ -24,11 +24,11 @@ import { Toaster, toast } from "sonner";
 const { Text } = Typography;
 
 const developers = [
-  { name: "Adidyo Fajar Isna", imgSrc: "https://anhede.se/wp-content/uploads/2015/02/portrait-photo-whiskey-salon-cigar-room-portrattfoto-salong-cigarr.jpg" },
-  { name: "Car", imgSrc: "https://anhede.se/wp-content/uploads/2015/02/portrait-photo-whiskey-salon-cigar-room-portrattfoto-salong-cigarr.jpg" },
-  { name: "Tim", imgSrc: "https://anhede.se/wp-content/uploads/2015/02/portrait-photo-whiskey-salon-cigar-room-portrattfoto-salong-cigarr.jpg" },
-  { name: "Pairi", imgSrc: "https://anhede.se/wp-content/uploads/2015/02/portrait-photo-whiskey-salon-cigar-room-portrattfoto-salong-cigarr.jpg" },
-  { name: "Sekuy", imgSrc: "https://anhede.se/wp-content/uploads/2015/02/portrait-photo-whiskey-salon-cigar-room-portrattfoto-salong-cigarr.jpg" },
+  { name: "Aditya Fajri", imgSrc: "https://anhede.se/wp-content/uploads/2015/02/portrait-photo-whiskey-salon-cigar-room-portrattfoto-salong-cigarr.jpg" },
+  { name: "Karina Dwinovera Mulia", imgSrc: "https://anhede.se/wp-content/uploads/2015/02/portrait-photo-whiskey-salon-cigar-room-portrattfoto-salong-cigarr.jpg" },
+  { name: "Timothy Paendong", imgSrc: "https://wallpaperaccess.com/full/6999296.jpg" },
+  { name: "Pierre Adrian T.O.S.", imgSrc: "https://ih1.redbubble.net/image.3515875957.2248/bg,f8f8f8-flat,750x,075,f-pad,750x1000,f8f8f8.jpg" },
+  { name: "Luke Mangala Soegianto", imgSrc: "https://anhede.se/wp-content/uploads/2015/02/portrait-photo-whiskey-salon-cigar-room-portrattfoto-salong-cigarr.jpg" },
 ];
 
 export default function DevelopersPage() {
