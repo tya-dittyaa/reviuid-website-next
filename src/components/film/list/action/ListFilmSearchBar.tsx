@@ -16,8 +16,6 @@ const ListFilmSearchBar: React.FC = () => {
       case "input":
         window.location.replace(`/film?search=${value}`);
         break;
-      default:
-        break;
     }
   };
 

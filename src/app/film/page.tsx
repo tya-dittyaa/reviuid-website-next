@@ -13,6 +13,7 @@ import {
   FilmTotalProvider,
   UserSessionProvider,
   ViewLayoutProvider,
+  useFilmTotal,
   useViewLayout,
 } from "@/context";
 import { useWindowSize } from "@/hooks";
@@ -29,21 +30,38 @@ function FilmList() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const filmTotal = useFilmTotal();
 
   const getPage = searchParams.get("page");
   const getSearch = searchParams.get("search");
+  const totalPage = Math.ceil(filmTotal / 10);
 
   const [onWebParam, setOnWebParam] = useState<"page" | "search">("page");
 
   useEffect(() => {
-    if (getPage) {
-      setOnWebParam("page");
-      router.replace(`${pathname}?page=${getPage}`, { scroll: false });
-    } else if (getSearch) {
+    if (getSearch) {
       setOnWebParam("search");
-      router.replace(`${pathname}?search=${getSearch}`, { scroll: false });
+    } else {
+      setOnWebParam("page");
+
+      if (!getPage || isNaN(Number(getPage))) {
+        router.replace(`${pathname}?page=1`, { scroll: false });
+      }
+
+      const page = Number(getPage);
+      switch (true) {
+        case page > totalPage:
+          router.replace(`${pathname}?page=${totalPage}`, { scroll: false });
+          break;
+        case totalPage < 0:
+          router.replace(`${pathname}?page=1`, { scroll: false });
+          break;
+        case page < 1:
+          router.replace(`${pathname}?page=1`, { scroll: false });
+          break;
+      }
     }
-  }, [getPage, getSearch, pathname, router]);
+  }, [getSearch, getPage, pathname, router, totalPage]);
 
   return (
     <Content
