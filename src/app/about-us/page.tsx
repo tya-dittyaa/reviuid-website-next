@@ -9,27 +9,12 @@ import {
   Image,
   Flex,
   Col,
-  Avatar,
-  Input } from "antd";
+  Avatar} from "antd";
 import {
   VideoCameraOutlined,
 } from "@ant-design/icons";
-import { useState } from 'react';
-import { UserSettings } from "@/types/userProfile.type";
-import Title from "antd/es/typography/Title";
-import { 
-  UserOutlined,
-  LikeOutlined,
-  DislikeOutlined,
-  FlagOutlined,
-  ShareAltOutlined,
-  LikeFilled,
-  DislikeFilled
- } from '@ant-design/icons';
-import { relative } from "path";
 const { Content } = Layout;
 const { Text, Paragraph } = Typography;
-const { TextArea } = Input;
 
 function AboutUsPageText() {
   return (
@@ -69,7 +54,6 @@ function AboutUsPageText() {
 
 function AboutUsPageContent() {
   return (
-
     <Content
       style={{
         flex: 1,

@@ -1,81 +1,193 @@
 "use client";
 
-import { useWindowSize } from "@/hooks";
-import { LogoConfig, UserLogin } from "@/types";
-import { FetchRefreshToken, FetchUserLogin } from "@/utils";
-import { KeyOutlined, MailOutlined } from "@ant-design/icons";
-
-import {
-  Alert,
-  Avatar,
-  Button,
-  Col,
-  Flex,
-  Form,
-  Image,
-  Input,
-  Spin,
+import { FooterLayout, HeaderLayout } from "@/components";
+import "@fontsource/poppins";
+import React from 'react';
+import { 
+  Layout, 
   Typography,
-} from "antd";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Toaster, toast } from "sonner";
-
+  Image,
+  Flex,
+  Col,
+  Avatar} from "antd";
+import {
+  TeamOutlined,
+} from "@ant-design/icons";
+const { Content } = Layout;
 const { Text } = Typography;
 
-const developers = [
-  { name: "Aditya Fajri", imgSrc: "https://anhede.se/wp-content/uploads/2015/02/portrait-photo-whiskey-salon-cigar-room-portrattfoto-salong-cigarr.jpg" },
-  { name: "Karina Dwinovera Mulia", imgSrc: "https://anhede.se/wp-content/uploads/2015/02/portrait-photo-whiskey-salon-cigar-room-portrattfoto-salong-cigarr.jpg" },
-  { name: "Timothy Paendong", imgSrc: "https://wallpaperaccess.com/full/6999296.jpg" },
-  { name: "Pierre Adrian T.O.S.", imgSrc: "https://ih1.redbubble.net/image.3515875957.2248/bg,f8f8f8-flat,750x,075,f-pad,750x1000,f8f8f8.jpg" },
-  { name: "Luke Mangala Soegianto", imgSrc: "https://anhede.se/wp-content/uploads/2015/02/portrait-photo-whiskey-salon-cigar-room-portrattfoto-salong-cigarr.jpg" },
-];
+const DevsPhoto: React.FC = () => (
+  <Flex vertical={true}
+  gap={'3rem'}
+  style={{
+    marginTop: '40px',
+    marginBottom: 0,
+    alignItems: 'center'
+  }}>
+    <Flex vertical={false} gap={'8rem'}>
+      <Flex vertical style={{
+        alignItems: 'center'
+      }}>
+        <Image
+        width={250}
+        src="https://i.pinimg.com/564x/dc/46/40/dc46403064ec076a128234ffdcd916c9.jpg"
+        style={{borderRadius: '5%'}}
+        />
 
-export default function DevelopersPage() {
+        <Text strong={true} style={{fontSize: '20px', color: 'white', paddingTop: '10px'}}>Nama</Text>
+        <Text strong={false} style={{fontSize: '20px', color: 'white'}}>NIM</Text>
+        <Text strong={false} style={{fontSize: '20px', color: 'white'}}>Role</Text>
+
+      </Flex>
+
+      <Flex vertical style={{
+        alignItems: 'center'
+      }}>
+        <Image
+        width={250}
+        src="https://i.pinimg.com/564x/dc/46/40/dc46403064ec076a128234ffdcd916c9.jpg"
+        style={{borderRadius: '5%'}}
+        />
+
+        <Text strong={true} style={{fontSize: '20px', color: 'white', paddingTop: '10px'}}>Nama</Text>
+        <Text strong={false} style={{fontSize: '20px', color: 'white'}}>NIM</Text>
+        <Text strong={false} style={{fontSize: '20px', color: 'white'}}>Role</Text>
+
+      </Flex>
+
+      <Flex vertical style={{
+        alignItems: 'center'
+      }}>
+        <Image
+        width={250}
+        src="https://i.pinimg.com/564x/dc/46/40/dc46403064ec076a128234ffdcd916c9.jpg"
+        style={{borderRadius: '5%'}}
+        />
+
+        <Text strong={true} style={{fontSize: '20px', color: 'white', paddingTop: '10px'}}>Nama</Text>
+        <Text strong={false} style={{fontSize: '20px', color: 'white'}}>NIM</Text>
+        <Text strong={false} style={{fontSize: '20px', color: 'white'}}>Role</Text>
+
+      </Flex>
+    </Flex>
+
+    <Flex vertical={false} gap={'8rem'} style={{marginTop: 0}}>
+      <Flex vertical style={{
+        alignItems: 'center'
+      }}>
+        <Image
+        width={250}
+        src="https://i.pinimg.com/564x/dc/46/40/dc46403064ec076a128234ffdcd916c9.jpg"
+        style={{borderRadius: '5%'}}
+        />
+
+        <Text strong={true} style={{fontSize: '20px', color: 'white', paddingTop: '10px'}}>Nama</Text>
+        <Text strong={false} style={{fontSize: '20px', color: 'white'}}>NIM</Text>
+        <Text strong={false} style={{fontSize: '20px', color: 'white'}}>Role</Text>
+
+      </Flex>
+
+      <Flex vertical style={{
+        alignItems: 'center'
+      }}>
+        <Image
+        width={250}
+        src="https://i.pinimg.com/564x/dc/46/40/dc46403064ec076a128234ffdcd916c9.jpg"
+        style={{borderRadius: '5%'}}
+        />
+
+        <Text strong={true} style={{fontSize: '20px', color: 'white', paddingTop: '10px'}}>Nama</Text>
+        <Text strong={false} style={{fontSize: '20px', color: 'white'}}>NIM</Text>
+        <Text strong={false} style={{fontSize: '20px', color: 'white'}}>Role</Text>
+
+      </Flex>
+    </Flex>
+  </Flex>
+);
+
+function DeveloperPageText() {
   return (
-    <>
-      <section style={{ padding: "2rem 0" }}>
-        <h2 style={{ 
-          maxWidth: "auto", 
-          marginTop: "1px", 
-          marginLeft: "30px", 
-          marginRight: "30px", 
-          fontSize: "50px", 
-          fontWeight: 500, 
-          borderBottom: "1px solid #e2b808", 
-          color: "#e2b808" 
-          }}>
-            <b>Our Developers</b>
-            </h2>
-        <div style={{ 
-          display: "grid", 
-          gap: "10px", 
-          maxWidth: "auto", 
-          marginLeft: "20px", 
-          marginRight: "20px", 
-          marginTop: "30px", 
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, auto))" 
-          }}>
-          {developers.map((dev, index) => (
-            <div key={index} 
-            style={{ 
-              textAlign: "center" 
-              }}>
-<div style={{ 
-  width: "auto", 
-  height: "auto", 
-  cursor: "pointer" }}>
-  <Image src={dev.imgSrc} alt={dev.name} width={200} height={300} />
-</div>
-              <h3 style={{ 
-                fontSize: "0.9rem", 
-                fontWeight: 500, 
-                color: "white", 
-                marginTop: "0.5rem" }}>{dev.name}</h3>
-            </div>
-          ))}
-        </div>
-      </section>
-    </>
+    <Flex vertical style={{ padding: '20px', paddingLeft: '30px', paddingBottom: '20px', width: "100%" }}>
+      <Col
+        style={{
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          textDecoration: "none",
+        }}
+      >
+        <Avatar
+          size= {40}
+          icon={<TeamOutlined />}
+          style={{
+            backgroundColor: "#E2B808",
+            color: "black",
+            marginRight: "1rem",
+            marginLeft: "1rem"
+          }}
+        />
+
+        <Text
+          strong
+          style={{
+            color: "#E2B808",
+            fontSize: 30,
+          }}
+        >
+          <b style={{ fontWeight: "bold" }}>Halaman Developer</b>
+        </Text>
+      </Col>
+    </Flex>
+  );
+}
+
+function DeveloperPageContent() {
+  return (
+    <Content
+    style={{
+      flex: 1,
+      backgroundColor: "#9E140F",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+    }}
+    >
+      <DeveloperPageText />
+
+      <Text strong style={{
+        maxWidth: "auto", 
+        marginTop: "1px", 
+        marginLeft: "100px", 
+        marginRight: "100px",
+        textAlign: 'left',
+        fontSize: 30, 
+        borderBottom: "1px solid #e2b808",
+        color: "#e2b808"}}>
+         Tim Kami
+      </Text>
+
+      <DevsPhoto />
+
+       <div style={{ 
+         display: "grid", 
+         gap: "10px", 
+         maxWidth: "auto", 
+         marginLeft: "20px", 
+         marginRight: "20px", 
+         marginTop: "30px", 
+         gridTemplateColumns: "repeat(auto-fit, minmax(200px, auto))" 
+         }}>
+       </div>
+     </Content>
+ );
+}
+
+export default function Home() {
+  return (
+    <Layout style={{ minHeight: "100dvh" }}>
+      <HeaderLayout />
+      <DeveloperPageContent />
+      <FooterLayout />
+    </Layout>
   );
 }
