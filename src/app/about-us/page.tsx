@@ -36,21 +36,26 @@ export default function AboutUsPage() {
             fontWeight: 500, 
             borderBottom: "1px solid #e2b808", 
             color: "#e2b808", 
-            marginRight: "30px"
+            marginRight: "30px",
           }}>
             <b>Tentang Kami</b>
           </h2>
           <Image 
             src="/logo.png" 
             alt="Image Description" 
-            width={100} 
-            height={100} 
+            width={300} 
+            height={300} 
             style={{ 
-              marginTop: "10px", 
+              marginTop: "30px",
+              marginLeft: "475px", 
+              justifyContent: "center",
+              display: "inline-flex",
+              alignItems: "center"
             }}
           />
           <p style={{ 
-            marginTop: "10px", 
+            marginTop: "50px", 
+            marginRight:"10px",
             fontSize: "20px", 
             fontWeight: 200,
             color: "white" 
