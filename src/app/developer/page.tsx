@@ -65,7 +65,11 @@ export default function DevelopersPage() {
   width: "auto", 
   height: "auto", 
   cursor: "pointer" }}>
-  <Image src={dev.imgSrc} alt={dev.name} width={200} height={300} />
+  <Image src={dev.imgSrc} alt={dev.name} width={200} height={300} 
+  style={{ 
+    borderRadius:"30px"
+  }}
+  />
 </div>
               <h3 style={{ 
                 fontSize: "0.9rem", 
