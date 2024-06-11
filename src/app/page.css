@@ -1,0 +1,23 @@
+.forum-box {
+    position: absolute;
+    margin-top: 100px;
+    margin-right: 100px;
+    margin-left: 20px;
+    top: 10px;
+    right: 0;
+    width: 320px;
+    height: 100px;
+    color: white;
+}
+
+
+.slider-and-box-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.home-content {
+    display: flex; /* Make the content container a flexbox */
+}
+
