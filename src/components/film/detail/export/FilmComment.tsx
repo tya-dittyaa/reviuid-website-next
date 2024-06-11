@@ -25,12 +25,12 @@ const FilmComment: React.FC = () => {
 
     const page = Number(getPage) || 1;
     if (page > totalPage) {
-      if (totalPage === 0) {
-        setNowPage(1);
-        router.replace(`${pathname}?page=1`, { scroll: false });
-      } else {
+      if (totalPage > 0) {
         setNowPage(totalPage);
         router.replace(`${pathname}?page=${totalPage}`, { scroll: false });
+      } else {
+        setNowPage(1);
+        router.replace(`${pathname}?page=1`, { scroll: false });
       }
     }
   }, [getPage, totalPage, pathname, router]);

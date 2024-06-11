@@ -1,13 +1,13 @@
 "use client";
 
 import {
+  DetailFilmHeader,
   DividerCenter,
   FilmComment,
-  FilmTextHeader,
+  FilmDescription,
   FooterLayout,
   HeaderLayout,
 } from "@/components";
-import FilmDescription from "@/components/film/export/FilmDescription";
 import {
   FilmDataProvider,
   UserFilmCommentProvider,
@@ -38,7 +38,7 @@ function FilmFound() {
         padding: layout === "horizontal" ? "2rem" : "1rem",
       }}
     >
-      <FilmTextHeader />
+      <DetailFilmHeader />
       <DividerCenter />
       <FilmDescription />
       <DividerCenter />

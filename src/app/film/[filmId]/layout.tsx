@@ -1,5 +1,4 @@
 import { GetFilmData } from "@/utils";
-import "@fontsource/poppins";
 import { Metadata } from "next";
 
 export async function generateMetadata({
