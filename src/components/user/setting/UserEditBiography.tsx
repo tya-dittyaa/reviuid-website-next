@@ -128,6 +128,7 @@ const UserEditBiography: React.FC = () => {
         okButtonProps={{
           disabled: confirmLoading || confirmDelete,
           icon: <SaveOutlined />,
+          style: { color: "black" },
         }}
         cancelButtonProps={{
           disabled: confirmLoading || confirmDelete,

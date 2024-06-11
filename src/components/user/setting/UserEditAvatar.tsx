@@ -158,6 +158,7 @@ const UserEditAvatar: React.FC = () => {
         okButtonProps={{
           disabled: fileImage === null || confirmLoading || confirmDelete,
           icon: <CloudUploadOutlined />,
+          style: { color: "black" },
         }}
         cancelButtonProps={{
           disabled: confirmLoading || confirmDelete,
