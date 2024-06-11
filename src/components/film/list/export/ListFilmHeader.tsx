@@ -4,7 +4,7 @@ import { Avatar, Col, Flex, Typography } from "antd";
 
 const { Text } = Typography;
 
-const FilmTextHeader: React.FC = () => {
+const ListFilmHeader: React.FC = () => {
   const layout = useViewLayout();
 
   return (
@@ -34,11 +34,11 @@ const FilmTextHeader: React.FC = () => {
             fontSize: 30,
           }}
         >
-          <b style={{ fontWeight: "bold" }}>Halaman Film</b>
+          <b style={{ fontWeight: "bold" }}>Daftar Film</b>
         </Text>
       </Col>
     </Flex>
   );
 };
 
-export default FilmTextHeader;
+export default ListFilmHeader;

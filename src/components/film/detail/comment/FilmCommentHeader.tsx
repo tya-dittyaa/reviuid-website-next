@@ -1,3 +1,4 @@
+import { useViewLayout } from "@/context";
 import { Flex, Pagination, Typography } from "antd";
 import { usePathname } from "next/navigation";
 
@@ -8,6 +9,7 @@ const FilmCommentHeader: React.FC<{
   totalPage: number;
 }> = ({ nowPage, totalPage }) => {
   const pathname = usePathname();
+  const layout = useViewLayout();
 
   if (totalPage === 0) totalPage = 1;
 
@@ -21,7 +23,7 @@ const FilmCommentHeader: React.FC<{
         strong
         style={{
           color: "#E2B808",
-          fontSize: 30,
+          fontSize: layout === "horizontal" ? 30 : 20,
         }}
       >
         <b style={{ fontWeight: "bold" }}>Komentar</b>
