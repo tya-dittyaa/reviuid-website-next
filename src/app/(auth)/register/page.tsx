@@ -13,7 +13,6 @@ import {
   Form,
   Image,
   Input,
-  Layout,
   Spin,
   Typography,
 } from "antd";
@@ -22,7 +21,6 @@ import { useEffect, useState } from "react";
 import { Toaster, toast } from "sonner";
 
 const { Text } = Typography;
-const { Header } = Layout;
 
 type LogoConfig = {
   AvatarSize: number;
