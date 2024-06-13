@@ -44,7 +44,7 @@ const UserDeleteAccount: React.FC = () => {
     modal.confirm({
       centered: true,
       title: "Konfirmasi Penghapusan Akun",
-      icon: <ExclamationCircleOutlined />,
+      icon: <ExclamationCircleOutlined style={{ color: "red" }} />,
       content: (
         <>
           <p>Apakah Anda yakin ingin menghapus akun Anda?</p>
@@ -56,6 +56,7 @@ const UserDeleteAccount: React.FC = () => {
       okText: "Hapus Akun",
       cancelText: "Batal",
       okButtonProps: { icon: <DeleteOutlined />, danger: true },
+      cancelButtonProps: { danger: true },
       onOk: handleOk,
     });
   };

@@ -93,8 +93,10 @@ const UserEditUsername: React.FC = () => {
 
       <Modal
         centered
+        closable={false}
+        maskClosable={false}
         title="Ubah Nama Pengguna"
-        visible={open}
+        open={open}
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
@@ -106,6 +108,7 @@ const UserEditUsername: React.FC = () => {
           style: { color: "black" },
         }}
         cancelButtonProps={{
+          danger: true,
           disabled: confirmLoading,
         }}
       >
