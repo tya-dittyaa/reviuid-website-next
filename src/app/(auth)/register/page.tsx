@@ -2,8 +2,18 @@
 
 import { useWindowSize } from "@/hooks";
 import { UserRegister } from "@/types";
-import { FetchRefreshToken, FetchUserRegister } from "@/utils";
-import { KeyOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  CreateUserOTP,
+  FetchRefreshToken,
+  FetchUserRegister,
+  VerifyUserOTP,
+} from "@/utils";
+import {
+  KeyOutlined,
+  MailOutlined,
+  SendOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import {
   Alert,
   Avatar,
@@ -13,6 +23,7 @@ import {
   Form,
   Image,
   Input,
+  Modal,
   Spin,
   Typography,
 } from "antd";
@@ -21,6 +32,7 @@ import { useEffect, useState } from "react";
 import { Toaster, toast } from "sonner";
 
 const { Text } = Typography;
+const { confirm } = Modal;
 
 type LogoConfig = {
   AvatarSize: number;
@@ -60,19 +72,70 @@ function ReviuIDLogo(logoConfig: LogoConfig) {
 function RegisterForm() {
   const router = useRouter();
   const [form] = Form.useForm();
+  const [formOTP] = Form.useForm();
 
   const [isSubmitting, setSubmitting] = useState<boolean>();
   const [isError, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [confirmModal, setConfirmModal] = useState<boolean>(false);
 
-  const onFinish = async (values: UserRegister) => {
-    setSubmitting(true);
-
+  const doRegistration = async (values: UserRegister & { otp: string }) => {
     const toastPromise = new Promise<void>((resolve, reject) => {
+      setError(false);
+      setErrorMessage("");
+
       setTimeout(async () => {
+        const verify = await VerifyUserOTP({
+          email: values.email,
+          otp: values.otp,
+        });
+
+        setConfirmModal(false);
+        setOpenModal(false);
+        formOTP.resetFields();
+
+        if (verify === undefined) {
+          setSubmitting(false);
+          setError(true);
+          setErrorMessage("Terjadi kesalahan pada server! Silakan coba lagi!");
+          reject();
+          return;
+        }
+
+        if (verify !== 1) {
+          setSubmitting(false);
+          switch (verify) {
+            case 2:
+              setError(true);
+              setErrorMessage(
+                "Email sudah terdaftar! Silakan gunakan email lain!"
+              );
+              break;
+
+            case 3:
+              setError(true);
+              setErrorMessage("Email tidak ditemukan! Silakan coba lagi!");
+              break;
+
+            case 4:
+              setError(true);
+              setErrorMessage("Kode OTP salah! Silakan coba lagi!");
+              break;
+
+            default:
+              setError(true);
+              setErrorMessage(
+                "Terjadi kesalahan pada server! Silakan coba lagi!"
+              );
+              break;
+          }
+
+          reject();
+          return;
+        }
+
         const register = await FetchUserRegister(values);
-        setError(false);
-        setErrorMessage("");
 
         switch (register.code) {
           case 200:
@@ -99,162 +162,302 @@ function RegisterForm() {
     });
   };
 
+  const showOTPModal = async () => {
+    const email = form.getFieldValue("email");
+    const sendOtp = await CreateUserOTP({ email });
+
+    if (!sendOtp) {
+      setSubmitting(false);
+      toast.error("Gagal mengirim OTP! Silakan coba lagi nanti!", {
+        duration: 5000,
+      });
+      return;
+    }
+
+    switch (sendOtp) {
+      case 1:
+        setError(false);
+        setErrorMessage("");
+        toast.success(
+          "Kode OTP telah dikirim ke email Anda! Silakan cek email Anda! Kode OTP akan kadaluarsa dalam 5 menit!",
+          { duration: 5000 }
+        );
+        break;
+
+      case 2:
+        setSubmitting(false);
+        setError(true);
+        setErrorMessage("Email sudah terdaftar! Silakan gunakan email lain!");
+        return;
+
+      case 3:
+        setError(false);
+        setErrorMessage("");
+        toast.warning(
+          "Gunakan kode OTP yang sama dengan yang telah dikirim sebelumnya! Kode OTP tersebut masih berlaku!",
+          { duration: 5000 }
+        );
+        break;
+
+      case 4:
+        setSubmitting(false);
+        toast.error("Gagal mengirim OTP! Silakan coba lagi nanti!", {
+          duration: 5000,
+        });
+        return;
+
+      default:
+        setSubmitting(false);
+        toast.error("Gagal mengirim OTP! Silakan coba lagi nanti!", {
+          duration: 5000,
+        });
+        return;
+    }
+  };
+
+  const showModal = async () => {
+    setSubmitting(true);
+    await showOTPModal();
+    setOpenModal(true);
+  };
+
+  const closeModal = () => {
+    formOTP.resetFields();
+    setSubmitting(false);
+    setOpenModal(false);
+  };
+
+  const okModal = async () => {
+    formOTP
+      .validateFields()
+      .then((values) => {
+        setConfirmModal(true);
+        doRegistration({ ...form.getFieldsValue(), otp: values.otp });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
-    <Flex vertical style={{ width: "100%", margin: "0 10% 0 10%" }}>
-      <Col style={{ fontSize: 30, fontWeight: "bold" }}>Daftar</Col>
+    <>
+      <Flex vertical style={{ width: "100%", margin: "0 10% 0 10%" }}>
+        <Col style={{ fontSize: 30, fontWeight: "bold" }}>Daftar</Col>
 
-      <Col style={{ margin: "30px 0 15px 0", color: "#969AB8" }}>
-        <Form
-          form={form}
-          initialValues={{ remember: true }}
-          autoComplete="off"
-          autoCapitalize="off"
-          autoSave="off"
-          autoCorrect="off"
-          onFinish={onFinish}
-        >
-          <Form.Item
-            name="username"
-            hasFeedback
-            rules={[
-              {
-                required: true,
-                message: "Silakan masukkan nama pengguna Anda!",
-              },
-              {
-                min: 3,
-                message: "Nama pengguna minimal 3 karakter!",
-              },
-              {
-                max: 16,
-                message: "Nama pengguna maksimal 16 karakter!",
-              },
-            ]}
+        <Col style={{ margin: "30px 0 15px 0", color: "#969AB8" }}>
+          <Form
+            form={form}
+            initialValues={{ remember: true }}
+            autoComplete="off"
+            autoCapitalize="off"
+            autoSave="off"
+            autoCorrect="off"
+            onFinish={showModal}
           >
-            <Input
-              size="large"
-              placeholder="Username Anda"
-              disabled={isSubmitting}
-              addonBefore={<UserOutlined style={{ color: "#969AB8" }} />}
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="email"
-            hasFeedback
-            rules={[
-              {
-                type: "email",
-                message: "Input tidak valid! Masukkan alamat email yang benar!",
-              },
-              {
-                required: true,
-                message: "Silakan masukkan alamat email Anda!",
-              },
-            ]}
-          >
-            <Input
-              size="large"
-              placeholder="Email Anda"
-              disabled={isSubmitting}
-              addonBefore={<MailOutlined style={{ color: "#969AB8" }} />}
-              onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
-                (e.target.value = e.target.value.toLowerCase())
-              }
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="password"
-            hasFeedback
-            rules={[
-              {
-                required: true,
-                message: "Silakan masukkan kata sandi Anda!",
-              },
-              {
-                pattern:
-                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[*.!@#$%^&(){}[\]:;<>,.?/~_+\-=|\\])[A-Za-z\d*.!@#$%^&(){}[\]:;<>,.?/~_+\-=|\\]{8,32}$/,
-                message: `Password harus memiliki 1 angka, huruf kecil, huruf kapital, karakter khusus, dan panjang 8-32 karakter!`,
-              },
-            ]}
-          >
-            <Input.Password
-              size="large"
-              placeholder="Password Anda"
-              disabled={isSubmitting}
-              addonBefore={<KeyOutlined style={{ color: "#969AB8" }} />}
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="repeatPassword"
-            hasFeedback
-            dependencies={["password"]}
-            rules={[
-              {
-                required: true,
-                message: "Silakan masukkan ulang kata sandi Anda!",
-              },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue("password") === value) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(
-                    new Error("Kata sandi yang Anda masukkan tidak sama!")
-                  );
+            <Form.Item
+              name="username"
+              hasFeedback
+              rules={[
+                {
+                  required: true,
+                  message: "Silakan masukkan nama pengguna Anda!",
                 },
-              }),
-            ]}
-          >
-            <Input.Password
-              size="large"
-              placeholder="Ulangi Password Anda"
-              disabled={isSubmitting}
-              addonBefore={<KeyOutlined style={{ color: "#969AB8" }} />}
-            />
-          </Form.Item>
-
-          <Form.Item>
-            <Button
-              block
-              size="large"
-              type="primary"
-              htmlType="submit"
-              loading={isSubmitting}
+                {
+                  min: 3,
+                  message: "Nama pengguna minimal 3 karakter!",
+                },
+                {
+                  max: 16,
+                  message: "Nama pengguna maksimal 16 karakter!",
+                },
+              ]}
             >
-              Daftar
-            </Button>
-          </Form.Item>
-        </Form>
+              <Input
+                size="large"
+                placeholder="Username Anda"
+                disabled={isSubmitting}
+                addonBefore={<UserOutlined style={{ color: "#969AB8" }} />}
+              />
+            </Form.Item>
 
-        {isError && (
-          <Alert
-            message="Error"
-            description={errorMessage}
-            type="error"
-            showIcon
-          />
-        )}
-      </Col>
+            <Form.Item
+              name="email"
+              hasFeedback
+              rules={[
+                {
+                  type: "email",
+                  message:
+                    "Input tidak valid! Masukkan alamat email yang benar!",
+                },
+                {
+                  required: true,
+                  message: "Silakan masukkan alamat email Anda!",
+                },
+              ]}
+            >
+              <Input
+                size="large"
+                placeholder="Email Anda"
+                disabled={isSubmitting}
+                addonBefore={<MailOutlined style={{ color: "#969AB8" }} />}
+                onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  (e.target.value = e.target.value.toLowerCase())
+                }
+              />
+            </Form.Item>
 
-      {!isSubmitting && (
-        <Col style={{ color: "#969AB8" }}>
-          Sudah punya akun?{" "}
-          <a
-            href="/login"
-            style={{
-              textDecoration: "none",
-              color: "#E2B808",
-              fontWeight: "bold",
-            }}
-          >
-            Masuk Sekarang!
-          </a>
+            <Form.Item
+              name="password"
+              hasFeedback
+              rules={[
+                {
+                  required: true,
+                  message: "Silakan masukkan kata sandi Anda!",
+                },
+                {
+                  pattern:
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[*.!@#$%^&(){}[\]:;<>,.?/~_+\-=|\\])[A-Za-z\d*.!@#$%^&(){}[\]:;<>,.?/~_+\-=|\\]{8,32}$/,
+                  message: `Password harus memiliki 1 angka, huruf kecil, huruf kapital, karakter khusus, dan panjang 8-32 karakter!`,
+                },
+              ]}
+            >
+              <Input.Password
+                size="large"
+                placeholder="Password Anda"
+                disabled={isSubmitting}
+                addonBefore={<KeyOutlined style={{ color: "#969AB8" }} />}
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="repeatPassword"
+              hasFeedback
+              dependencies={["password"]}
+              rules={[
+                {
+                  required: true,
+                  message: "Silakan masukkan ulang kata sandi Anda!",
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("password") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error("Kata sandi yang Anda masukkan tidak sama!")
+                    );
+                  },
+                }),
+              ]}
+            >
+              <Input.Password
+                size="large"
+                placeholder="Ulangi Password Anda"
+                disabled={isSubmitting}
+                addonBefore={<KeyOutlined style={{ color: "#969AB8" }} />}
+              />
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                block
+                size="large"
+                type="primary"
+                htmlType="submit"
+                loading={isSubmitting}
+              >
+                Daftar
+              </Button>
+            </Form.Item>
+          </Form>
+
+          {isError && (
+            <Alert
+              message="Error"
+              description={errorMessage}
+              type="error"
+              showIcon
+            />
+          )}
         </Col>
-      )}
-    </Flex>
+
+        {!isSubmitting && (
+          <Col style={{ color: "#969AB8" }}>
+            Sudah punya akun?{" "}
+            <a
+              href="/login"
+              style={{
+                textDecoration: "none",
+                color: "#E2B808",
+                fontWeight: "bold",
+              }}
+            >
+              Masuk Sekarang!
+            </a>
+          </Col>
+        )}
+      </Flex>
+
+      <Modal
+        centered
+        closable={false}
+        title="Verifikasi Email"
+        maskClosable={false}
+        open={openModal}
+        onOk={okModal}
+        onCancel={closeModal}
+        confirmLoading={confirmModal}
+        okText="Verifikasi"
+        cancelText="Batal"
+        okButtonProps={{
+          disabled: confirmModal,
+          icon: <SendOutlined />,
+          style: { color: "black" },
+        }}
+        cancelButtonProps={{
+          danger: true,
+          disabled: confirmModal,
+        }}
+      >
+        <Flex vertical gap={20} style={{ width: "100%" }}>
+          <Text>
+            Kode verifikasi (OTP) telah dikirim ke email{" "}
+            <b>{form.getFieldValue("email")}</b>. Silakan masukkan kode tersebut
+            untuk melanjutkan pendaftaran.
+          </Text>
+
+          <Form
+            form={formOTP}
+            initialValues={{ remember: true }}
+            autoComplete="off"
+            autoCapitalize="off"
+            autoSave="off"
+            autoCorrect="off"
+          >
+            <Form.Item
+              name="otp"
+              hasFeedback
+              rules={[
+                {
+                  required: true,
+                  message: "Silakan masukkan kode OTP!",
+                },
+                {
+                  pattern: /^[0-9]{6}$/,
+                  message: "Kode OTP harus 6 digit angka!",
+                },
+              ]}
+            >
+              <Input.OTP
+                variant="filled"
+                size="large"
+                formatter={(str) => str.toUpperCase()}
+              />
+            </Form.Item>
+          </Form>
+        </Flex>
+      </Modal>
+    </>
   );
 }
 
