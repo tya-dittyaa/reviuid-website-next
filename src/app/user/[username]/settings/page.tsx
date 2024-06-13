@@ -50,6 +50,7 @@ function DisplayUserVertical() {
           size={100}
           icon={
             <Image
+              priority
               src={user.avatar}
               width={2048}
               height={2048}

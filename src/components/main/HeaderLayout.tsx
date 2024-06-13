@@ -43,6 +43,7 @@ const ReviuIDLogo: React.FC<ReviuIDLogoProps> = ({ logoConfig }) => {
         size={logoConfig.AvatarSize}
         src={
           <Image
+            priority
             src="/logo.png"
             alt="Reviu.ID Logo"
             width={logoConfig.AvatarSize}
@@ -312,6 +313,7 @@ const UserHasLogin: React.FC = () => {
           size={40}
           src={
             <Image
+              priority
               src={userSession.avatar}
               alt={`Avatar ${userSession.username}`}
               width={40}
