@@ -32,7 +32,6 @@ import { useEffect, useState } from "react";
 import { Toaster, toast } from "sonner";
 
 const { Text } = Typography;
-const { confirm } = Modal;
 
 type LogoConfig = {
   AvatarSize: number;
@@ -123,6 +122,11 @@ function RegisterForm() {
               setErrorMessage("Kode OTP salah! Silakan coba lagi!");
               break;
 
+            case 5:
+              setError(true);
+              setErrorMessage("Kode OTP sudah kadaluarsa! Silakan coba lagi!");
+              break;
+
             default:
               setError(true);
               setErrorMessage(
@@ -162,7 +166,7 @@ function RegisterForm() {
     });
   };
 
-  const showOTPModal = async () => {
+  const generateOTP = async () => {
     const email = form.getFieldValue("email");
     const sendOtp = await CreateUserOTP({ email });
 
@@ -217,7 +221,7 @@ function RegisterForm() {
 
   const showModal = async () => {
     setSubmitting(true);
-    await showOTPModal();
+    await generateOTP();
     setOpenModal(true);
   };
 
@@ -401,12 +405,12 @@ function RegisterForm() {
       <Modal
         centered
         closable={false}
-        title="Verifikasi Email"
         maskClosable={false}
+        title="Verifikasi Email"
         open={openModal}
         onOk={okModal}
-        onCancel={closeModal}
         confirmLoading={confirmModal}
+        onCancel={closeModal}
         okText="Verifikasi"
         cancelText="Batal"
         okButtonProps={{
