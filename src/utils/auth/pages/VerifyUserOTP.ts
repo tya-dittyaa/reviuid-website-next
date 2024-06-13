@@ -30,6 +30,7 @@ export async function VerifyUserOTP({
     if (result.message === "Email already exists") return 2;
     if (result.message === "User not found") return 3;
     if (result.message === "Invalid OTP") return 4;
+    if (result.message === "OTP expired") return 5;
   } catch (error) {
     return undefined;
   }
