@@ -57,6 +57,7 @@ const Found: React.FC<{ reviewData: FilmCommentData }> = ({ reviewData }) => {
               size={64}
               icon={
                 <Image
+                  priority
                   src={reviewData.user.avatar}
                   width={2048}
                   height={2048}
