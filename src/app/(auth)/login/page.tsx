@@ -185,19 +185,34 @@ function LoginForm() {
       </Col>
 
       {!isSubmitting && (
-        <Col style={{ color: "#969AB8" }}>
-          Tidak punya akun?{" "}
-          <a
-            href="/register"
-            style={{
-              textDecoration: "none",
-              color: "#E2B808",
-              fontWeight: "bold",
-            }}
-          >
-            Daftar Sekarang!
-          </a>
-        </Col>
+        <>
+          <Col style={{ color: "#969AB8" }}>
+            Lupa kata sandi?{" "}
+            <a
+              href="/forgot-password"
+              style={{
+                textDecoration: "none",
+                color: "#E2B808",
+                fontWeight: "bold",
+              }}
+            >
+              Atur ulang kata sandi!
+            </a>
+          </Col>
+          <Col style={{ color: "#969AB8" }}>
+            Tidak punya akun?{" "}
+            <a
+              href="/register"
+              style={{
+                textDecoration: "none",
+                color: "#E2B808",
+                fontWeight: "bold",
+              }}
+            >
+              Daftar Sekarang!
+            </a>
+          </Col>
+        </>
       )}
     </Flex>
   );

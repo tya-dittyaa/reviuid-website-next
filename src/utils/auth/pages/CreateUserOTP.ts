@@ -1,9 +1,13 @@
 "use server";
 
+import { UserOtpType } from "@/types";
+
 export async function CreateUserOTP({
   email,
+  type,
 }: {
   email: string;
+  type: UserOtpType;
 }): Promise<number | undefined> {
   // Get the environment variables
   const BACKEND_URL = process.env.BACKEND_URL as string;
@@ -18,6 +22,7 @@ export async function CreateUserOTP({
       },
       body: JSON.stringify({
         email,
+        type,
       }),
     });
 

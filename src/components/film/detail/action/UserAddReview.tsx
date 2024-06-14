@@ -180,6 +180,8 @@ const AddReview: React.FC = () => {
 
       <Modal
         centered
+        closable={false}
+        maskClosable={false}
         title="Menambahkan Komentar"
         open={open}
         onOk={handleReviewAction}

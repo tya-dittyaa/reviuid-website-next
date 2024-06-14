@@ -1,4 +1,5 @@
 export * from "./pages/CreateUserOTP";
+export * from "./pages/FetchForgotPassword";
 export * from "./pages/FetchUserLogin";
 export * from "./pages/FetchUserLogout";
 export * from "./pages/FetchUserRegister";

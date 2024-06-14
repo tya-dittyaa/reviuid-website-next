@@ -148,8 +148,10 @@ const UserEditAvatar: React.FC = () => {
 
       <Modal
         centered
+        closable={false}
+        maskClosable={false}
         title="Ubah Foto Profil"
-        visible={open}
+        open={open}
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
@@ -161,6 +163,7 @@ const UserEditAvatar: React.FC = () => {
           style: { color: "black" },
         }}
         cancelButtonProps={{
+          danger: true,
           disabled: confirmLoading || confirmDelete,
         }}
         footer={(_, { OkBtn, CancelBtn }) => (

@@ -82,8 +82,10 @@ const UserEditPassword: React.FC = () => {
 
       <Modal
         centered
+        closable={false}
+        maskClosable={false}
         title="Ubah Kata Sandi"
-        visible={open}
+        open={open}
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
@@ -95,6 +97,7 @@ const UserEditPassword: React.FC = () => {
           style: { color: "black" },
         }}
         cancelButtonProps={{
+          danger: true,
           disabled: confirmLoading,
         }}
       >
