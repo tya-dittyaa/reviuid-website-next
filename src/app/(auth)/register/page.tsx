@@ -3,6 +3,8 @@
 import { useWindowSize } from "@/hooks";
 import { UserRegister } from "@/types";
 import {
+  CheckAvailableEmail,
+  CheckAvailableUsername,
   CreateUserOTP,
   FetchRefreshToken,
   FetchUserRegister,
@@ -79,6 +81,50 @@ function RegisterForm() {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [confirmModal, setConfirmModal] = useState<boolean>(false);
 
+  const checkUsernameAvailability = async (): Promise<boolean> => {
+    const username = form.getFieldValue("username");
+    const check = await CheckAvailableUsername(username);
+
+    if (check === undefined) {
+      setSubmitting(false);
+      setError(true);
+      setErrorMessage("Terjadi kesalahan pada server! Silakan coba lagi!");
+      return false;
+    }
+
+    if (!check) {
+      setSubmitting(false);
+      setError(true);
+      setErrorMessage(
+        "Nama pengguna sudah digunakan! Silakan gunakan nama pengguna lain!"
+      );
+      return false;
+    }
+
+    return true;
+  };
+
+  const checkEmailAvailability = async (): Promise<boolean> => {
+    const email = form.getFieldValue("email");
+    const check = await CheckAvailableEmail(email);
+
+    if (check === undefined) {
+      setSubmitting(false);
+      setError(true);
+      setErrorMessage("Terjadi kesalahan pada server! Silakan coba lagi!");
+      return false;
+    }
+
+    if (!check) {
+      setSubmitting(false);
+      setError(true);
+      setErrorMessage("Email sudah digunakan! Silakan gunakan email lain!");
+      return false;
+    }
+
+    return true;
+  };
+
   const doRegistration = async (values: UserRegister & { otp: string }) => {
     const toastPromise = new Promise<void>((resolve, reject) => {
       setError(false);
@@ -88,6 +134,7 @@ function RegisterForm() {
         const verify = await VerifyUserOTP({
           email: values.email,
           otp: values.otp,
+          type: "REGISTER",
         });
 
         setConfirmModal(false);
@@ -107,24 +154,22 @@ function RegisterForm() {
           switch (verify) {
             case 2:
               setError(true);
-              setErrorMessage(
-                "Email sudah terdaftar! Silakan gunakan email lain!"
-              );
+              setErrorMessage("Kode OTP tidak ditemukan! Silakan coba lagi!");
               break;
 
             case 3:
               setError(true);
-              setErrorMessage("Email tidak ditemukan! Silakan coba lagi!");
+              setErrorMessage("Kode OTP tidak valid! Silakan coba lagi!");
               break;
 
             case 4:
               setError(true);
-              setErrorMessage("Kode OTP salah! Silakan coba lagi!");
+              setErrorMessage("Tipe OTP tidak valid! Silakan coba lagi!");
               break;
 
             case 5:
               setError(true);
-              setErrorMessage("Kode OTP sudah kadaluarsa! Silakan coba lagi!");
+              setErrorMessage("Kode OTP telah kadaluarsa! Silakan coba lagi!");
               break;
 
             default:
@@ -168,7 +213,7 @@ function RegisterForm() {
 
   const generateOTP = async () => {
     const email = form.getFieldValue("email");
-    const sendOtp = await CreateUserOTP({ email });
+    const sendOtp = await CreateUserOTP({ email, type: "REGISTER" });
 
     if (!sendOtp) {
       setSubmitting(false);
@@ -221,6 +266,13 @@ function RegisterForm() {
 
   const showModal = async () => {
     setSubmitting(true);
+
+    const check = await checkUsernameAvailability();
+    if (!check) return;
+
+    const checkEmail = await checkEmailAvailability();
+    if (!checkEmail) return;
+
     await generateOTP();
     setOpenModal(true);
   };

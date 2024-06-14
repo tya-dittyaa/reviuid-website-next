@@ -85,6 +85,7 @@ function DisplayUserHorizontal() {
           size={125}
           icon={
             <Image
+              priority
               src={user.avatar}
               width={2048}
               height={2048}

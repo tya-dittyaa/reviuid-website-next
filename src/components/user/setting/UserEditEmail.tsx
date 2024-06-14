@@ -45,7 +45,11 @@ const UserEditEmail: React.FC = () => {
       setErrorMessage("");
 
       setTimeout(async () => {
-        const verify = await VerifyUserOTP({ email, otp });
+        const verify = await VerifyUserOTP({
+          email,
+          otp,
+          type: "CHANGE_EMAIL",
+        });
 
         setConfirmModal(false);
         setOpenModal(false);
@@ -64,19 +68,17 @@ const UserEditEmail: React.FC = () => {
           switch (verify) {
             case 2:
               setError(true);
-              setErrorMessage(
-                "Email sudah terdaftar! Silakan gunakan email lain!"
-              );
+              setErrorMessage("Kode OTP tidak ditemukan! Silakan coba lagi!");
               break;
 
             case 3:
               setError(true);
-              setErrorMessage("Email tidak ditemukan! Silakan coba lagi!");
+              setErrorMessage("Kode OTP tidak valid! Silakan coba lagi!");
               break;
 
             case 4:
               setError(true);
-              setErrorMessage("Kode OTP salah! Silakan coba lagi!");
+              setErrorMessage("Tipe OTP tidak valid! Silakan coba lagi!");
               break;
 
             case 5:
@@ -156,7 +158,7 @@ const UserEditEmail: React.FC = () => {
 
   const generateOTP = async () => {
     const email = form.getFieldValue("email");
-    const sendOtp = await CreateUserOTP({ email });
+    const sendOtp = await CreateUserOTP({ email, type: "CHANGE_EMAIL" });
 
     if (!sendOtp) {
       setConfirmLoading(false);
