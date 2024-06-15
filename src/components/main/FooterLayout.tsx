@@ -33,8 +33,11 @@ function Vertical() {
           </Link>
         </Space>
         <Space direction="vertical">
-          <Link href="/developer" style={{ color: "white", listStyle: "none" }}>
-            Developer
+          <Link
+            href="/developers"
+            style={{ color: "white", listStyle: "none" }}
+          >
+            Developers
           </Link>
         </Space>
       </Space>
