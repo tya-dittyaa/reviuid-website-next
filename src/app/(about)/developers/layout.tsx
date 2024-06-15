@@ -4,12 +4,12 @@ import type { Metadata } from "next";
 const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL!;
 
 export const metadata: Metadata = {
-  title: "Tentang Kami",
-  description: "Temukan informasi tentang Reviu.ID di sini.",
+  title: "Daftar Pengembang",
+  description: "Daftar pengembang yang terlibat dalam pengembangan Reviu.ID.",
   openGraph: {
-    title: "Tentang Kami » Reviu.ID",
-    description: "Temukan informasi tentang Reviu.ID di sini.",
-    url: `${FRONTEND_URL}/about-us`,
+    title: "Daftar Pengembang » Reviu.ID",
+    description: "Daftar pengembang yang terlibat dalam pengembangan Reviu.ID.",
+    url: `${FRONTEND_URL}/developers`,
     siteName: "Reviu.ID",
     images: [
       {
