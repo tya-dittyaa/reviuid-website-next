@@ -4,12 +4,30 @@ import { ConfigProvider } from "antd";
 import type { Metadata } from "next";
 import "./globals.css";
 
+const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL!;
+
 export const metadata: Metadata = {
   title: {
     default: "Reviu.ID",
     template: "%s » Reviu.ID",
   },
   description: "Halaman utama Reviu.ID",
+  openGraph: {
+    title: "Reviu.ID",
+    description: "Halaman utama Reviu.ID",
+    url: FRONTEND_URL,
+    siteName: "Reviu.ID",
+    images: [
+      {
+        url: `${FRONTEND_URL}/logo.png`,
+        alt: "Reviu.ID",
+        width: 800,
+        height: 600,
+      },
+    ],
+    locale: "id_ID",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
