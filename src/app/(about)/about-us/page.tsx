@@ -24,7 +24,7 @@ import {
 import { CSSProperties, useEffect, useState } from "react";
 
 const { Content } = Layout;
-const { Text, Title, Paragraph } = Typography;
+const { Title, Paragraph } = Typography;
 
 function TaglineImage() {
   return (
@@ -274,15 +274,15 @@ function AboutUsText() {
           }}
         />
 
-        <Text
-          strong
+        <Title
+          level={2}
           style={{
             color: "#E2B808",
-            fontSize: 30,
+            margin: 0,
           }}
         >
-          <b style={{ fontWeight: "bold" }}>Tentang Kami</b>
-        </Text>
+          Tentang Kami
+        </Title>
       </Col>
     </Flex>
   );

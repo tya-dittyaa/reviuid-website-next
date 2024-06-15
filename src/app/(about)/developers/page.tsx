@@ -133,8 +133,6 @@ function DeveloperCard({ developer }: { developer: Developer }) {
 }
 
 function DeveloperList() {
-  const layout = useViewLayout();
-
   return (
     <Flex
       wrap
@@ -173,15 +171,15 @@ function DeveloperText() {
           }}
         />
 
-        <Text
-          strong
+        <Title
+          level={2}
           style={{
             color: "#E2B808",
-            fontSize: 30,
+            margin: 0,
           }}
         >
-          <b style={{ fontWeight: "bold" }}>Daftar Pengembang</b>
-        </Text>
+          Daftar Pengembang
+        </Title>
       </Col>
     </Flex>
   );
