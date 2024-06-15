@@ -1,11 +1,6 @@
 import "@fontsource/poppins";
 import type { Metadata } from "next";
 
-// export const metadata: Metadata = {
-//   title: "Daftar Pengembang",
-//   description: "Daftar pengembang yang terlibat dalam pengembangan Reviu.ID.",
-// };
-
 const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL!;
 
 export const metadata: Metadata = {
