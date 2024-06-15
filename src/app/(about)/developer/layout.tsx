@@ -2,9 +2,8 @@ import "@fontsource/poppins";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Lupa Kata Sandi",
-  description:
-    "Lupa kata sandi akun Reviu.ID? Atur ulang kata sandi Anda di sini.",
+  title: "Daftar Pengembang",
+  description: "Daftar pengembang yang terlibat dalam pengembangan Reviu.ID.",
 };
 
 export default function RootLayout({
