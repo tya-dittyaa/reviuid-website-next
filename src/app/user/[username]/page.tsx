@@ -18,7 +18,7 @@ import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const { Content } = Layout;
-const { Text, Title, Paragraph } = Typography;
+const { Title, Paragraph } = Typography;
 
 function DisplayUserVertical() {
   const user = useUserProfile()!;
@@ -134,15 +134,15 @@ function ProfileText() {
           }}
         />
 
-        <Text
-          strong
+        <Title
+          level={2}
           style={{
             color: "#E2B808",
-            fontSize: 30,
+            margin: 0,
           }}
         >
-          <b style={{ fontWeight: "bold" }}>Profil User</b>
-        </Text>
+          Profil Pengguna
+        </Title>
       </Col>
     </Flex>
   );

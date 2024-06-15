@@ -2,7 +2,7 @@ import { useViewLayout } from "@/context";
 import { VideoCameraOutlined } from "@ant-design/icons";
 import { Avatar, Col, Flex, Typography } from "antd";
 
-const { Text } = Typography;
+const { Title } = Typography;
 
 const DetailFilmHeader: React.FC = () => {
   const layout = useViewLayout();
@@ -27,15 +27,15 @@ const DetailFilmHeader: React.FC = () => {
           }}
         />
 
-        <Text
-          strong
+        <Title
+          level={2}
           style={{
             color: "#E2B808",
-            fontSize: 30,
+            margin: 0,
           }}
         >
-          <b style={{ fontWeight: "bold" }}>Halaman Film</b>
-        </Text>
+          Halaman Film
+        </Title>
       </Col>
     </Flex>
   );
