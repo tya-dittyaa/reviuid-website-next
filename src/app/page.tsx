@@ -1,7 +1,8 @@
 "use client";
 
 import { FooterLayout, HeaderLayout } from "@/components";
-import { UserSessionProvider } from "@/context";
+import { UserSessionProvider, ViewLayoutProvider } from "@/context";
+import { useWindowSize } from "@/hooks";
 import { UserSession } from "@/types";
 import { GetUserSession } from "@/utils";
 import "@fontsource/poppins";
@@ -35,6 +36,9 @@ function TemporaryContent() {
 }
 
 export default function Home() {
+  const size = useWindowSize();
+
+  const [layout, setLayout] = useState<"vertical" | "horizontal">("horizontal");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userSession, setUserSession] = useState<UserSession | null>(null);
 
@@ -45,7 +49,21 @@ export default function Home() {
   };
 
   useEffect(() => {
+    if (size.width && size.width < 800) {
+      setLayout("vertical");
+    } else {
+      setLayout("horizontal");
+    }
+  }, [size.width]);
+
+  useEffect(() => {
     getUserSession();
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
   }, []);
 
   if (isLoading) {
@@ -53,12 +71,14 @@ export default function Home() {
   }
 
   return (
-    <UserSessionProvider user={userSession}>
-      <Layout style={{ minHeight: "100dvh" }}>
-        <HeaderLayout />
-        <TemporaryContent />
-        <FooterLayout />
-      </Layout>
-    </UserSessionProvider>
+    <ViewLayoutProvider view={layout}>
+      <UserSessionProvider user={userSession}>
+        <Layout style={{ minHeight: "100dvh" }}>
+          <HeaderLayout />
+          <TemporaryContent />
+          <FooterLayout />
+        </Layout>
+      </UserSessionProvider>
+    </ViewLayoutProvider>
   );
 }
