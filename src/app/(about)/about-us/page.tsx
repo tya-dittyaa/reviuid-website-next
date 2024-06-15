@@ -48,14 +48,14 @@ function BodyLayout() {
     {
       key: "3.1",
       label: (
-        <Text
+        <Title
+          level={5}
           style={{
-            color: "#9E140F",
-            fontSize: 16,
+            margin: 0,
           }}
         >
           Komunitas yang Aktif
-        </Text>
+        </Title>
       ),
       children: (
         <Paragraph
@@ -72,14 +72,14 @@ function BodyLayout() {
     {
       key: "3.2",
       label: (
-        <Text
+        <Title
+          level={5}
           style={{
-            color: "#9E140F",
-            fontSize: 16,
+            margin: 0,
           }}
         >
           Akses Mudah
-        </Text>
+        </Title>
       ),
       children: (
         <Paragraph
@@ -95,14 +95,14 @@ function BodyLayout() {
     {
       key: "3.3",
       label: (
-        <Text
+        <Title
+          level={5}
           style={{
-            color: "#9E140F",
-            fontSize: 16,
+            margin: 0,
           }}
         >
           Ulasan yang Jujur dan Terpercaya
-        </Text>
+        </Title>
       ),
       children: (
         <Paragraph
@@ -128,7 +128,6 @@ function BodyLayout() {
         <Title
           level={4}
           style={{
-            color: "#9E140F",
             margin: 0,
           }}
         >
@@ -157,7 +156,6 @@ function BodyLayout() {
         <Title
           level={4}
           style={{
-            color: "#9E140F",
             margin: 0,
           }}
         >
@@ -186,7 +184,6 @@ function BodyLayout() {
         <Title
           level={4}
           style={{
-            color: "#9E140F",
             margin: 0,
           }}
         >
