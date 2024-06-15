@@ -1,6 +1,6 @@
 "use client";
 
-import { FooterLayout, HeaderLayout } from "@/components";
+import { DividerCenter, FooterLayout, HeaderLayout } from "@/components";
 import {
   UserProfileProvider,
   UserSessionProvider,
@@ -12,7 +12,7 @@ import { useWindowSize } from "@/hooks";
 import { UserProfile, UserSession } from "@/types";
 import { GetUserProfile, GetUserSession } from "@/utils";
 import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Col, Divider, Flex, Layout, Spin, Typography } from "antd";
+import { Avatar, Col, Flex, Layout, Spin, Typography } from "antd";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -148,19 +148,6 @@ function ProfileText() {
   );
 }
 
-function DividerText() {
-  return (
-    <Divider
-      orientation="center"
-      style={{
-        borderColor: "black",
-        borderWidth: 2,
-        margin: "20px 0 20px 0",
-      }}
-    />
-  );
-}
-
 function UserFound() {
   const layout = useViewLayout();
 
@@ -175,7 +162,7 @@ function UserFound() {
       }}
     >
       <ProfileText />
-      <DividerText />
+      <DividerCenter />
 
       {layout === "vertical" ? (
         <DisplayUserVertical />
@@ -183,7 +170,7 @@ function UserFound() {
         <DisplayUserHorizontal />
       )}
 
-      <DividerText />
+      <DividerCenter />
     </Content>
   );
 }
