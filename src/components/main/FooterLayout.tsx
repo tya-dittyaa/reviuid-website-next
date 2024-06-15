@@ -37,7 +37,7 @@ function Vertical() {
             href="/developers"
             style={{ color: "white", listStyle: "none" }}
           >
-            Developers
+            Pengembang
           </Link>
         </Space>
       </Space>
