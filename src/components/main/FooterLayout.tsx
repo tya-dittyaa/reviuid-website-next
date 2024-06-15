@@ -65,8 +65,8 @@ function Horizontal() {
         <Link href="/about-us" style={{ color: "white", listStyle: "none" }}>
           Tentang Kami
         </Link>
-        <Link href="/developer" style={{ color: "white", listStyle: "none" }}>
-          Developer
+        <Link href="/developers" style={{ color: "white", listStyle: "none" }}>
+          Pengembang
         </Link>
       </Space>
     </Flex>
