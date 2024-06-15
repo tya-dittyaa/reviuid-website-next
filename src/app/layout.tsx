@@ -11,10 +11,10 @@ export const metadata: Metadata = {
     default: "Reviu.ID",
     template: "%s » Reviu.ID",
   },
-  description: "Halaman utama Reviu.ID",
+  description: "Halaman Utama Reviu.ID",
   openGraph: {
     title: "Reviu.ID",
-    description: "Halaman utama Reviu.ID",
+    description: "Berbagi Cerita, Menikmati Karya Film Indonesia!",
     url: FRONTEND_URL,
     siteName: "Reviu.ID",
     images: [
