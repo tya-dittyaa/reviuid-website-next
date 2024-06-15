@@ -1,5 +1,4 @@
 import "@fontsource/poppins";
-import { App } from "antd";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -13,9 +12,5 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <App>
-      <section>{children}</section>
-    </App>
-  );
+  return <section>{children}</section>;
 }
