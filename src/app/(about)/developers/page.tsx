@@ -69,7 +69,10 @@ function DeveloperCard({ developer }: { developer: Developer }) {
   return (
     <Card
       hoverable
-      style={{ width: layout === "vertical" ? "100%" : 600 }}
+      style={{
+        width: layout === "vertical" ? "100%" : 600,
+        background: "#E2E0D8",
+      }}
       styles={{ body: { padding: 0, overflow: "hidden" } }}
     >
       <Flex
