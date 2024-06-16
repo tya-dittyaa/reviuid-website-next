@@ -7,6 +7,33 @@ import React, { useEffect, useState } from "react";
 
 const { Title } = Typography;
 
+const ServerError: React.FC = () => {
+  return (
+    <Flex
+      vertical={true}
+      align="center"
+      justify="center"
+      style={{
+        width: "100%",
+        backgroundColor: "#E2E0D8",
+        padding: "1rem",
+        borderRadius: 20,
+      }}
+    >
+      <Title
+        level={4}
+        style={{
+          color: "gray",
+          margin: "0",
+          padding: "1rem",
+        }}
+      >
+        Terjadi kesalahan pada server :(
+      </Title>
+    </Flex>
+  );
+};
+
 const NotFound: React.FC = () => {
   return (
     <Flex
@@ -125,12 +152,11 @@ const ListFilmPageCard: React.FC = () => {
   const page = Number(getPage) || 1;
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [filmData, setFilmData] = useState<FilmData[]>([]);
+  const [filmData, setFilmData] = useState<FilmData[] | undefined>([]);
 
   const getFilmData = async (page: number) => {
     const response = await GetFilmListByPage(page);
-    if (response) setFilmData(response);
-    else setFilmData([]);
+    setFilmData(response);
     setIsLoading(false);
   };
 
@@ -140,6 +166,10 @@ const ListFilmPageCard: React.FC = () => {
 
   if (isLoading) {
     return <Spin />;
+  }
+
+  if (!filmData) {
+    return <ServerError />;
   }
 
   if (totalFilm === 0 || filmData.length === 0) {
