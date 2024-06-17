@@ -10,7 +10,12 @@ import {
   PatchUserFilmReview,
   PostUserFilmReview,
 } from "@/utils";
-import { DeleteOutlined, SaveOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PlusCircleOutlined,
+  SaveOutlined,
+} from "@ant-design/icons";
 import { Button, Form, Input, Modal, Rate } from "antd";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -179,6 +184,7 @@ const AddReview: React.FC = () => {
         size="large"
         type="primary"
         onClick={showModal}
+        icon={userComment ? <EditOutlined /> : <PlusCircleOutlined />}
         style={{
           color: "black",
           fontSize: layout === "horizontal" ? "1.2vw" : "4vw",
