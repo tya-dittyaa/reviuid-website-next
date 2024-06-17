@@ -1,10 +1,10 @@
-import { FilmCommentValue } from "@/types";
+import { FilmReviewValue } from "@/types";
 import { createContext, useContext } from "react";
 
-const UserCommentContext = createContext<FilmCommentValue | null>(null);
+const UserCommentContext = createContext<FilmReviewValue | null>(null);
 
 const UserFilmCommentProvider: React.FC<{
-  value: FilmCommentValue | null;
+  value: FilmReviewValue | null;
   children: React.ReactNode;
 }> = ({ value, children }) => {
   return (
