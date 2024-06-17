@@ -1,29 +1,24 @@
 import { GetFilmData } from "@/utils";
 import { Metadata } from "next";
 
-const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL!;
-
 export async function generateMetadata({
   params,
-}: {
+}: Readonly<{
   params: { filmId: string };
-}): Promise<Metadata> {
-  const response = await GetFilmData(params.filmId);
+}>): Promise<Metadata> {
+  const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL!;
+  const { filmId } = params;
 
-  if (!response) {
+  const filmData = await GetFilmData(filmId);
+
+  if (!filmData) {
     return {
-      title: {
-        default: `Film Tidak Ditemukan`,
-        template: "%s » Reviu.ID",
-      },
-      description: "Halaman yang Anda cari tidak ditemukan.",
+      title: "Film Tidak Ditemukan",
+      description: "Film yang dicari tidak ditemukan",
       openGraph: {
-        title: {
-          default: `Film Tidak Ditemukan » Reviu.ID`,
-          template: "%s » Reviu.ID",
-        },
-        description: "Halaman yang Anda cari tidak ditemukan.",
-        url: `${FRONTEND_URL}/film/${params.filmId}`,
+        title: "Film Tidak Ditemukan",
+        description: "Film yang dicari tidak ditemukan",
+        url: `${FRONTEND_URL}/film/${filmId}`,
         siteName: "Reviu.ID",
         images: [
           {
@@ -40,20 +35,20 @@ export async function generateMetadata({
   }
 
   return {
-    title: {
-      default: `${response.title}`,
-      template: "%s » Reviu.ID",
-    },
-    description: response.synopsis,
+    title: filmData.title,
+    description: filmData.synopsis,
     openGraph: {
-      title: {
-        default: `${response.title} » Reviu.ID`,
-        template: "%s » Reviu.ID",
-      },
-      description: response.synopsis,
-      url: `${FRONTEND_URL}/film/${params.filmId}`,
+      title: filmData.title,
+      description: filmData.synopsis,
+      url: `${FRONTEND_URL}/film/${filmId}`,
       siteName: "Reviu.ID",
       images: [
+        {
+          url: filmData.poster,
+          alt: filmData.title,
+          width: 800,
+          height: 600,
+        },
         {
           url: `${FRONTEND_URL}/logo.png`,
           alt: "Reviu.ID",
