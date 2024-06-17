@@ -6,6 +6,10 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+
+  --primary: #E2B808;
+  --secondary: rgba(31, 209, 253, 0.4);
+  --tertiary: rgba(31, 209, 253, 0.6);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,4 +30,50 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  height: 5px;
+  background-color: black;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(56, 56, 56);
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #E2B808;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #947809;
+}
+
+/* Horizontal Scroll */
+::-webkit-scrollbar {
+  width: 5px;
+  background-color: black;
+}
+
+/* Horizontal Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(56, 56, 56);
+  border-radius: 10px;
+}
+
+/* Horizontal Handle */
+::-webkit-scrollbar-thumb {
+  background: #E2B808;
+  border-radius: 10px;
+}
+
+/* Horizontal Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #947809;
 }

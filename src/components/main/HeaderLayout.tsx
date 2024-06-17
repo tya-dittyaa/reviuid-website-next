@@ -1,6 +1,6 @@
+import { useUserSession } from "@/context";
 import { useWindowSize } from "@/hooks";
-import { LogoConfig, UserSession, ViewType } from "@/types";
-import { GetUserSession } from "@/utils";
+import { LogoConfig } from "@/types";
 import {
   LogoutOutlined,
   MenuOutlined,
@@ -24,7 +24,11 @@ import { useEffect, useState } from "react";
 const { Header } = Layout;
 const { Text } = Typography;
 
-function ReviuIDLogo(logoConfig: LogoConfig) {
+interface ReviuIDLogoProps {
+  logoConfig: LogoConfig;
+}
+
+const ReviuIDLogo: React.FC<ReviuIDLogoProps> = ({ logoConfig }) => {
   return (
     <a
       href="/"
@@ -39,6 +43,7 @@ function ReviuIDLogo(logoConfig: LogoConfig) {
         size={logoConfig.AvatarSize}
         src={
           <Image
+            priority
             src="/logo.png"
             alt="Reviu.ID Logo"
             width={logoConfig.AvatarSize}
@@ -58,9 +63,10 @@ function ReviuIDLogo(logoConfig: LogoConfig) {
       </Text>
     </a>
   );
-}
+};
 
-function DrawerLayout({ view }: { view: ViewType }) {
+const DrawerLayout: React.FC = () => {
+  const userSession = useUserSession();
   const [open, setOpen] = useState(false);
 
   const onClose = () => {
@@ -83,10 +89,10 @@ function DrawerLayout({ view }: { view: ViewType }) {
       />
 
       <Drawer
-        title="Reviu.ID - Menu"
+        title="Reviu.ID - Menu Cepat"
         footer="© 2024, oleh Reviu Film ID, Inc."
         placement="left"
-        width={250}
+        width={270}
         onClose={onClose}
         open={open}
         style={{
@@ -122,12 +128,65 @@ function DrawerLayout({ view }: { view: ViewType }) {
         >
           Forum
         </Button>
+
+        {!userSession ? (
+          <>
+            <Button
+              type="text"
+              size="large"
+              href="/login"
+              block
+              style={{ marginBottom: "15px" }}
+            >
+              Masuk
+            </Button>
+            <Button
+              type="text"
+              size="large"
+              href="/register"
+              block
+              style={{ marginBottom: "15px" }}
+            >
+              Daftar
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              type="text"
+              size="large"
+              href={`/user/${userSession.username}`}
+              block
+              style={{ marginBottom: "15px" }}
+            >
+              Profil
+            </Button>
+            <Button
+              type="text"
+              size="large"
+              href={`/user/${userSession.username}/settings`}
+              block
+              style={{ marginBottom: "15px" }}
+            >
+              Pengaturan
+            </Button>
+            <Button
+              type="text"
+              size="large"
+              href={`/logout`}
+              block
+              style={{ marginBottom: "15px" }}
+            >
+              Keluar
+            </Button>
+          </>
+        )}
       </Drawer>
     </Col>
   );
-}
+};
 
-function LogoLayout() {
+const LogoLayout: React.FC = () => {
   return (
     <Col
       flex="auto"
@@ -138,12 +197,12 @@ function LogoLayout() {
         color: "white",
       }}
     >
-      <ReviuIDLogo AvatarSize={40} FontSize={30} />
+      <ReviuIDLogo logoConfig={{ AvatarSize: 40, FontSize: 30 }} />
     </Col>
   );
-}
+};
 
-function UserNotLogin() {
+const UserNotLogin: React.FC = () => {
   return (
     <Col
       flex="auto"
@@ -159,22 +218,21 @@ function UserNotLogin() {
         size="large"
         type="primary"
         style={{
-          fontWeight: "bolder",
           color: "black",
-          backgroundColor: "#E2B808",
         }}
       >
         Masuk
       </Button>
     </Col>
   );
-}
+};
 
-function UserHasLogin() {
+const UserHasLogin: React.FC = () => {
   const size = useWindowSize();
+  const userSession = useUserSession();
+
   const [isLoading, setIsLoading] = useState(true);
   const [value, setValue] = useState<"vertical" | "horizontal">("horizontal");
-  const [userData, setUserData] = useState<UserSession | null>(null);
 
   useEffect(() => {
     if (size.width && size.width < 800) {
@@ -185,26 +243,23 @@ function UserHasLogin() {
   }, [size.width]);
 
   useEffect(() => {
-    const getUserData = async () => {
-      const response = await GetUserSession();
-      setUserData(response);
+    setTimeout(() => {
       setIsLoading(false);
-    };
-    getUserData();
-  }, []);
+    }, 2000);
+  });
 
   if (isLoading) {
     return <Spin />;
   }
 
-  if (!userData) {
+  if (!userSession) {
     return <UserNotLogin />;
   }
 
   const items: MenuProps["items"] = [
     {
       key: "1",
-      label: `Halo, ${userData.username} !`,
+      label: `Halo, ${userSession.username} !`,
       disabled: true,
       style: { color: "#E2B808", fontWeight: "bold" },
     },
@@ -213,12 +268,12 @@ function UserHasLogin() {
     },
     {
       key: "2",
-      label: <a href={`/user/${userData.username}`}>Profil</a>,
+      label: <a href={`/user/${userSession.username}`}>Profil</a>,
       icon: <UserOutlined />,
     },
     {
       key: "3",
-      label: <a href={`/user/${userData.username}/settings`}>Pengaturan</a>,
+      label: <a href={`/user/${userSession.username}/settings`}>Pengaturan</a>,
       icon: <SettingOutlined />,
     },
     {
@@ -250,7 +305,7 @@ function UserHasLogin() {
               marginRight: 15,
             }}
           >
-            {userData.username}
+            {userSession.username}
           </Text>
         )}
 
@@ -258,8 +313,9 @@ function UserHasLogin() {
           size={40}
           src={
             <Image
-              src={userData.avatar}
-              alt={`Avatar ${userData.username}`}
+              priority
+              src={userSession.avatar}
+              alt={`Avatar ${userSession.username}`}
               width={40}
               height={40}
             />
@@ -268,9 +324,9 @@ function UserHasLogin() {
       </a>
     </Dropdown>
   );
-}
+};
 
-export default function HeaderLayout() {
+const HeaderLayout: React.FC = () => {
   const size = useWindowSize();
   const [value, setValue] = useState<"vertical" | "horizontal">("horizontal");
 
@@ -296,9 +352,11 @@ export default function HeaderLayout() {
         padding: value === "horizontal" ? "0 25px" : "0 15px",
       }}
     >
-      <DrawerLayout view={value} />
+      <DrawerLayout />
       <LogoLayout />
       <UserHasLogin />
     </Header>
   );
-}
+};
+
+export default HeaderLayout;

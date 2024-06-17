@@ -6,7 +6,8 @@
     "dev": "next dev -p 4000",
     "build": "next build",
     "start": "next start -p 4000",
-    "lint": "next lint"
+    "lint": "next lint",
+    "server": "pm2 start npm --name reviuid-website -- start"
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.7",
@@ -20,7 +21,10 @@
     "react": "^18",
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18",
+<<<<<<< HEAD
     "react-multi-carousel": "^2.8.5",
+=======
+>>>>>>> 3d8eaa29a09e879e49ca046274ea3d1a135f492c
     "react-slick": "^0.30.2",
     "sharp": "^0.33.4",
     "slick-carousel": "^1.8.1",
