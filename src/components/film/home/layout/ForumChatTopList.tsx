@@ -27,7 +27,7 @@ const ForumChatTopList: React.FC = () => {
               <Spin />
             ) : (
               <Title level={5} style={{ color: "gray", margin: 0 }}>
-                Belum ada diskusi
+                Akan Segera Hadir!
               </Title>
             )
           }
