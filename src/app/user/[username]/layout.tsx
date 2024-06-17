@@ -57,12 +57,6 @@ export async function generateMetadata({
       siteName: "Reviu.ID",
       images: [
         {
-          url: user.avatar,
-          alt: user.username,
-          width: 800,
-          height: 600,
-        },
-        {
           url: `${FRONTEND_URL}/logo.png`,
           alt: "Reviu.ID",
           width: 800,

@@ -44,12 +44,6 @@ export async function generateMetadata({
       siteName: "Reviu.ID",
       images: [
         {
-          url: filmData.poster,
-          alt: filmData.title,
-          width: 800,
-          height: 600,
-        },
-        {
           url: `${FRONTEND_URL}/logo.png`,
           alt: "Reviu.ID",
           width: 800,
