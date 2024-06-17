@@ -9,12 +9,12 @@ export type FilmData = {
   totalReviews: number;
 };
 
-export type FilmCommentValue = {
+export type FilmReviewValue = {
   rating: number;
   review: string;
 };
 
-export type FilmCommentData = FilmCommentValue & {
+export type FilmReviewData = FilmReviewValue & {
   user: {
     username: string;
     avatar: string;

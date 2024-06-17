@@ -4,7 +4,7 @@ import {
   useUserSession,
   useViewLayout,
 } from "@/context";
-import { FilmCommentValue } from "@/types";
+import { FilmReviewValue } from "@/types";
 import {
   DeleteFilmUserReview,
   PatchFilmUserReview,
@@ -44,7 +44,7 @@ const AddReview: React.FC = () => {
     setOpen(false);
   };
 
-  const handleAddReview = async (values: FilmCommentValue) => {
+  const handleAddReview = async (values: FilmReviewValue) => {
     setConfirmLoading(true);
 
     const promise = () =>
@@ -83,7 +83,7 @@ const AddReview: React.FC = () => {
     });
   };
 
-  const handleEditReview = async (values: FilmCommentValue) => {
+  const handleEditReview = async (values: FilmReviewValue) => {
     setConfirmLoading(true);
 
     const promise = () =>
@@ -157,10 +157,10 @@ const AddReview: React.FC = () => {
     });
   };
 
-  const handleReviewAction = async () => {
+  const handleCommentAction = async () => {
     form
       .validateFields()
-      .then((values: FilmCommentValue) => {
+      .then((values: FilmReviewValue) => {
         if (userComment) {
           handleEditReview(values);
         } else {
@@ -198,7 +198,7 @@ const AddReview: React.FC = () => {
         maskClosable={false}
         title="Menambahkan Komentar"
         open={open}
-        onOk={handleReviewAction}
+        onOk={handleCommentAction}
         confirmLoading={confirmLoading}
         onCancel={hideModal}
         okText={userComment ? "Perbarui" : "Tambahkan"}
@@ -243,7 +243,7 @@ const AddReview: React.FC = () => {
           <Form.Item
             label="Review"
             name="review"
-            initialValue={userComment?.review}
+            initialValue={userComment?.comment}
             rules={[{ required: true, message: "Review harus diisi" }]}
           >
             <TextArea rows={4} />
