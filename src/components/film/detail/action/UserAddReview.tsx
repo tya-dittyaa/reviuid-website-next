@@ -189,14 +189,14 @@ const AddReview: React.FC = () => {
           alignItems: "center",
         }}
       >
-        {userComment ? "Edit Komentar" : "Tambahkan Komentar"}
+        {userComment ? "Ubah Komentar" : "Tambahkan Komentar"}
       </Button>
 
       <Modal
         centered
         closable={false}
         maskClosable={false}
-        title="Menambahkan Komentar"
+        title={userComment ? "Ubah Komentar" : "Tambahkan Komentar"}
         open={open}
         onOk={handleCommentAction}
         confirmLoading={confirmLoading}
