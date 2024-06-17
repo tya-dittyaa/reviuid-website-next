@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 
-export async function PostFilmUserReview(
+export async function PostUserFilmReview(
   filmId: string,
   rating: number,
   review: string

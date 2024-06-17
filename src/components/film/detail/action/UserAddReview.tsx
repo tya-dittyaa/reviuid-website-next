@@ -6,9 +6,9 @@ import {
 } from "@/context";
 import { FilmReviewValue } from "@/types";
 import {
-  DeleteFilmUserReview,
-  PatchFilmUserReview,
-  PostFilmUserReview,
+  DeleteUserFilmReview,
+  PatchUserFilmReview,
+  PostUserFilmReview,
 } from "@/utils";
 import { DeleteOutlined, SaveOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal, Rate } from "antd";
@@ -50,7 +50,7 @@ const AddReview: React.FC = () => {
     const promise = () =>
       new Promise((resolve, reject) => {
         setTimeout(async () => {
-          const response = await PostFilmUserReview(
+          const response = await PostUserFilmReview(
             filmData.id,
             values.rating,
             values.review
@@ -89,7 +89,7 @@ const AddReview: React.FC = () => {
     const promise = () =>
       new Promise((resolve, reject) => {
         setTimeout(async () => {
-          const response = await PatchFilmUserReview(
+          const response = await PatchUserFilmReview(
             filmData.id,
             values.rating,
             values.review
@@ -128,7 +128,7 @@ const AddReview: React.FC = () => {
     const promise = () =>
       new Promise((resolve, reject) => {
         setTimeout(async () => {
-          const response = await DeleteFilmUserReview(filmData.id);
+          const response = await DeleteUserFilmReview(filmData.id);
 
           if (response === undefined) {
             reject("Terjadi kesalahan pada server!");

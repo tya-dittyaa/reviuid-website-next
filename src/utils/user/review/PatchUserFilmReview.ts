@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 
-export async function PatchFilmUserReview(
+export async function PatchUserFilmReview(
   filmId: string,
   rating: number,
   review: string
