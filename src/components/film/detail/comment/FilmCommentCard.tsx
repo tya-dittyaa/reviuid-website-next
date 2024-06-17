@@ -1,5 +1,5 @@
 import { useFilmData } from "@/context";
-import { FilmCommentData } from "@/types";
+import { FilmReviewData } from "@/types";
 import { GetFilmCommentByPage } from "@/utils";
 import { Avatar, Col, Flex, Rate, Spin, Typography } from "antd";
 import Image from "next/image";
@@ -34,7 +34,7 @@ const NotFound: React.FC = () => {
   );
 };
 
-const Found: React.FC<{ reviewData: FilmCommentData }> = ({ reviewData }) => {
+const Found: React.FC<{ reviewData: FilmReviewData }> = ({ reviewData }) => {
   return (
     <Flex
       vertical={true}
@@ -107,7 +107,7 @@ const FilmCommentCard: React.FC<{
   const filmData = useFilmData()!;
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [reviewData, setReviewData] = useState<FilmCommentData[] | null>(null);
+  const [reviewData, setReviewData] = useState<FilmReviewData[] | null>(null);
 
   const getReviewData = async (filmId: string, nowPage: number) => {
     const response = await GetFilmCommentByPage(filmId, nowPage);
