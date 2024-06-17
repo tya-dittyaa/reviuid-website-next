@@ -16,7 +16,7 @@ import {
   useViewLayout,
 } from "@/context";
 import { useWindowSize } from "@/hooks";
-import { FilmCommentValue, FilmData, UserSession } from "@/types";
+import { FilmData, FilmReviewValue, UserSession } from "@/types";
 import { GetFilmData, GetUserFilmComment, GetUserSession } from "@/utils";
 import { Layout, Spin } from "antd";
 import { notFound } from "next/navigation";
@@ -58,7 +58,7 @@ export default function ProfilePage({
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userSession, setUserSession] = useState<UserSession | null>(null);
   const [filmData, setFilmData] = useState<FilmData | null>(null);
-  const [userComment, setUserComment] = useState<FilmCommentValue | null>(null);
+  const [userComment, setUserComment] = useState<FilmReviewValue | null>(null);
 
   const getUserSession = async () => {
     const user = await GetUserSession();

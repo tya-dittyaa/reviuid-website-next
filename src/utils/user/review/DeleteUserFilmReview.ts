@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 
-export async function DeleteFilmUserReview(
+export async function DeleteUserFilmReview(
   filmId: string
 ): Promise<boolean | undefined> {
   // Get the environment variables

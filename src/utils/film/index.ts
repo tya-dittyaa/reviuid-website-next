@@ -7,7 +7,3 @@ export * from "./data/GetFilmListBySearch";
 export * from "./data/GetFilmTop10";
 export * from "./data/GetFilmTopFavorite";
 export * from "./data/GetFilmTotal";
-export * from "./review/DeleteFilmUserReview";
-export * from "./review/GetUserFilmReview";
-export * from "./review/PatchFilmUserReview";
-export * from "./review/PostFilmUserReview";
