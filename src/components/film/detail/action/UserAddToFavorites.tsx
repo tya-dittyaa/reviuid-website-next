@@ -1,9 +1,10 @@
-import { useUserSession } from "@/context";
+import { useUserSession, useViewLayout } from "@/context";
 import { Button, Form } from "antd";
 import { useState } from "react";
 import { toast } from "sonner";
 
 const AddToFavorites: React.FC = () => {
+  const layout = useViewLayout();
   const userSession = useUserSession();
   const [form] = Form.useForm();
 
@@ -26,9 +27,17 @@ const AddToFavorites: React.FC = () => {
       size="large"
       type="primary"
       onClick={showModal}
-      style={{ color: "black" }}
+      style={{
+        color: "black",
+        fontSize: layout === "horizontal" ? "1.2vw" : "4vw",
+        paddingTop: layout === "horizontal" ? "1vw" : "3vw",
+        paddingBottom: layout === "horizontal" ? "1vw" : "3vw",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
     >
-      Daftar Favorit
+      Tambah ke Daftar Favorit
     </Button>
   );
 };
