@@ -12,7 +12,7 @@ export async function GetUserProfile(
   try {
     // Fetch the user login
     const res = await fetch(
-      `${BACKEND_URL}/users/display/profile/${username}`,
+      `${BACKEND_URL}/users/display/${username}/profile`,
       {
         method: "GET",
         headers: {

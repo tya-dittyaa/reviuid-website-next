@@ -55,6 +55,15 @@ export default function RootLayout({
               colorTextDisabled: "#B3B3B3",
               fontWeight: "bold",
             },
+            Tabs: {
+              cardBg: "#E2B808",
+              colorBgBase: "#E2B808",
+              itemColor: "black",
+              itemHoverColor: "white",
+              itemActiveColor: "#B38A06",
+              itemSelectedColor: "black",
+              horizontalMargin: "0px",
+            },
           },
         }}
       >
