@@ -1,11 +1,11 @@
 "use server";
 
-import { FilmCommentData } from "@/types";
+import { FilmReviewData } from "@/types";
 
 export async function GetFilmCommentByPage(
   filmId: string,
   page: number
-): Promise<FilmCommentData[] | null> {
+): Promise<FilmReviewData[] | null> {
   // Get the environment variables
   const BACKEND_URL = process.env.BACKEND_URL as string;
   const HEADER_API_KEY = process.env.HEADER_API_KEY as string;
@@ -26,7 +26,7 @@ export async function GetFilmCommentByPage(
     if (res.status !== 200) return null;
 
     // Return the data
-    const data: FilmCommentData[] = await res.json();
+    const data: FilmReviewData[] = await res.json();
     return data;
   } catch (error) {
     return null;
