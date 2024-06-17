@@ -1,0 +1,31 @@
+name: cd
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  cd:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Deploy Using ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd ~/apps/reviuid-website-next
+            git pull origin master
+            git status
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            npm install
+            npm run build
+            pm2 reload reviuid-website
+            pm2 restart reviuid-website
