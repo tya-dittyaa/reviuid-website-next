@@ -4,31 +4,36 @@ import { ConfigProvider } from "antd";
 import type { Metadata } from "next";
 import "./globals.css";
 
-const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL!;
+export async function generateMetadata(): Promise<Metadata> {
+  const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL!;
 
-export const metadata: Metadata = {
-  title: {
-    default: "Reviu.ID",
-    template: "%s » Reviu.ID",
-  },
-  description: "Halaman Utama Reviu.ID",
-  openGraph: {
-    title: "Reviu.ID",
-    description: "Berbagi Cerita, Menikmati Karya Film Indonesia!",
-    url: FRONTEND_URL,
-    siteName: "Reviu.ID",
-    images: [
-      {
-        url: `${FRONTEND_URL}/logo.png`,
-        alt: "Reviu.ID",
-        width: 800,
-        height: 600,
+  return {
+    title: {
+      default: "Reviu.ID",
+      template: "%s • Reviu.ID",
+    },
+    description: "Halaman Utama Reviu.ID",
+    openGraph: {
+      title: {
+        default: "Reviu.ID",
+        template: "%s • Reviu.ID",
       },
-    ],
-    locale: "id_ID",
-    type: "website",
-  },
-};
+      description: "Berbagi Cerita, Menikmati Karya Film Indonesia!",
+      url: FRONTEND_URL,
+      siteName: "Reviu.ID",
+      images: [
+        {
+          url: `${FRONTEND_URL}/logo.png`,
+          alt: "Reviu.ID",
+          width: 800,
+          height: 600,
+        },
+      ],
+      locale: "id_ID",
+      type: "website",
+    },
+  };
+}
 
 export default function RootLayout({
   children,

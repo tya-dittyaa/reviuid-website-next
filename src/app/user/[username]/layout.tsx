@@ -2,29 +2,30 @@ import { GetUserProfile } from "@/utils";
 import "@fontsource/poppins";
 import { Metadata } from "next";
 
-const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL!;
-
 export async function generateMetadata({
   params,
-}: {
+}: Readonly<{
   params: { username: string };
-}): Promise<Metadata> {
-  const response = await GetUserProfile(params.username);
+}>): Promise<Metadata> {
+  const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL!;
+  const { username } = params;
 
-  if (typeof response === "number") {
+  const user = await GetUserProfile(username);
+
+  if (typeof user === "number") {
     return {
       title: {
-        default: `Pengguna Tidak Ditemukan`,
-        template: "%s » Reviu.ID",
+        default: "Pengguna Tidak Ditemukan",
+        template: "%s • Reviu.ID",
       },
-      description: "Halaman yang Anda cari tidak ditemukan.",
+      description: "Pengguna yang dicari tidak ditemukan",
       openGraph: {
         title: {
-          default: `Pengguna Tidak Ditemukan » Reviu.ID`,
-          template: "%s » Reviu.ID",
+          default: "Pengguna Tidak Ditemukan",
+          template: "%s • Reviu.ID",
         },
-        description: "Halaman yang Anda cari tidak ditemukan.",
-        url: `${FRONTEND_URL}/user/${params.username}`,
+        description: "Pengguna yang dicari tidak ditemukan",
+        url: `${FRONTEND_URL}/user/${username}`,
         siteName: "Reviu.ID",
         images: [
           {
@@ -42,22 +43,28 @@ export async function generateMetadata({
 
   return {
     title: {
-      default: `${response.username}`,
-      template: "%s » Reviu.ID",
+      default: user.username,
+      template: "%s • Reviu.ID",
     },
-    description: response.biography || "Tidak ada deskripsi.",
+    description: user.biography || "Tidak ada deskripsi pengguna",
     openGraph: {
       title: {
-        default: `${response.username} » Reviu.ID`,
-        template: "%s » Reviu.ID",
+        default: user.username,
+        template: "%s • Reviu.ID",
       },
-      description: response.biography || "Tidak ada deskripsi.",
-      url: `${FRONTEND_URL}/user/${params.username}`,
+      description: user.biography || "Tidak ada deskripsi pengguna",
+      url: `${FRONTEND_URL}/user/${username}`,
       siteName: "Reviu.ID",
       images: [
         {
-          url: response.avatar || `${FRONTEND_URL}/logo.png`,
-          alt: response.username,
+          url: user.avatar,
+          alt: user.username,
+          width: 800,
+          height: 600,
+        },
+        {
+          url: `${FRONTEND_URL}/logo.png`,
+          alt: "Reviu.ID",
           width: 800,
           height: 600,
         },

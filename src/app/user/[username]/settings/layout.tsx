@@ -2,17 +2,18 @@ import { GetUserProfile } from "@/utils";
 import type { Metadata } from "next";
 import { OpenGraph } from "next/dist/lib/metadata/types/opengraph-types";
 
-const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL!;
-
 export async function generateMetadata({
   params,
-}: {
+}: Readonly<{
   params: { username: string };
-}): Promise<Metadata> {
-  const response = await GetUserProfile(params.username);
+}>): Promise<Metadata> {
+  const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL!;
+  const { username } = params;
+
+  const user = await GetUserProfile(username);
 
   const openGraph: OpenGraph = {
-    title: "Reviu.ID",
+    title: "Halaman Pengguna",
     description: "Berbagi Cerita, Menikmati Karya Film Indonesia!",
     url: FRONTEND_URL,
     siteName: "Reviu.ID",
@@ -28,7 +29,7 @@ export async function generateMetadata({
     type: "website",
   };
 
-  if (typeof response === "number") {
+  if (typeof user === "number") {
     return {
       title: `Pengguna Tidak Ditemukan`,
       description: "Halaman yang Anda cari tidak ditemukan.",
