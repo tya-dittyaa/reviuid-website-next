@@ -11,13 +11,21 @@ import {
 import {
   FilmDataProvider,
   UserFilmCommentProvider,
+  UserFilmFavoriteProvider,
+  UserFilmWatchlistProvider,
   UserSessionProvider,
   ViewLayoutProvider,
   useViewLayout,
 } from "@/context";
 import { useWindowSize } from "@/hooks";
 import { FilmData, FilmReviewValue, UserSession } from "@/types";
-import { GetFilmData, GetUserFilmComment, GetUserSession } from "@/utils";
+import {
+  CheckUserFilmFavorite,
+  CheckUserFilmWatchlist,
+  GetFilmData,
+  GetUserFilmComment,
+  GetUserSession,
+} from "@/utils";
 import { Layout, Spin } from "antd";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -59,6 +67,8 @@ export default function ProfilePage({
   const [userSession, setUserSession] = useState<UserSession | null>(null);
   const [filmData, setFilmData] = useState<FilmData | null>(null);
   const [userComment, setUserComment] = useState<FilmReviewValue | null>(null);
+  const [userFavorite, setUserFavorite] = useState<boolean | null>(null);
+  const [userWatchlist, setUserWatchlist] = useState<boolean | null>(null);
 
   const getUserSession = async () => {
     const user = await GetUserSession();
@@ -76,6 +86,16 @@ export default function ProfilePage({
     setUserComment(response);
   };
 
+  const checkUserFavorite = async (filmId: string) => {
+    const response = await CheckUserFilmFavorite(filmId);
+    setUserFavorite(response);
+  };
+
+  const checkUserWatchlist = async (filmId: string) => {
+    const response = await CheckUserFilmWatchlist(filmId);
+    setUserWatchlist(response);
+  };
+
   useEffect(() => {
     if (size.width && size.width < 800) {
       setLayout("vertical");
@@ -88,6 +108,8 @@ export default function ProfilePage({
     getUserSession();
     getFilmData(params.filmId);
     getUserComment(params.filmId);
+    checkUserFavorite(params.filmId);
+    checkUserWatchlist(params.filmId);
   }, [params.filmId]);
 
   useEffect(() => {
@@ -109,12 +131,16 @@ export default function ProfilePage({
       <UserSessionProvider user={userSession}>
         <FilmDataProvider film={filmData}>
           <UserFilmCommentProvider value={userComment}>
-            <Layout style={{ minHeight: "100dvh" }}>
-              <HeaderLayout />
-              <FilmFound />
-              <FooterLayout />
-              <Toaster richColors position="bottom-right" />
-            </Layout>
+            <UserFilmFavoriteProvider value={userFavorite}>
+              <UserFilmWatchlistProvider value={userWatchlist}>
+                <Layout style={{ minHeight: "100dvh" }}>
+                  <HeaderLayout />
+                  <FilmFound />
+                  <FooterLayout />
+                  <Toaster richColors position="bottom-right" />
+                </Layout>
+              </UserFilmWatchlistProvider>
+            </UserFilmFavoriteProvider>
           </UserFilmCommentProvider>
         </FilmDataProvider>
       </UserSessionProvider>

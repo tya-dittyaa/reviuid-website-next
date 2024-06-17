@@ -1,24 +1,113 @@
-import { useUserSession, useViewLayout } from "@/context";
-import { Button, Form } from "antd";
+import {
+  useFilmData,
+  useUserFilmWatchlist,
+  useUserSession,
+  useViewLayout,
+} from "@/context";
+import { DeleteUserFilmWatchlist, PostUserFilmWatchlist } from "@/utils";
+import { DeleteOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { Button } from "antd";
 import { useState } from "react";
 import { toast } from "sonner";
+
+const forceRefresh = () => window.location.reload();
 
 const AddToWatchlist: React.FC = () => {
   const layout = useViewLayout();
   const userSession = useUserSession();
-  const [form] = Form.useForm();
+  const filmData = useFilmData()!;
+  const userWatchlist = useUserFilmWatchlist();
 
-  const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const showModal = () => {
+  const hanlePostData = async () => {
+    setIsLoading(true);
+
+    const promise = () =>
+      new Promise((resolve, reject) => {
+        setTimeout(async () => {
+          const response = await PostUserFilmWatchlist(filmData.id);
+
+          if (response === undefined) {
+            reject("Terjadi kesalahan pada server!");
+          } else if (response) {
+            resolve("Berhasil menambahkan ke daftar tontonan!");
+          } else {
+            reject("Gagal menambahkan ke daftar tontonan!");
+          }
+
+          setTimeout(() => {
+            setIsLoading(false);
+            forceRefresh();
+          }, 1000);
+        }, 1000);
+      });
+
+    toast.promise(promise, {
+      loading: "Menambahkan ke daftar tontonan...",
+      success: (data) => {
+        return `${data}`;
+      },
+      error: (error) => {
+        return `${error}`;
+      },
+    });
+  };
+
+  const handleDeleteData = async () => {
+    setIsLoading(true);
+
+    const promise = () =>
+      new Promise((resolve, reject) => {
+        setTimeout(async () => {
+          const response = await DeleteUserFilmWatchlist(filmData.id);
+
+          if (response === undefined) {
+            reject("Terjadi kesalahan pada server!");
+          } else if (response) {
+            resolve("Berhasil menghapus dari daftar tontonan!");
+          } else {
+            reject("Gagal menghapus dari daftar tontonan!");
+          }
+
+          setTimeout(() => {
+            setIsLoading(false);
+            forceRefresh();
+          }, 1000);
+        }, 1000);
+      });
+
+    toast.promise(promise, {
+      loading: "Menghapus dari daftar tontonan...",
+      success: (data) => {
+        return `${data}`;
+      },
+      error: (error) => {
+        return `${error}`;
+      },
+    });
+  };
+
+  const clickButton = () => {
     if (!userSession) {
       toast.warning(
-        "Anda harus masuk terlebih dahulu sebelum anda dapat menambahkan ke daftar tontonan"
+        "Anda harus masuk terlebih dahulu sebelum anda dapat menambahkan film ke favorit"
       );
       return;
     }
 
-    toast.info("Fitur ini akan segera hadir");
+    if (userWatchlist === null) {
+      toast.warning("Terjadi kesalahan pada server!");
+      return;
+    }
+
+    if (userWatchlist === false) {
+      hanlePostData();
+    }
+
+    if (userWatchlist === true) {
+      handleDeleteData();
+    }
   };
 
   return (
@@ -26,7 +115,9 @@ const AddToWatchlist: React.FC = () => {
       block
       size="large"
       type="primary"
-      onClick={showModal}
+      onClick={clickButton}
+      loading={isLoading}
+      icon={userWatchlist ? <DeleteOutlined /> : <PlusCircleOutlined />}
       style={{
         color: "black",
         fontSize: layout === "horizontal" ? "1.2vw" : "4vw",
@@ -37,7 +128,9 @@ const AddToWatchlist: React.FC = () => {
         alignItems: "center",
       }}
     >
-      Tambah ke Daftar Tontonan
+      {userWatchlist
+        ? "Hapus dari Daftar Tontonan"
+        : "Tambahkan ke Daftar Tontonan"}
     </Button>
   );
 };
