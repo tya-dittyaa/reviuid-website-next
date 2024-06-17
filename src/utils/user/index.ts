@@ -1,3 +1,6 @@
+export * from "./favorite/CheckUserFilmFavorite";
+export * from "./favorite/DeleteUserFilmFavorite";
+export * from "./favorite/PostUserFilmFavorite";
 export * from "./profile/GetUserProfile";
 export * from "./review/DeleteUserFilmReview";
 export * from "./review/GetUserFilmReview";
@@ -9,3 +12,6 @@ export * from "./setting/FetchChangeEmail";
 export * from "./setting/FetchChangePassword";
 export * from "./setting/FetchChangeUsername";
 export * from "./setting/FetchDeleteAccount";
+export * from "./watchlist/CheckUserFilmWatchlist";
+export * from "./watchlist/DeleteUserFilmWatchlist";
+export * from "./watchlist/PostUserFilmWatchlist";
