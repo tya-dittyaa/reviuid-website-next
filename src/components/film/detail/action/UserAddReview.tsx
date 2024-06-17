@@ -1,4 +1,9 @@
-import { useFilmData, useUserFilmComment, useUserSession } from "@/context";
+import {
+  useFilmData,
+  useUserFilmComment,
+  useUserSession,
+  useViewLayout,
+} from "@/context";
 import { FilmCommentValue } from "@/types";
 import {
   DeleteFilmUserReview,
@@ -14,6 +19,7 @@ const { TextArea } = Input;
 const forceRefresh = () => window.location.reload();
 
 const AddReview: React.FC = () => {
+  const layout = useViewLayout();
   const userSession = useUserSession();
   const filmData = useFilmData()!;
   const userComment = useUserFilmComment();
@@ -173,9 +179,17 @@ const AddReview: React.FC = () => {
         size="large"
         type="primary"
         onClick={showModal}
-        style={{ color: "black" }}
+        style={{
+          color: "black",
+          fontSize: layout === "horizontal" ? "1.2vw" : "4vw",
+          paddingTop: layout === "horizontal" ? "1vw" : "3vw",
+          paddingBottom: layout === "horizontal" ? "1vw" : "3vw",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
-        Komentar
+        {userComment ? "Edit Komentar" : "Tambahkan Komentar"}
       </Button>
 
       <Modal
