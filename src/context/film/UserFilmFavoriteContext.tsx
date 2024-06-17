@@ -1,10 +1,9 @@
-import { FilmReviewValue } from "@/types";
 import { createContext, useContext } from "react";
 
-const UserFilmCommentContext = createContext<FilmReviewValue | null>(null);
+const UserFilmCommentContext = createContext<boolean | null>(null);
 
-const UserFilmCommentProvider: React.FC<{
-  value: FilmReviewValue | null;
+const UserFilmFavoriteProvider: React.FC<{
+  value: boolean | null;
   children: React.ReactNode;
 }> = ({ value, children }) => {
   return (
@@ -14,8 +13,8 @@ const UserFilmCommentProvider: React.FC<{
   );
 };
 
-const useUserFilmComment = () => {
+const useUserFilmFavorite = () => {
   return useContext(UserFilmCommentContext);
 };
 
-export { UserFilmCommentProvider, useUserFilmComment };
+export { UserFilmFavoriteProvider, useUserFilmFavorite };

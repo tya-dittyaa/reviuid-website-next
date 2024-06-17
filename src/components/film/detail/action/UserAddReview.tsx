@@ -243,7 +243,7 @@ const AddReview: React.FC = () => {
           <Form.Item
             label="Review"
             name="review"
-            initialValue={userComment?.comment}
+            initialValue={userComment?.review}
             rules={[{ required: true, message: "Review harus diisi" }]}
           >
             <TextArea rows={4} />

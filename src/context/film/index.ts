@@ -5,3 +5,5 @@ export * from "./FilmTop10Context";
 export * from "./FilmTopFavoriteContext";
 export * from "./FilmTotalContext";
 export * from "./UserFilmCommentContext";
+export * from "./UserFilmFavoriteContext";
+export * from "./UserFilmWatchlistContext";
