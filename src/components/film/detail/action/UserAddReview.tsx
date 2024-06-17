@@ -1,5 +1,10 @@
-import { useFilmData, useUserFilmComment, useUserSession } from "@/context";
-import { FilmCommentValue } from "@/types";
+import {
+  useFilmData,
+  useUserFilmComment,
+  useUserSession,
+  useViewLayout,
+} from "@/context";
+import { FilmReviewValue } from "@/types";
 import {
   DeleteFilmUserReview,
   PatchFilmUserReview,
@@ -14,6 +19,7 @@ const { TextArea } = Input;
 const forceRefresh = () => window.location.reload();
 
 const AddReview: React.FC = () => {
+  const layout = useViewLayout();
   const userSession = useUserSession();
   const filmData = useFilmData()!;
   const userComment = useUserFilmComment();
@@ -38,7 +44,7 @@ const AddReview: React.FC = () => {
     setOpen(false);
   };
 
-  const handleAddReview = async (values: FilmCommentValue) => {
+  const handleAddReview = async (values: FilmReviewValue) => {
     setConfirmLoading(true);
 
     const promise = () =>
@@ -77,7 +83,7 @@ const AddReview: React.FC = () => {
     });
   };
 
-  const handleEditReview = async (values: FilmCommentValue) => {
+  const handleEditReview = async (values: FilmReviewValue) => {
     setConfirmLoading(true);
 
     const promise = () =>
@@ -151,10 +157,10 @@ const AddReview: React.FC = () => {
     });
   };
 
-  const handleReviewAction = async () => {
+  const handleCommentAction = async () => {
     form
       .validateFields()
-      .then((values: FilmCommentValue) => {
+      .then((values: FilmReviewValue) => {
         if (userComment) {
           handleEditReview(values);
         } else {
@@ -173,9 +179,17 @@ const AddReview: React.FC = () => {
         size="large"
         type="primary"
         onClick={showModal}
-        style={{ color: "black" }}
+        style={{
+          color: "black",
+          fontSize: layout === "horizontal" ? "1.2vw" : "4vw",
+          paddingTop: layout === "horizontal" ? "1vw" : "3vw",
+          paddingBottom: layout === "horizontal" ? "1vw" : "3vw",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
-        Komentar
+        {userComment ? "Edit Komentar" : "Tambahkan Komentar"}
       </Button>
 
       <Modal
@@ -184,7 +198,7 @@ const AddReview: React.FC = () => {
         maskClosable={false}
         title="Menambahkan Komentar"
         open={open}
-        onOk={handleReviewAction}
+        onOk={handleCommentAction}
         confirmLoading={confirmLoading}
         onCancel={hideModal}
         okText={userComment ? "Perbarui" : "Tambahkan"}
@@ -229,7 +243,7 @@ const AddReview: React.FC = () => {
           <Form.Item
             label="Review"
             name="review"
-            initialValue={userComment?.review}
+            initialValue={userComment?.comment}
             rules={[{ required: true, message: "Review harus diisi" }]}
           >
             <TextArea rows={4} />

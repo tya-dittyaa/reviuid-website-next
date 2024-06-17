@@ -29,7 +29,7 @@ const Vertical: React.FC = () => {
     <Flex gap={10} vertical>
       <FilmPoster />
       <FilmTrailer />
-      <FilmSynopsis  />
+      <FilmSynopsis />
       <FilmRating />
       <FilmUserAction />
     </Flex>

@@ -1,11 +1,11 @@
 "use server";
 
-import { FilmCommentValue } from "@/types";
+import { FilmReviewValue } from "@/types";
 import { cookies } from "next/headers";
 
 export async function GetUserFilmComment(
   filmId: string
-): Promise<FilmCommentValue | null> {
+): Promise<FilmReviewValue | null> {
   // Get the environment variables
   const BACKEND_URL = process.env.BACKEND_URL as string;
   const HEADER_API_KEY = process.env.HEADER_API_KEY as string;
@@ -28,7 +28,7 @@ export async function GetUserFilmComment(
     if (res.status !== 200) return null;
 
     // Return the data
-    const data: FilmCommentValue = await res.json();
+    const data: FilmReviewValue = await res.json();
     return data;
   } catch (error) {
     return null;

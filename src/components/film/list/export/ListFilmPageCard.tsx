@@ -104,6 +104,7 @@ const Found: React.FC<{ filmData: FilmData }> = ({ filmData }) => {
           }}
         >
           <Image
+            preview={false}
             width={100}
             height={160}
             src={filmData.poster}
