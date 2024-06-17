@@ -1,8 +1,10 @@
 "use client";
 
 import { FooterLayout, HeaderLayout } from "@/components";
+import { useWindowSize } from "@/hooks";
 import "@fontsource/poppins";
 import React from 'react';
+import { useEffect, useState } from "react";
 import { 
   Layout, 
   Typography,
@@ -18,7 +20,7 @@ const { Text, Paragraph } = Typography;
 
 function AboutUsPageText() {
   return (
-    <Flex vertical style={{ padding: '20px', paddingLeft: '30px', paddingBottom: '20px', width: "100%" }}>
+    <Flex vertical style={{ paddingBottom: '20px', width: "100%" }}>
       <Col
         style={{
           display: "flex",
@@ -52,6 +54,97 @@ function AboutUsPageText() {
   );
 }
 
+function BannerSizeMob() {
+  return(
+    <>
+      <img src='/Reviu.ID.png' style={{ width: '100%', height: '15vh' , padding: 0, margin: 0 }} /> 
+      
+      <div style={{
+        position: 'absolute',
+        top: '0', 
+        left: '0', 
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: 'white', 
+      }}>
+        <Text style={{ 
+          margin: '0 20px',
+          fontSize: '2.5vw',
+          fontWeight: 200,
+          textAlign: 'center',
+          color: 'white',
+        }}>
+          Reviu.ID - Berbagi Cerita, Menikmati Karya Film Indonesia
+        </Text>
+
+      </div>
+    </>
+  )
+}
+
+function BannerSizeWeb() {
+  return(
+    <>
+      <img src='/Reviu.ID.png' style={{ width: '100%', height: '30vh' , padding: 0, margin: 0 }} /> 
+      
+      <div style={{
+        position: 'absolute',
+        top: '0', 
+        left: '0', 
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: 'white', 
+      }}>
+        <Text style={{ 
+          margin: '0 20px',
+          fontSize: '1.5vw',
+          fontWeight: 200,
+          textAlign: 'center',
+          color: 'white',
+        }}>
+          Reviu.ID - Berbagi Cerita, Menikmati Karya Film Indonesia
+        </Text>
+
+      </div>
+    </>
+  )
+}
+
+function BannerSizeOption() {
+  const size = useWindowSize();
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [value, setValue] = useState<"web" | "mob">("mob");
+
+  useEffect(() => {
+    if (size.width && size.width < 800) {
+      setValue("mob");
+    } else {
+      setValue("web");
+    }
+  }, [size.width]);
+
+  if (value === "mob") {
+    return (
+      <>
+        <BannerSizeMob />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <BannerSizeWeb />
+    </>
+  );
+}
+
 function AboutUsPageContent() {
   return (
     <Content
@@ -63,36 +156,22 @@ function AboutUsPageContent() {
         justifyContent: "center",
         alignItems: "center",
         textAlign: "center",
-        // padding: "1rem",
+        padding: "1rem",
       }}
     >
+      <Flex vertical style={{ padding: "2rem", alignItems: "start" }}>
+        <AboutUsPageText />
 
-    <AboutUsPageText />
-
-    <Flex>
-      <Image 
-        src='/tagline.png' 
-        preview={false}
-        style={{
-          width: '100%',
-          height: 'auto',
-          margin: 0,
-          padding: 0
-        }}/>
-    </Flex>
-    
-    <Flex vertical style={{ padding: "2rem", display: "start"}}>
-      <div>
-        <Paragraph style={{ 
-          // marginTop: '20px', 
-          marginLeft: '70px',
-          marginRight: '70px',
-          fontSize: '20px', 
-          fontWeight: 200,
-          color: 'white',
-          textAlign: 'justify' 
+        <div style={{
+          position: 'relative',
+          width: '100%', 
+          maxWidth: '1200px', 
+          margin: '0 auto',
         }}>
+          <BannerSizeOption />
+        </div>
 
+        <Flex vertical> 
           <Paragraph style={{fontWeight: 'bold', color: '#E2B808', fontSize: '40px', paddingBottom: '10px', paddingTop: '0px', margin: 0}}>
             Siapa Kami?
           </Paragraph>
@@ -104,32 +183,10 @@ function AboutUsPageContent() {
           </Paragraph>
 
           Misi kami adalah menjadi sumber terpercaya bagi ulasan film Indonesia dan mendukung industri perfilman lokal dengan memberikan platform yang transparan dan mudah diakses bagi semua orang. Kami berkomitmen untuk menghadirkan informasi yang akurat dan mendalam tentang film-film terbaru, serta memberikan kesempatan bagi pengguna kami untuk berkontribusi dengan ulasan mereka sendiri.        
-        
-          <Paragraph style={{fontWeight: 'bold', color: '#E2B808', fontSize: '40px', paddingBottom: '10px', paddingTop: '40px', margin: 0}}>
-            Mengapa Reviu.ID?
-          </Paragraph>
 
-            Dengan pesatnya perkembangan teknologi internet, aplikasi web telah menjadi alat yang vital dalam pengiriman, penyampaian, dan penerimaan informasi. Reviu.ID memanfaatkan tren ini untuk menciptakan sebuah platform yang intuitif dan user-friendly. Berikut adalah beberapa alasan mengapa Anda harus memilih Reviu.ID:
-            
-            <ul style={{paddingTop: '10px'}}>
-              <li>
-                <Text strong={true} style={{fontSize: '18px', color: 'white'}}>Komunitas yang Aktif: </Text>
-                <Text style={{fontSize: '18px', color: 'white'}}>Bergabunglah dengan ribuan pengguna lain yang memiliki minat yang sama dalam dunia perfilman Indonesia. Baca ulasan dari perspektif yang berbeda dan temukan film-film baru untuk ditonton.</Text>
-              </li>
-              <li>
-                <Text strong={true} style={{fontSize: '18px', color: 'white'}}>Akses Mudah: </Text>
-                <Text style={{fontSize: '18px', color: 'white'}}>Platform kami dirancang untuk memberikan kemudahan akses di berbagai perangkat, baik itu smartphone, tablet, maupun desktop.</Text>
-              </li>
-              <li>
-                <Text strong={true} style={{fontSize: '18px', color: 'white'}}>Ulasan yang Jujur dan Terpercaya: </Text>
-                <Text style={{fontSize: '18px', color: 'white'}}>Kami mengutamakan kejujuran dan transparansi dalam setiap ulasan yang dipublikasikan. Setiap pengguna memiliki kesempatan untuk memberikan penilaian mereka sendiri yang membantu orang lain dalam membuat keputusan tontonan.</Text>
-              </li>
-            </ul>
-        </Paragraph>  
-      </div>
-    </Flex>
-
-  </Content>
+          </Flex>
+      </Flex>
+    </Content>
   );
 }
 
