@@ -12,6 +12,7 @@ export type FilmData = {
 export type FilmReviewValue = {
   rating: number;
   review: string;
+  updatedAt: Date;
 };
 
 export type FilmReviewData = FilmReviewValue & {

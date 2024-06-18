@@ -25,8 +25,8 @@ export async function generateMetadata(): Promise<Metadata> {
         {
           url: `${FRONTEND_URL}/logo.png`,
           alt: "Reviu.ID",
-          width: 800,
-          height: 600,
+          width: 512,
+          height: 512,
         },
       ],
       locale: "id_ID",
@@ -56,13 +56,9 @@ export default function RootLayout({
               fontWeight: "bold",
             },
             Tabs: {
-              cardBg: "#E2B808",
-              colorBgBase: "#E2B808",
-              itemColor: "black",
-              itemHoverColor: "white",
-              itemActiveColor: "#B38A06",
-              itemSelectedColor: "black",
-              horizontalMargin: "0px",
+              inkBarColor: "#9E140F",
+              itemSelectedColor: "#9E140F",
+              itemHoverColor: "#9E140F",
             },
           },
         }}

@@ -1,7 +1,7 @@
 import { useFilmData } from "@/context";
 import { FilmReviewData } from "@/types";
 import { GetFilmCommentByPage } from "@/utils";
-import { Avatar, Col, Flex, Rate, Spin, Typography } from "antd";
+import { Avatar, Card, Col, Flex, Rate, Spin, Typography } from "antd";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
@@ -35,68 +35,81 @@ const NotFound: React.FC = () => {
 };
 
 const Found: React.FC<{ reviewData: FilmReviewData }> = ({ reviewData }) => {
-  return (
-    <Flex
-      vertical={true}
-      align="flex-start"
-      justify="flex-start"
-      style={{
-        width: "100%",
-        backgroundColor: "#E2E0D8",
-        padding: "1rem",
-        borderRadius: 20,
-      }}
+  const title: React.ReactNode = (
+    <a
+      href={`/user/${reviewData.user.username}`}
+      style={{ textDecoration: "none" }}
     >
-      <Flex vertical={false} style={{ width: "100%" }}>
-        <Col flex="80px">
-          <a
-            href={`/user/${reviewData.user.username}`}
-            style={{ textDecoration: "none" }}
-          >
-            <Avatar
-              size={64}
-              icon={
-                <Image
-                  priority
-                  src={reviewData.user.avatar}
-                  width={2048}
-                  height={2048}
-                  alt={`Avatar ${reviewData.user.username}`}
-                />
-              }
-              style={{
-                borderColor: "black",
-                borderWidth: 2,
-                borderStyle: "solid",
-                boxShadow: "2px 2px 10px rgba(0, 0, 0, 0.25)",
-              }}
-            />
-          </a>
+      <Flex vertical={false} justify="flex-start" align="center">
+        <Col flex="75px">
+          <Avatar
+            size={50}
+            icon={
+              <Image
+                priority
+                src={reviewData.user.avatar}
+                width={2048}
+                height={2048}
+                alt={`Avatar ${reviewData.user.username}`}
+              />
+            }
+            style={{
+              borderColor: "black",
+              borderWidth: 2,
+              borderStyle: "solid",
+            }}
+          />
         </Col>
         <Col flex="auto">
-          <Flex vertical>
-            <a
-              href={`/user/${reviewData.user.username}`}
-              style={{ textDecoration: "none" }}
-            >
-              <Text strong style={{ color: "black", fontSize: 20 }}>
-                <b style={{ fontWeight: "bold" }}>{reviewData.user.username}</b>
+          <Flex vertical gap={5} justify="center" align="flex-start">
+            <Text strong style={{ color: "black", fontSize: 17 }}>
+              <b style={{ fontWeight: "bold" }}>{reviewData.user.username}</b>
+            </Text>
+            <Flex gap={15} justify="center" align="center">
+              <Rate
+                disabled
+                defaultValue={reviewData.rating}
+                style={{ margin: 0, fontSize: 14 }}
+              />
+              <Text style={{ color: "black", fontSize: 12, margin: 0 }}>
+                {new Date(reviewData.updatedAt).toLocaleDateString("id-ID", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "2-digit",
+                })}
               </Text>
-            </a>
-
-            <Rate
-              disabled
-              defaultValue={reviewData.rating}
-              style={{ margin: 0, fontSize: 20, marginTop: "5px" }}
-            />
-
-            <Paragraph style={{ color: "black", marginTop: "15px" }}>
-              {reviewData.review}
-            </Paragraph>
+            </Flex>
           </Flex>
         </Col>
       </Flex>
-    </Flex>
+    </a>
+  );
+
+  return (
+    <Card
+      title={title}
+      style={{ width: "100%", backgroundColor: "#E2E0D8" }}
+      styles={{
+        header: {
+          margin: 0,
+          padding: "1rem",
+        },
+        body: {
+          margin: 0,
+          padding: "1rem",
+        },
+      }}
+    >
+      <Paragraph
+        style={{
+          color: "black",
+          fontSize: 16,
+          margin: 0,
+        }}
+      >
+        {reviewData.review}
+      </Paragraph>
+    </Card>
   );
 };
 

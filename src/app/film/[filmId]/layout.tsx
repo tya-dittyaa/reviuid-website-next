@@ -24,8 +24,8 @@ export async function generateMetadata({
           {
             url: `${FRONTEND_URL}/logo.png`,
             alt: "Reviu.ID",
-            width: 800,
-            height: 600,
+            width: 512,
+            height: 512,
           },
         ],
         locale: "id_ID",
@@ -44,10 +44,10 @@ export async function generateMetadata({
       siteName: "Reviu.ID",
       images: [
         {
-          url: `${FRONTEND_URL}/logo.png`,
-          alt: "Reviu.ID",
-          width: 800,
-          height: 600,
+          url: filmData.poster,
+          alt: `Poster ${filmData.title}`,
+          width: 648,
+          height: 960,
         },
       ],
       locale: "id_ID",

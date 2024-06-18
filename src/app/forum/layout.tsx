@@ -5,14 +5,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL!;
 
   return {
-    title: "Lupa Kata Sandi",
-    description:
-      "Lupa kata sandi akun Reviu.ID? Atur ulang kata sandi Anda di sini.",
+    title: "Forum Diskusi",
+    description: "Forum Komunitas Reviu.ID untuk berdiskusi seputar film.",
     openGraph: {
-      title: "Lupa Kata Sandi",
-      description:
-        "Lupa kata sandi akun Reviu.ID? Atur ulang kata sandi Anda di sini.",
-      url: `${FRONTEND_URL}/forgot-password`,
+      title: "Forum Diskusi",
+      description: "Forum Komunitas Reviu.ID untuk berdiskusi seputar film.",
+      url: `${FRONTEND_URL}/forum`,
       siteName: "Reviu.ID",
       images: [
         {
