@@ -21,8 +21,8 @@ export async function generateMetadata({
       {
         url: `${FRONTEND_URL}/logo.png`,
         alt: "Reviu.ID",
-        width: 800,
-        height: 600,
+        width: 512,
+        height: 512,
       },
     ],
     locale: "id_ID",
