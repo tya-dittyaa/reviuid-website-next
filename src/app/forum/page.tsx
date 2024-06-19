@@ -1,7 +1,11 @@
 "use client";
 
-import { DividerCenter, FooterLayout, HeaderLayout } from "@/components";
-import ForumTextHeader from "@/components/forum/list/export/ForumTextHeader";
+import {
+  FooterLayout,
+  ForumListHorizontal,
+  ForumListVertical,
+  HeaderLayout,
+} from "@/components";
 import {
   UserSessionProvider,
   ViewLayoutProvider,
@@ -10,12 +14,10 @@ import {
 import { useWindowSize } from "@/hooks";
 import { UserSession } from "@/types";
 import { GetUserSession } from "@/utils";
-import { Card, Layout, Spin, Typography } from "antd";
-import Meta from "antd/es/card/Meta";
+import { Layout, Spin } from "antd";
 import { useEffect, useState } from "react";
 
 const { Content } = Layout;
-const { Title } = Typography;
 
 function ForumLayout() {
   const layout = useViewLayout();
@@ -30,23 +32,11 @@ function ForumLayout() {
         padding: layout === "horizontal" ? "2rem" : "1rem",
       }}
     >
-      <ForumTextHeader />
-      <DividerCenter />
-
-      <Card
-        style={{
-          background: "#E2E0D8",
-          textAlign: "center",
-        }}
-      >
-        <Meta
-          title={
-            <Title level={5} style={{ color: "gray", margin: 0 }}>
-              Akan Segera Hadir!
-            </Title>
-          }
-        />
-      </Card>
+      {layout === "horizontal" ? (
+        <ForumListHorizontal />
+      ) : (
+        <ForumListVertical />
+      )}
     </Content>
   );
 }
