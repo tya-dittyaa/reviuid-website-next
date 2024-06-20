@@ -5,10 +5,16 @@ export async function generateMetadata(): Promise<Metadata> {
   const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL!;
 
   return {
-    title: "Forum Diskusi",
+    title: {
+      default: "Forum Diskusi",
+      template: "%s • Reviu.ID",
+    },
     description: "Forum Komunitas Reviu.ID untuk berdiskusi seputar film.",
     openGraph: {
-      title: "Forum Diskusi",
+      title: {
+        default: "Forum Diskusi",
+        template: "%s • Reviu.ID",
+      },
       description: "Forum Komunitas Reviu.ID untuk berdiskusi seputar film.",
       url: `${FRONTEND_URL}/forum`,
       siteName: "Reviu.ID",

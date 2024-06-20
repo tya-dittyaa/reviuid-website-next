@@ -1,10 +1,10 @@
-import { DividerCenter } from "@/components/main";
+import { DividerCenter, TitleLayout } from "@/components/main";
+import { MessageOutlined } from "@ant-design/icons";
 import { Card, Flex, Typography } from "antd";
 import ForumListCreateButton from "../action/ForumListCreateButton";
 import ForumListPageBar from "../action/ForumListPageBar";
 import ForumListSearchBar from "../action/ForumListSearchBar";
 import ForumParentList from "../layout/ForumParentList";
-import ForumTextHeader from "../layout/ForumTextHeader";
 
 const { Title } = Typography;
 const { Meta } = Card;
@@ -20,7 +20,7 @@ const rules = [
 const ForumListVertical: React.FC = () => {
   return (
     <Flex vertical>
-      <ForumTextHeader />
+      <TitleLayout icon={<MessageOutlined />} title="Forum Diskusi" />
       <DividerCenter />
 
       <Flex vertical gap={25}>

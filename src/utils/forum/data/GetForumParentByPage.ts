@@ -1,10 +1,10 @@
 "use server";
 
-import { ForumListParentData } from "@/types";
+import { ForumParentData } from "@/types";
 
 export async function GetForumParentByPage(
   page: number
-): Promise<ForumListParentData[] | undefined> {
+): Promise<ForumParentData[] | undefined> {
   // Get the environment variables
   const BACKEND_URL = process.env.BACKEND_URL as string;
   const HEADER_API_KEY = process.env.HEADER_API_KEY as string;
@@ -28,7 +28,7 @@ export async function GetForumParentByPage(
     }
 
     // Parse the response
-    const data: ForumListParentData[] = await res.json();
+    const data: ForumParentData[] = await res.json();
 
     // Return the data
     return data;

@@ -1,4 +1,4 @@
-import { ForumListParentData } from "@/types";
+import { ForumParentData } from "@/types";
 import { GetForumParentByPage, GetForumParentBySearch } from "@/utils";
 import { Flex } from "antd";
 import { useSearchParams } from "next/navigation";
@@ -14,7 +14,7 @@ const ForumParentList: React.FC = () => {
   const getSearch = searchParams.get("search");
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [forumParent, setForumParent] = useState<ForumListParentData[]>([]);
+  const [forumParent, setForumParent] = useState<ForumParentData[]>([]);
 
   const getForumParentByPage = async (page: number) => {
     const data = await GetForumParentByPage(page);

@@ -4,10 +4,10 @@ import {
   DividerCenter,
   FooterLayout,
   HeaderLayout,
-  ListFilmHeader,
   ListFilmPageCard,
   ListFilmSearchAndPage,
   ListFilmSearchCard,
+  TitleLayout,
 } from "@/components";
 import {
   FilmTotalProvider,
@@ -19,6 +19,7 @@ import {
 import { useWindowSize } from "@/hooks";
 import { UserSession } from "@/types";
 import { GetFilmTotal, GetUserSession } from "@/utils";
+import { VideoCameraOutlined } from "@ant-design/icons";
 import { Layout, Spin } from "antd";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -73,7 +74,7 @@ function FilmList() {
         padding: layout === "horizontal" ? "2rem" : "1rem",
       }}
     >
-      <ListFilmHeader />
+      <TitleLayout title="Daftar Film" icon={<VideoCameraOutlined />} />
       <DividerCenter />
       <ListFilmSearchAndPage />
       {onWebParam === "page" ? <ListFilmPageCard /> : <ListFilmSearchCard />}

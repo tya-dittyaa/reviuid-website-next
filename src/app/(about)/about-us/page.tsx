@@ -1,6 +1,11 @@
 "use client";
 
-import { DividerCenter, FooterLayout, HeaderLayout } from "@/components";
+import {
+  DividerCenter,
+  FooterLayout,
+  HeaderLayout,
+  TitleLayout,
+} from "@/components";
 import {
   UserSessionProvider,
   ViewLayoutProvider,
@@ -11,8 +16,6 @@ import { UserSession } from "@/types";
 import { GetUserSession } from "@/utils";
 import { CaretRightOutlined, VideoCameraOutlined } from "@ant-design/icons";
 import {
-  Avatar,
-  Col,
   Collapse,
   CollapseProps,
   Flex,
@@ -251,43 +254,6 @@ function BodyLayout() {
   );
 }
 
-function AboutUsText() {
-  const layout = useViewLayout();
-
-  return (
-    <Flex vertical style={{ width: "100%" }}>
-      <Col
-        style={{
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          textDecoration: "none",
-        }}
-      >
-        <Avatar
-          size={layout === "horizontal" ? "large" : "default"}
-          icon={<VideoCameraOutlined />}
-          style={{
-            backgroundColor: "#E2B808",
-            color: "black",
-            marginRight: "1rem",
-          }}
-        />
-
-        <Title
-          level={2}
-          style={{
-            color: "#E2B808",
-            margin: 0,
-          }}
-        >
-          Tentang Kami
-        </Title>
-      </Col>
-    </Flex>
-  );
-}
-
 function ContentLayout() {
   const layout = useViewLayout();
 
@@ -301,7 +267,7 @@ function ContentLayout() {
         padding: layout === "horizontal" ? "2rem" : "1rem",
       }}
     >
-      <AboutUsText />
+      <TitleLayout icon={<VideoCameraOutlined />} title="Tentang Kami" />
       <DividerCenter />
 
       <Flex

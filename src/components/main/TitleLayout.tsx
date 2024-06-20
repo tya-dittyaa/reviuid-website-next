@@ -1,10 +1,14 @@
 import { useViewLayout } from "@/context";
-import { VideoCameraOutlined } from "@ant-design/icons";
 import { Avatar, Col, Flex, Typography } from "antd";
 
 const { Title } = Typography;
 
-const ListFilmHeader: React.FC = () => {
+interface HeaderWithIconProps {
+  icon: React.ReactNode;
+  title: string;
+}
+
+const TitleLayout: React.FC<HeaderWithIconProps> = ({ icon, title }) => {
   const layout = useViewLayout();
 
   return (
@@ -19,7 +23,7 @@ const ListFilmHeader: React.FC = () => {
       >
         <Avatar
           size={layout === "horizontal" ? "large" : "default"}
-          icon={<VideoCameraOutlined />}
+          icon={icon}
           style={{
             backgroundColor: "#E2B808",
             color: "black",
@@ -28,17 +32,17 @@ const ListFilmHeader: React.FC = () => {
         />
 
         <Title
-          level={2}
+          level={layout === "horizontal" ? 2 : 3}
           style={{
             color: "#E2B808",
             margin: 0,
           }}
         >
-          Daftar Film
+          {title}
         </Title>
       </Col>
     </Flex>
   );
 };
 
-export default ListFilmHeader;
+export default TitleLayout;

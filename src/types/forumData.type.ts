@@ -3,9 +3,10 @@ export type ForumCreateParentData = {
   content: string;
 };
 
-export type ForumListParentData = ForumCreateParentData & {
+export type ForumParentData = ForumCreateParentData & {
   id: string;
   createdAt: Date;
+  updatedAt: Date;
   user: {
     username: string;
     avatar: string;
