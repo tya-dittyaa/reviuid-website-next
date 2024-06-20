@@ -127,8 +127,12 @@ const ForumListCreateButton: React.FC = () => {
             rules={[
               { required: true, message: "Judul forum harus diisi!" },
               {
-                max: 64,
-                message: "Judul forum tidak boleh lebih dari 64 karakter!",
+                min: 5,
+                message: "Judul forum minimal 5 karakter!",
+              },
+              {
+                max: 100,
+                message: "Judul forum tidak boleh lebih dari 100 karakter!",
               },
             ]}
           >
@@ -141,12 +145,16 @@ const ForumListCreateButton: React.FC = () => {
             rules={[
               { required: true, message: "Konten forum harus diisi!" },
               {
-                max: 2000,
-                message: "Konten forum tidak boleh lebih dari 2000 karakter!",
+                min: 5,
+                message: "Konten forum minimal 5 karakter!",
+              },
+              {
+                max: 1000,
+                message: "Konten forum tidak boleh lebih dari 1000 karakter!",
               },
             ]}
           >
-            <Input.TextArea count={{ show: true, max: 2000 }} />
+            <Input.TextArea count={{ show: true, max: 1000 }} />
           </Form.Item>
         </Form>
       </Modal>

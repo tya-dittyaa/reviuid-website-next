@@ -1,13 +1,10 @@
 import { DividerCenter, TitleLayout } from "@/components/main";
 import { MessageOutlined } from "@ant-design/icons";
-import { Card, Col, Flex, Typography } from "antd";
+import { Card, Col, Flex } from "antd";
 import ForumListCreateButton from "../action/ForumListCreateButton";
 import ForumListPageBar from "../action/ForumListPageBar";
 import ForumListSearchBar from "../action/ForumListSearchBar";
 import ForumParentList from "../layout/ForumParentList";
-
-const { Title } = Typography;
-const { Meta } = Card;
 
 const rules = [
   "Tidak diperbolehkan menggunakan kata-kata yang mengandung SARA (Suku, Agama, Ras, Antar-golongan)",
@@ -53,6 +50,8 @@ const ForumListHorizontal: React.FC = () => {
                 style={{
                   listStyleType: "decimal",
                   padding: "0 1rem",
+                  textAlign: "justify",
+                  textJustify: "inter-word",
                 }}
               >
                 {rules.map((rule, index) => (

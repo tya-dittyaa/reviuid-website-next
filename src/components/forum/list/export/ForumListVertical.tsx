@@ -1,13 +1,10 @@
 import { DividerCenter, TitleLayout } from "@/components/main";
 import { MessageOutlined } from "@ant-design/icons";
-import { Card, Flex, Typography } from "antd";
+import { Card, Flex } from "antd";
 import ForumListCreateButton from "../action/ForumListCreateButton";
 import ForumListPageBar from "../action/ForumListPageBar";
 import ForumListSearchBar from "../action/ForumListSearchBar";
 import ForumParentList from "../layout/ForumParentList";
-
-const { Title } = Typography;
-const { Meta } = Card;
 
 const rules = [
   "Tidak diperbolehkan menggunakan kata-kata yang mengandung SARA (Suku, Agama, Ras, Antar-golongan)",
