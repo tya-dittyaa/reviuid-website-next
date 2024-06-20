@@ -1,12 +1,12 @@
 "use client";
 
 import {
-  DetailFilmHeader,
   DividerCenter,
   FilmComment,
   FilmDescription,
   FooterLayout,
   HeaderLayout,
+  TitleLayout,
 } from "@/components";
 import {
   FilmDataProvider,
@@ -26,6 +26,7 @@ import {
   GetUserFilmComment,
   GetUserSession,
 } from "@/utils";
+import { VideoCameraOutlined } from "@ant-design/icons";
 import { Layout, Spin } from "antd";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -46,7 +47,7 @@ function FilmFound() {
         padding: layout === "horizontal" ? "2rem" : "1rem",
       }}
     >
-      <DetailFilmHeader />
+      <TitleLayout icon={<VideoCameraOutlined />} title="Halaman Film" />
       <DividerCenter />
       <FilmDescription />
       <DividerCenter />

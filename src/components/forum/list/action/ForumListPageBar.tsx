@@ -11,7 +11,6 @@ const ForumListPageBar: React.FC = () => {
 
   const getPage = searchParams.get("page");
   const getSearch = searchParams.get("search");
-  const totalPage = Math.ceil(totalForumParent / 10);
 
   const [nowPage, setNowPage] = useState<number>(Number(getPage) || 1);
   const [finalForumTotal, setFinalForumTotal] =

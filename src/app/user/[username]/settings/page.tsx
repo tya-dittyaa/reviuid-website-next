@@ -3,6 +3,7 @@
 import {
   FooterLayout,
   HeaderLayout,
+  TitleLayout,
   UserDeleteAccount,
   UserEditAvatar,
   UserEditBiography,
@@ -22,7 +23,7 @@ import { useWindowSize } from "@/hooks";
 import { UserProfile, UserSession, UserSettings } from "@/types";
 import { GetUserProfile, GetUserSession } from "@/utils";
 import { SettingOutlined } from "@ant-design/icons";
-import { Avatar, Col, Divider, Flex, Layout, Spin, Typography } from "antd";
+import { Avatar, Divider, Flex, Layout, Spin, Typography } from "antd";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -177,43 +178,6 @@ function ButtonSetting() {
   );
 }
 
-function SettingText() {
-  const layout = useViewLayout();
-
-  return (
-    <Flex vertical style={{ width: "100%" }}>
-      <Col
-        style={{
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          textDecoration: "none",
-        }}
-      >
-        <Avatar
-          size={layout === "horizontal" ? "large" : "default"}
-          icon={<SettingOutlined />}
-          style={{
-            backgroundColor: "#E2B808",
-            color: "black",
-            marginRight: "1rem",
-          }}
-        />
-
-        <Title
-          level={2}
-          style={{
-            color: "#E2B808",
-            margin: 0,
-          }}
-        >
-          Pengaturan Akun
-        </Title>
-      </Col>
-    </Flex>
-  );
-}
-
 function DividerText() {
   return (
     <Divider
@@ -240,7 +204,7 @@ function UserFound() {
         padding: layout === "horizontal" ? "2rem" : "1rem",
       }}
     >
-      <SettingText />
+      <TitleLayout icon={<SettingOutlined />} title="Pengaturan Akun" />
       <DividerText />
 
       {layout === "vertical" ? (

@@ -1,4 +1,4 @@
-import { ForumListParentData } from "@/types";
+import { ForumParentData } from "@/types";
 import { Avatar, Card, Col, Flex, Typography } from "antd";
 import { formatDistanceToNow } from "date-fns";
 import { id } from "date-fns/locale";
@@ -6,9 +6,7 @@ import Image from "next/image";
 
 const { Paragraph, Text } = Typography;
 
-const ForumParentCard: React.FC<{ parent: ForumListParentData }> = ({
-  parent,
-}) => {
+const ForumParentCard: React.FC<{ parent: ForumParentData }> = ({ parent }) => {
   const title: React.ReactNode = (
     <a href={`/forum/${parent.id}`} style={{ textDecoration: "none" }}>
       <Flex vertical={false} justify="flex-start" align="center">

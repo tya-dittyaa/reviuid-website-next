@@ -1,6 +1,11 @@
 "use client";
 
-import { DividerCenter, FooterLayout, HeaderLayout } from "@/components";
+import {
+  DividerCenter,
+  FooterLayout,
+  HeaderLayout,
+  TitleLayout,
+} from "@/components";
 import {
   UserSessionProvider,
   ViewLayoutProvider,
@@ -10,7 +15,7 @@ import { useWindowSize } from "@/hooks";
 import { Developer, UserSession } from "@/types";
 import { GetUserSession } from "@/utils";
 import { TeamOutlined } from "@ant-design/icons";
-import { Avatar, Card, Col, Flex, Image, Layout, Spin, Typography } from "antd";
+import { Card, Col, Flex, Image, Layout, Spin, Typography } from "antd";
 import { useEffect, useState } from "react";
 
 const { Content } = Layout;
@@ -151,43 +156,6 @@ function DeveloperList() {
   );
 }
 
-function DeveloperText() {
-  const layout = useViewLayout();
-
-  return (
-    <Flex vertical style={{ width: "100%" }}>
-      <Col
-        style={{
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          textDecoration: "none",
-        }}
-      >
-        <Avatar
-          size={layout === "horizontal" ? "large" : "default"}
-          icon={<TeamOutlined />}
-          style={{
-            backgroundColor: "#E2B808",
-            color: "black",
-            marginRight: "1rem",
-          }}
-        />
-
-        <Title
-          level={2}
-          style={{
-            color: "#E2B808",
-            margin: 0,
-          }}
-        >
-          Daftar Pengembang
-        </Title>
-      </Col>
-    </Flex>
-  );
-}
-
 function ContentLayout() {
   const layout = useViewLayout();
 
@@ -201,7 +169,7 @@ function ContentLayout() {
         padding: layout === "horizontal" ? "2rem" : "1rem",
       }}
     >
-      <DeveloperText />
+      <TitleLayout icon={<TeamOutlined />} title="Daftar Pengembang" />
       <DividerCenter />
       <DeveloperList />
     </Content>

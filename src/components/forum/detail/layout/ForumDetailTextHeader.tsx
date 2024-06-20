@@ -1,10 +1,10 @@
 import { useViewLayout } from "@/context";
-import { UserOutlined } from "@ant-design/icons";
+import { VideoCameraOutlined } from "@ant-design/icons";
 import { Avatar, Col, Flex, Typography } from "antd";
 
 const { Title } = Typography;
 
-const UserHomeHeader: React.FC = () => {
+const ForumDetailTextHeader: React.FC = () => {
   const layout = useViewLayout();
 
   return (
@@ -19,7 +19,7 @@ const UserHomeHeader: React.FC = () => {
       >
         <Avatar
           size={layout === "horizontal" ? "large" : "default"}
-          icon={<UserOutlined />}
+          icon={<VideoCameraOutlined />}
           style={{
             backgroundColor: "#E2B808",
             color: "black",
@@ -34,11 +34,11 @@ const UserHomeHeader: React.FC = () => {
             margin: 0,
           }}
         >
-          Profil Pengguna
+          Forum Diskusi
         </Title>
       </Col>
     </Flex>
   );
 };
 
-export default UserHomeHeader;
+export default ForumDetailTextHeader;

@@ -37,14 +37,13 @@ const ForumListCreateButton: React.FC = () => {
           }
 
           setTimeout(() => {
-            setConfirmLoading(false);
-            hideModal();
-
             if (typeof response === "string") {
               route.push(`/forum/${response}`);
             } else {
               route.push("/forum");
             }
+            setConfirmLoading(false);
+            hideModal();
           }, 1500);
         }, 1000);
       });

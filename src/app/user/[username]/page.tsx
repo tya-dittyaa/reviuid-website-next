@@ -4,7 +4,7 @@ import {
   DividerCenter,
   FooterLayout,
   HeaderLayout,
-  UserHomeHeader,
+  TitleLayout,
   UserHomeHorizontal,
   UserHomeTabs,
   UserHomeVertical,
@@ -27,6 +27,7 @@ import {
   GetUserProfile,
   GetUserSession,
 } from "@/utils";
+import { UserOutlined } from "@ant-design/icons";
 import { Layout, Spin } from "antd";
 import {
   notFound,
@@ -89,7 +90,7 @@ function BodyLayout() {
         padding: layout === "horizontal" ? "2rem" : "1rem",
       }}
     >
-      <UserHomeHeader />
+      <TitleLayout icon={<UserOutlined />} title="Profil Pengguna" />
       <DividerCenter />
       {layout === "vertical" ? <UserHomeVertical /> : <UserHomeHorizontal />}
       <DividerCenter />
