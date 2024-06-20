@@ -1,5 +1,6 @@
 import { Developer, DeveloperRole } from "./developer.type";
 import { FilmData, FilmReviewData, FilmReviewValue } from "./filmData.type";
+import { ForumCreateParentData, ForumListParentData } from "./forumData.type";
 import { LogoConfig } from "./logo.type";
 import { ViewType, WindowSize } from "./responsive.type";
 import { TokenData, UserLogin } from "./userLogin.type";
@@ -13,6 +14,8 @@ export type {
   FilmData,
   FilmReviewData,
   FilmReviewValue,
+  ForumCreateParentData,
+  ForumListParentData,
   LogoConfig,
   RegisterResult,
   TokenData,

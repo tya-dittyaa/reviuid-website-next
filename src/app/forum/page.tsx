@@ -7,20 +7,46 @@ import {
   HeaderLayout,
 } from "@/components";
 import {
+  ForumParentTotalProvider,
   UserSessionProvider,
   ViewLayoutProvider,
+  useForumParentTotal,
   useViewLayout,
 } from "@/context";
 import { useWindowSize } from "@/hooks";
 import { UserSession } from "@/types";
-import { GetUserSession } from "@/utils";
+import { GetForumParentTotal, GetUserSession } from "@/utils";
 import { Layout, Spin } from "antd";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Toaster } from "sonner";
 
 const { Content } = Layout;
 
 function ForumLayout() {
   const layout = useViewLayout();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const totalForumParent = useForumParentTotal();
+
+  const getPage = searchParams.get("page");
+  const getSearch = searchParams.get("search");
+
+  const totalPage = Math.ceil(totalForumParent / 10);
+
+  useEffect(() => {
+    if (getSearch) {
+      router.replace(`${pathname}?search=${getSearch}`);
+    } else if (
+      !getPage ||
+      isNaN(Number(getPage)) ||
+      Number(getPage) < 1 ||
+      Number(getPage) > totalPage
+    ) {
+      router.replace(`${pathname}?page=1`, { scroll: false });
+    }
+  }, [getPage, getSearch, totalPage, pathname, router]);
 
   return (
     <Content
@@ -47,10 +73,17 @@ export default function ForumPage() {
   const [layout, setLayout] = useState<"vertical" | "horizontal">("horizontal");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userSession, setUserSession] = useState<UserSession | null>(null);
+  const [totalForumParent, setTotalForumParent] = useState<number>(0);
 
   const getUserSession = async () => {
     const user = await GetUserSession();
     setUserSession(user);
+  };
+
+  const getForumParentTotal = async () => {
+    const response = await GetForumParentTotal();
+    if (response) setTotalForumParent(response);
+    else setTotalForumParent(0);
   };
 
   useEffect(() => {
@@ -63,6 +96,7 @@ export default function ForumPage() {
 
   useEffect(() => {
     getUserSession();
+    getForumParentTotal();
   }, []);
 
   useEffect(() => {
@@ -78,11 +112,14 @@ export default function ForumPage() {
   return (
     <ViewLayoutProvider view={layout}>
       <UserSessionProvider user={userSession}>
-        <Layout style={{ minHeight: "100dvh" }}>
-          <HeaderLayout />
-          <ForumLayout />
-          <FooterLayout />
-        </Layout>
+        <ForumParentTotalProvider total={totalForumParent}>
+          <Layout style={{ minHeight: "100dvh" }}>
+            <HeaderLayout />
+            <ForumLayout />
+            <FooterLayout />
+            <Toaster richColors position="bottom-right" />
+          </Layout>
+        </ForumParentTotalProvider>
       </UserSessionProvider>
     </ViewLayoutProvider>
   );
