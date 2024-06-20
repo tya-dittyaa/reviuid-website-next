@@ -6,7 +6,7 @@ import {
 } from "@/context";
 import { Flex, Typography } from "antd";
 import FilmListCard from "../layout/FilmListCard";
-import ForumChatTopList from "../layout/ForumChatTopList";
+import ForumTopList from "../layout/ForumTopList";
 
 const { Title } = Typography;
 
@@ -52,7 +52,7 @@ const FilmHomeHorizontal: React.FC = () => {
           }}
         >
           <CreateTitleName title="Diskusi Forum" />
-          <ForumChatTopList />
+          <ForumTopList />
         </Flex>
       </Flex>
 
