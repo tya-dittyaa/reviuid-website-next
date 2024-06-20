@@ -71,7 +71,14 @@ const Found: React.FC<{ reviewData: FilmReviewData }> = ({ reviewData }) => {
                 defaultValue={reviewData.rating}
                 style={{ margin: 0, fontSize: 14 }}
               />
-              <Text style={{ color: "black", fontSize: 12, margin: 0 }}>
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 12,
+                  fontWeight: "lighter",
+                  margin: 0,
+                }}
+              >
                 {new Date(reviewData.updatedAt).toLocaleDateString("id-ID", {
                   day: "2-digit",
                   month: "2-digit",

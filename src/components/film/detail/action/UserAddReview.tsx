@@ -215,6 +215,7 @@ const AddReview: React.FC = () => {
           style: { color: "black" },
         }}
         cancelButtonProps={{
+          danger: true,
           disabled: confirmLoading || confirmDelete,
         }}
         footer={(_, { OkBtn, CancelBtn }) => (

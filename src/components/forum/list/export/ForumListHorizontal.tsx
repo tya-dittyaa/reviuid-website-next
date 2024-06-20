@@ -3,6 +3,7 @@ import { Card, Col, Flex, Typography } from "antd";
 import ForumListCreateButton from "../action/ForumListCreateButton";
 import ForumListPageBar from "../action/ForumListPageBar";
 import ForumListSearchBar from "../action/ForumListSearchBar";
+import ForumParentList from "../layout/ForumParentList";
 import ForumTextHeader from "../layout/ForumTextHeader";
 
 const { Title } = Typography;
@@ -34,20 +35,7 @@ const ForumListHorizontal: React.FC = () => {
         <Flex gap={50}>
           <Col flex="65%">
             <Flex vertical gap={25}>
-              <Card
-                style={{
-                  background: "#E2E0D8",
-                  textAlign: "center",
-                }}
-              >
-                <Meta
-                  title={
-                    <Title level={5} style={{ color: "gray", margin: 0 }}>
-                      Akan Segera Hadir!
-                    </Title>
-                  }
-                />
-              </Card>
+              <ForumParentList />
             </Flex>
           </Col>
 
