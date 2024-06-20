@@ -1,6 +1,6 @@
 import { Card, Spin } from "antd";
 
-const ForumDetailChildLoadingCard: React.FC = () => {
+const ForumParentLoadingCard: React.FC = () => {
   return (
     <Card
       style={{
@@ -13,4 +13,4 @@ const ForumDetailChildLoadingCard: React.FC = () => {
   );
 };
 
-export default ForumDetailChildLoadingCard;
+export default ForumParentLoadingCard;

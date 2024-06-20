@@ -12,3 +12,14 @@ export type ForumParentData = ForumCreateParentData & {
     avatar: string;
   };
 };
+
+export type ForumChildData = {
+  id: string;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
+  user: {
+    username: string;
+    avatar: string;
+  };
+};
