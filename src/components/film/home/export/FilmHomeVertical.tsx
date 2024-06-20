@@ -6,7 +6,7 @@ import {
 } from "@/context";
 import { Flex, Typography } from "antd";
 import FilmListCard from "../layout/FilmListCard";
-import ForumChatTopList from "../layout/ForumChatTopList";
+import ForumTopList from "../layout/ForumTopList";
 
 const { Title } = Typography;
 
@@ -34,7 +34,7 @@ const FilmHomeVertical: React.FC = () => {
     <Flex vertical gap={30}>
       <Flex vertical gap={10}>
         <CreateTitleName title="Diskusi Forum" />
-        <ForumChatTopList />
+        <ForumTopList />
       </Flex>
 
       <Flex vertical gap={10}>
