@@ -5,9 +5,9 @@ import { Card, Flex } from "antd";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import ForumDetailChildLoadingCard from "../../list/layout/ForumParentLoadingCard";
+import ForumChildPageBar from "../action/ForumChildPageBar";
 import ForumDetailChildCard from "./ForumChildCard";
 import ForumChildNoDataCard from "./ForumChildNoDataCard";
-import ForumChildPageBar from "../action/ForumChildPageBar";
 
 const ForumDetailChildList: React.FC = () => {
   const searchParams = useSearchParams();

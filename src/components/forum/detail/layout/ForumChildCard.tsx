@@ -3,6 +3,7 @@ import { Avatar, Card, Col, Flex, Typography } from "antd";
 import { formatDistanceToNow } from "date-fns";
 import { id } from "date-fns/locale";
 import Image from "next/image";
+import ForumChildDropdown from "../action/ForumChildDropdown";
 
 const { Paragraph, Text } = Typography;
 
@@ -75,6 +76,7 @@ const ForumDetailChildCard: React.FC<{ child: ForumChildData }> = ({
           padding: "1rem",
         },
       }}
+      extra={<ForumChildDropdown childData={child} />}
     >
       <Paragraph
         style={{
