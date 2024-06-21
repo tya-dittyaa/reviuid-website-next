@@ -5,6 +5,7 @@ import { UserRegister } from "@/types";
 import {
   CheckAvailableEmail,
   CheckAvailableUsername,
+  CheckSafetyText,
   CreateUserOTP,
   FetchRefreshToken,
   FetchUserRegister,
@@ -83,6 +84,27 @@ function RegisterForm() {
 
   const checkUsernameAvailability = async (): Promise<boolean> => {
     const username = form.getFieldValue("username");
+
+    // Check safety text
+    const isProfanity = await CheckSafetyText(username);
+
+    if (isProfanity === undefined) {
+      setSubmitting(false);
+      setError(true);
+      setErrorMessage("Terjadi kesalahan pada server! Silakan coba lagi!");
+      return false;
+    }
+
+    if (isProfanity) {
+      setSubmitting(false);
+      setError(true);
+      setErrorMessage(
+        "Nama pengguna mengandung kata-kata yang tidak pantas! Silakan gunakan nama pengguna lain!"
+      );
+      return false;
+    }
+
+    // Check username availability
     const check = await CheckAvailableUsername(username);
 
     if (check === undefined) {

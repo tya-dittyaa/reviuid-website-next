@@ -1,5 +1,5 @@
 import { useForumParentData, useUserSession } from "@/context";
-import { DeleteForumParent, UpdateForumParent } from "@/utils";
+import { CheckSafetyText, DeleteForumParent, UpdateForumParent } from "@/utils";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -30,6 +30,26 @@ const ForumParentDropdown: React.FC = () => {
     const promise = () =>
       new Promise((resolve, reject) => {
         setTimeout(async () => {
+          // Check if the title is profane
+          const isTitleProfane = await CheckSafetyText(values.title);
+          if (isTitleProfane === undefined) {
+            reject("Terjadi kesalahan pada server!");
+            return;
+          } else if (isTitleProfane === true) {
+            reject("Judul forum mengandung kata-kata yang tidak pantas!");
+            return;
+          }
+
+          // Check if the content is profane
+          const isContentProfane = await CheckSafetyText(values.content);
+          if (isContentProfane === undefined) {
+            reject("Terjadi kesalahan pada server!");
+            return;
+          } else if (isContentProfane === true) {
+            reject("Konten forum mengandung kata-kata yang tidak pantas!");
+            return;
+          }
+
           // Fetch the forum parent
           const response = await UpdateForumParent(
             values.title,
@@ -39,27 +59,29 @@ const ForumParentDropdown: React.FC = () => {
 
           if (response === undefined) {
             reject("Terjadi kesalahan pada server!");
+            return;
           } else if (response === false) {
             reject("Terjadi kesalahan saat mengubah forum!");
+            return;
           } else {
             resolve("Forum berhasil diubah!");
-            hideEditModal();
+            setTimeout(() => {
+              window.location.reload();
+              hideEditModal();
+            }, 1500);
+            return;
           }
-
-          setTimeout(() => {
-            window.location.reload();
-            setConfirmEditModal(false);
-            hideEditModal();
-          }, 1500);
         }, 1000);
       });
 
     toast.promise(promise(), {
       loading: "Mengubah forum...",
       success: (data) => {
+        setConfirmEditModal(false);
         return `${data}`;
       },
       error: (error) => {
+        setConfirmEditModal(false);
         return `${error}`;
       },
     });
