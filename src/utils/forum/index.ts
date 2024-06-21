@@ -6,3 +6,7 @@ export * from "./data/GetForumParentBySearch";
 export * from "./data/GetForumParentTotal";
 export * from "./setting/CreateForumChild";
 export * from "./setting/CreateForumParent";
+export * from "./setting/DeleteForumChild";
+export * from "./setting/DeleteForumParent";
+export * from "./setting/UpdateForumChild";
+export * from "./setting/UpdateForumParent";

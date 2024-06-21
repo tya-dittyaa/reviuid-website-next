@@ -8,6 +8,7 @@ export type ForumParentData = ForumCreateParentData & {
   createdAt: Date;
   updatedAt: Date;
   user: {
+    id: string;
     username: string;
     avatar: string;
   };
@@ -19,6 +20,7 @@ export type ForumChildData = {
   createdAt: Date;
   updatedAt: Date;
   user: {
+    id: string;
     username: string;
     avatar: string;
   };

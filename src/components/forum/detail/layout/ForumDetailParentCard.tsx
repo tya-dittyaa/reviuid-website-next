@@ -6,6 +6,7 @@ import { id } from "date-fns/locale";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
+import ForumParentDropdown from "../action/ForumParentDropdown";
 
 const { Title, Paragraph, Text } = Typography;
 const { TextArea } = Input;
@@ -235,6 +236,7 @@ const ForumDetailParentCard: React.FC = () => {
           padding: "0.5rem",
         },
       }}
+      extra={<ForumParentDropdown />}
     >
       <Flex vertical gap={10}>
         {content}
