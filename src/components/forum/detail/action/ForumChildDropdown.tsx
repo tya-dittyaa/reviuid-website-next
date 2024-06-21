@@ -1,6 +1,6 @@
 import { useUserSession } from "@/context";
 import { ForumChildData } from "@/types";
-import { DeleteForumChild, UpdateForumChild } from "@/utils";
+import { CheckSafetyText, DeleteForumChild, UpdateForumChild } from "@/utils";
 import { DeleteOutlined, EditOutlined, MoreOutlined } from "@ant-design/icons";
 import { Dropdown, Form, Input, MenuProps, Modal } from "antd";
 import { useState } from "react";
@@ -24,32 +24,44 @@ const ForumChildDropdown: React.FC<{
     const promise = () =>
       new Promise((resolve, reject) => {
         setTimeout(async () => {
+          // Check if the content is profane
+          const isContentProfane = await CheckSafetyText(values.content);
+          if (isContentProfane === undefined) {
+            reject("Terjadi kesalahan pada server!");
+            return;
+          } else if (isContentProfane === true) {
+            reject("Balasan mengandung kata-kata yang tidak pantas!");
+            return;
+          }
+
           // Fetch the forum child
           const response = await UpdateForumChild(values.content, childData.id);
 
           if (response === undefined) {
             reject("Terjadi kesalahan pada server!");
+            return;
           } else if (response === false) {
             reject("Terjadi kesalahan saat mengubah balasan!");
+            return;
           } else {
             resolve("Balasan berhasil diubah!");
-            hideEditModal();
+            setTimeout(() => {
+              window.location.reload();
+              hideEditModal();
+            }, 1500);
+            return;
           }
-
-          setTimeout(() => {
-            window.location.reload();
-            setConfirmEditModal(false);
-            hideEditModal();
-          }, 1500);
         }, 1000);
       });
 
     toast.promise(promise(), {
       loading: "Mengubah balasan...",
       success: (data) => {
+        setConfirmEditModal(false);
         return `${data}`;
       },
       error: (error) => {
+        setConfirmEditModal(false);
         return `${error}`;
       },
     });

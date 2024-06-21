@@ -1,4 +1,8 @@
-import { CheckAvailableUsername, FetchChangeUsername } from "@/utils";
+import {
+  CheckAvailableUsername,
+  CheckSafetyText,
+  FetchChangeUsername,
+} from "@/utils";
 import { EditOutlined, SaveOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal } from "antd";
 import { useRouter } from "next/navigation";
@@ -34,25 +38,39 @@ const UserEditUsername: React.FC = () => {
     const promise = () =>
       new Promise(async (resolve, reject) => {
         setTimeout(async () => {
-          let validResponse = false;
+          const isProfanity = await CheckSafetyText(values.username);
+
+          if (isProfanity === undefined) {
+            reject("Terjadi kesalahan pada server!");
+            setConfirmLoading(false);
+            return;
+          } else if (isProfanity) {
+            reject(
+              "Nama pengguna yang Anda masukkan mengandung kata-kata tidak pantas!"
+            );
+            setConfirmLoading(false);
+            return;
+          }
+
           const response = await FetchChangeUsername(values.username);
 
           if (response === undefined) {
             reject("Terjadi kesalahan pada server!");
+            setConfirmLoading(false);
+            return;
           } else if (response) {
-            validResponse = true;
             resolve("Berhasil memperbarui nama pengguna.");
+            setTimeout(() => {
+              setOpen(false);
+              setConfirmLoading(false);
+              router.push(`/user/${values.username}/settings`);
+            }, 1000);
+            return;
           } else {
             reject("Gagal memperbarui nama pengguna!");
-          }
-
-          setTimeout(() => {
-            setOpen(false);
             setConfirmLoading(false);
-            if (validResponse) {
-              router.push(`/user/${values.username}/settings`);
-            }
-          }, 1000);
+            return;
+          }
         }, 1000);
       });
 

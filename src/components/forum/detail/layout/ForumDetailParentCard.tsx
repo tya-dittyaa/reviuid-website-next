@@ -1,5 +1,5 @@
 import { useForumParentData, useUserSession, useViewLayout } from "@/context";
-import { CreateForumChild } from "@/utils";
+import { CheckSafetyText, CreateForumChild } from "@/utils";
 import { Avatar, Button, Card, Col, Flex, Form, Input, Typography } from "antd";
 import { formatDistanceToNow } from "date-fns";
 import { id } from "date-fns/locale";
@@ -25,19 +25,32 @@ const ForumDetailParentCard: React.FC = () => {
     const promise = () =>
       new Promise((resolve, reject) => {
         setTimeout(async () => {
+          // Check if the content is profane
+          const isContentProfane = await CheckSafetyText(values.content);
+          if (isContentProfane === undefined) {
+            reject("Terjadi kesalahan pada server!");
+            return;
+          } else if (isContentProfane === true) {
+            reject("Komentar mengandung kata-kata yang tidak pantas!");
+            return;
+          }
+
           // Fetch the forum parent
           const response = await CreateForumChild(parent.id, values.content);
 
           // If the response is false, reject
           if (response === undefined || response === null) {
             reject("Terjadi kesalahan saat membuat komentar");
+            return;
           } else if (response === false) {
             reject("Gagal membuat komentar");
+            return;
           } else {
             resolve("Komentar berhasil dibuat");
             setTimeout(() => {
               window.location.reload();
             }, 1500);
+            return;
           }
         }, 1000);
       });

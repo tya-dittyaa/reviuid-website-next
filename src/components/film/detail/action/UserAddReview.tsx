@@ -6,6 +6,7 @@ import {
 } from "@/context";
 import { FilmReviewValue } from "@/types";
 import {
+  CheckSafetyText,
   DeleteUserFilmReview,
   PatchUserFilmReview,
   PostUserFilmReview,
@@ -55,34 +56,47 @@ const AddReview: React.FC = () => {
     const promise = () =>
       new Promise((resolve, reject) => {
         setTimeout(async () => {
+          // Check if the content is profane
+          const isContentProfane = await CheckSafetyText(values.review);
+          if (isContentProfane === undefined) {
+            reject("Terjadi kesalahan pada server!");
+            return;
+          } else if (isContentProfane === true) {
+            reject("Komentar mengandung kata-kata yang tidak pantas!");
+            return;
+          }
+
+          // Fetch the forum parent
           const response = await PostUserFilmReview(
             filmData.id,
             values.rating,
             values.review
           );
-
           if (response === undefined) {
             reject("Terjadi kesalahan pada server!");
+            return;
           } else if (response) {
             resolve("Berhasil menambahkan komentar!");
+            setTimeout(() => {
+              hideModal();
+              forceRefresh();
+            }, 1000);
+            return;
           } else {
             reject("Gagal menambahkan komentar!");
+            return;
           }
-
-          setTimeout(() => {
-            setConfirmLoading(false);
-            hideModal();
-            forceRefresh();
-          }, 1000);
         }, 1000);
       });
 
     toast.promise(promise, {
       loading: "Menambahkan komentar...",
       success: (data) => {
+        setConfirmLoading(false);
         return `${data}`;
       },
       error: (error) => {
+        setConfirmLoading(false);
         return `${error}`;
       },
     });
@@ -94,34 +108,47 @@ const AddReview: React.FC = () => {
     const promise = () =>
       new Promise((resolve, reject) => {
         setTimeout(async () => {
+          // Check if the content is profane
+          const isContentProfane = await CheckSafetyText(values.review);
+          if (isContentProfane === undefined) {
+            reject("Terjadi kesalahan pada server!");
+            return;
+          } else if (isContentProfane === true) {
+            reject("Komentar mengandung kata-kata yang tidak pantas!");
+            return;
+          }
+
+          // Fetch the forum parent
           const response = await PatchUserFilmReview(
             filmData.id,
             values.rating,
             values.review
           );
-
           if (response === undefined) {
             reject("Terjadi kesalahan pada server!");
+            return;
           } else if (response) {
             resolve("Berhasil memperbarui komentar!");
+            setTimeout(() => {
+              hideModal();
+              forceRefresh();
+            }, 1000);
+            return;
           } else {
             reject("Gagal memperbarui komentar!");
+            return;
           }
-
-          setTimeout(() => {
-            setConfirmLoading(false);
-            hideModal();
-            forceRefresh();
-          }, 1000);
         }, 1000);
       });
 
     toast.promise(promise, {
       loading: "Memperbarui komentar...",
       success: (data) => {
+        setConfirmLoading(false);
         return `${data}`;
       },
       error: (error) => {
+        setConfirmLoading(false);
         return `${error}`;
       },
     });

@@ -1,6 +1,6 @@
 import { useUserSession } from "@/context";
 import { ForumCreateParentData } from "@/types";
-import { CreateForumParent } from "@/utils";
+import { CheckSafetyText, CreateForumParent } from "@/utils";
 import { SaveOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal } from "antd";
 import { useRouter } from "next/navigation";
@@ -21,6 +21,26 @@ const ForumListCreateButton: React.FC = () => {
     const promise = () =>
       new Promise((resolve, reject) => {
         setTimeout(async () => {
+          // Check if the title is profane
+          const isTitleProfane = await CheckSafetyText(values.title);
+          if (isTitleProfane === undefined) {
+            reject("Terjadi kesalahan pada server!");
+            return;
+          } else if (isTitleProfane === true) {
+            reject("Judul forum mengandung kata-kata yang tidak pantas!");
+            return;
+          }
+
+          // Check if the content is profane
+          const isContentProfane = await CheckSafetyText(values.content);
+          if (isContentProfane === undefined) {
+            reject("Terjadi kesalahan pada server!");
+            return;
+          } else if (isContentProfane === true) {
+            reject("Konten forum mengandung kata-kata yang tidak pantas!");
+            return;
+          }
+
           // Fetch the forum parent
           const response = await CreateForumParent(
             values.title,
@@ -29,31 +49,29 @@ const ForumListCreateButton: React.FC = () => {
 
           if (response === undefined) {
             reject("Terjadi kesalahan pada server!");
+            return;
           } else if (response === null) {
             reject("Terjadi kesalahan saat membuat forum!");
+            return;
           } else {
             resolve("Forum berhasil dibuat!");
-            hideModal();
-          }
-
-          setTimeout(() => {
-            if (typeof response === "string") {
+            setTimeout(() => {
               route.push(`/forum/${response}`);
-            } else {
-              route.push("/forum");
-            }
-            setConfirmLoading(false);
-            hideModal();
-          }, 1500);
+              hideModal();
+            }, 1500);
+            return;
+          }
         }, 1000);
       });
 
     toast.promise(promise(), {
       loading: "Membuat forum...",
       success: (data) => {
+        setConfirmLoading(false);
         return `${data}`;
       },
       error: (error) => {
+        setConfirmLoading(false);
         return `${error}`;
       },
     });

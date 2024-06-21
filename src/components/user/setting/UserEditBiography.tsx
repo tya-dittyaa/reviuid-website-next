@@ -1,4 +1,4 @@
-import { FetchChangeBiography } from "@/utils";
+import { CheckSafetyText, FetchChangeBiography } from "@/utils";
 import { DeleteOutlined, EditOutlined, SaveOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal } from "antd";
 import { useState } from "react";
@@ -28,21 +28,39 @@ const UserEditBiography: React.FC = () => {
     const promise = () =>
       new Promise(async (resolve, reject) => {
         setTimeout(async () => {
+          const isProfanity = await CheckSafetyText(values.biography);
+
+          if (isProfanity === undefined) {
+            reject("Terjadi kesalahan pada server!");
+            setConfirmLoading(false);
+            return;
+          } else if (isProfanity) {
+            reject(
+              "Deskripsi yang Anda masukkan mengandung kata-kata tidak pantas!"
+            );
+            setConfirmLoading(false);
+            return;
+          }
+
           const response = await FetchChangeBiography(values.biography);
 
           if (response === undefined) {
             reject("Terjadi kesalahan pada server!");
+            setConfirmLoading(false);
+            return;
           } else if (response) {
             resolve("Berhasil memperbarui deskripsi pengguna.");
+            setTimeout(() => {
+              setOpen(false);
+              setConfirmLoading(false);
+              forceRefresh();
+            }, 1000);
+            return;
           } else {
             reject("Gagal memperbarui deskripsi pengguna!");
-          }
-
-          setTimeout(() => {
-            setOpen(false);
             setConfirmLoading(false);
-            forceRefresh();
-          }, 1000);
+            return;
+          }
         }, 1000);
       });
 
