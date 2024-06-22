@@ -30,8 +30,6 @@ export async function PostUserFilmReview(
       }),
     });
 
-    console.log(res);
-
     // If the status is not 201, return false
     if (res.status !== 201) return false;
 
