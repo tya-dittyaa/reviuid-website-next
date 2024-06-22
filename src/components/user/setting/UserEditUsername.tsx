@@ -32,6 +32,52 @@ const UserEditUsername: React.FC = () => {
     return input.includes(" ");
   }
 
+  function hasInvisibleChars(str: string): boolean {
+    // List of invisible characters
+    const invisibleChars = [
+      "\u0009", // tab
+      "\u000A", // line feed
+      "\u000B", // vertical tab
+      "\u000C", // form feed
+      "\u000D", // carriage return
+      "\u0020", // space
+      "\u0085", // next line
+      "\u00A0", // no-break space
+      "\u1680", // ogham space mark
+      "\u180E", // mongolian vowel separator
+      "\u2000", // en quad
+      "\u2001", // em quad
+      "\u2002", // en space
+      "\u2003", // em space
+      "\u2004", // three-per-em space
+      "\u2005", // four-per-em space
+      "\u2006", // six-per-em space
+      "\u2007", // figure space
+      "\u2008", // punctuation space
+      "\u2009", // thin space
+      "\u200A", // hair space
+      "\u200B", // zero-width space
+      "\u2028", // line separator
+      "\u2029", // paragraph separator
+      "\u202F", // narrow no-break space
+      "\u205F", // medium mathematical space
+      "\u3000", // ideographic space
+      "\uFEFF", // zero-width no-break space
+      "\u3164", // hangul filler
+      "\uFFA0", // hangul half-width filler
+      "ㅤ", // hangul filler (U+3164)
+    ];
+
+    // Check if the string contains any of the invisible characters
+    for (const char of invisibleChars) {
+      if (str.includes(char)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   const updateUsername = async (values: { username: string }) => {
     setConfirmLoading(true);
 
@@ -155,15 +201,15 @@ const UserEditUsername: React.FC = () => {
               },
               {
                 validator: async (_, value) => {
-                  if (hasSpace(value)) {
+                  if (hasInvisibleChars(value)) {
                     return Promise.reject(
-                      "Nama pengguna tidak boleh mengandung spasi!"
+                      "Nama pengguna tidak boleh mengandung karakter tidak terlihat!"
                     );
                   }
 
-                  if (value.includes(String.fromCharCode(32))) {
+                  if (hasSpace(value)) {
                     return Promise.reject(
-                      "Nama pengguna tidak boleh mengandung karakter kosong!"
+                      "Nama pengguna tidak boleh mengandung spasi!"
                     );
                   }
 
