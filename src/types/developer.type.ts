@@ -3,6 +3,7 @@ export type DeveloperRole =
   | "Frontend Developer"
   | "Backend Developer"
   | "UI/UX Designer"
+  | "AI Prompter"
   | "Database Administrator"
   | "System Administrator";
 

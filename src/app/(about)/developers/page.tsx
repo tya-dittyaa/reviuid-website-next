@@ -64,7 +64,7 @@ const DeveloperPeople: Developer[] = [
     email: "timothy.paendong@binus.ac.id",
     avatar:
       "https://stbm7resourcesprod.blob.core.windows.net/profilepicture/a1f31845-6f13-4b1e-86e7-605853e6f2b3.jpg",
-    role: ["Team Leader", "Frontend Developer"],
+    role: ["Team Leader", "Frontend Developer", "AI Prompter"],
   },
 ];
 
