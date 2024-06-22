@@ -161,6 +161,12 @@ const UserEditUsername: React.FC = () => {
                     );
                   }
 
+                  if (value.includes(String.fromCharCode(32))) {
+                    return Promise.reject(
+                      "Nama pengguna tidak boleh mengandung karakter kosong!"
+                    );
+                  }
+
                   const response = await CheckAvailableUsername(value);
                   if (response === true) {
                     return Promise.resolve();
