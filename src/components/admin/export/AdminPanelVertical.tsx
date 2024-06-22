@@ -27,6 +27,7 @@ const AdminPanelVertical: React.FC = () => {
             margin: 0,
             padding: "1rem",
             color: "gray",
+            textAlign: "center",
           }}
         >
           Konten ini hanya bisa diakses di mode horizontal!
