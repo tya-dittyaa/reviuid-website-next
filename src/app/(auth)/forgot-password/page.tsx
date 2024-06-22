@@ -221,6 +221,7 @@ function ForgotPasswordForm() {
     formOTP
       .validateFields()
       .then(async (values) => {
+        setSubmitting(true);
         setConfirmModal(true);
         closeModal();
 
@@ -236,6 +237,7 @@ function ForgotPasswordForm() {
 
         setTimeout(() => {
           router.replace("/login");
+          setSubmitting(false);
         }, 2000);
       })
       .catch((error) => {
