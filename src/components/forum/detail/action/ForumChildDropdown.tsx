@@ -1,6 +1,11 @@
 import { useUserSession } from "@/context";
 import { ForumChildData } from "@/types";
-import { CheckSafetyText, DeleteForumChild, UpdateForumChild } from "@/utils";
+import {
+  AddUserReport,
+  CheckSafetyText,
+  DeleteForumChild,
+  UpdateForumChild,
+} from "@/utils";
 import { DeleteOutlined, EditOutlined, MoreOutlined } from "@ant-design/icons";
 import { Dropdown, Form, Input, MenuProps, Modal } from "antd";
 import { useState } from "react";
@@ -214,9 +219,22 @@ const ForumChildDropdown: React.FC<{
       key: "report",
       danger: true,
       icon: <DeleteOutlined />,
-      label: "Laporkan",
-      onClick: () => {
-        toast.info("Fitur ini akan segera hadir!");
+      label: "Laporkan Balasan",
+      onClick: async () => {
+        const res = await AddUserReport(
+          childData.id,
+          "USER_FORUM_CHILD_CONTENT",
+          childData.content,
+          childData.user.id
+        );
+
+        if (res === undefined) {
+          toast.error("Terjadi kesalahan pada server!");
+        } else if (res === false) {
+          toast.error("Terjadi kesalahan saat melaporkan balasan!");
+        } else {
+          toast.success("Balasan berhasil dilaporkan!");
+        }
       },
     },
   ];

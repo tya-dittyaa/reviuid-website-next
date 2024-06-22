@@ -213,6 +213,7 @@ function ForgotPasswordForm() {
   const closeModal = () => {
     setOpenModal(false);
     setConfirmModal(false);
+    setSubmitting(false);
     formOTP.resetFields();
   };
 

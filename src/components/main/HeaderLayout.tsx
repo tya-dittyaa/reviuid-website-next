@@ -152,6 +152,17 @@ const DrawerLayout: React.FC = () => {
           </>
         ) : (
           <>
+            {userSession?.role === "ADMIN" && (
+              <Button
+                type="text"
+                size="large"
+                href={`/admin`}
+                block
+                style={{ marginBottom: "15px" }}
+              >
+                Admin
+              </Button>
+            )}
             <Button
               type="text"
               size="large"
@@ -284,8 +295,27 @@ const UserHasLogin: React.FC = () => {
     },
   ];
 
+  const adminItems: MenuProps["items"] = [
+    {
+      key: "5",
+      label: <a href="/admin">Admin</a>,
+      icon: <SettingOutlined />,
+    },
+  ];
+
+  let mainItems: MenuProps["items"] = items;
+
+  if (userSession.role === "ADMIN") {
+    mainItems = [...items, ...adminItems];
+  }
+
   return (
-    <Dropdown menu={{ items }} placement="bottomRight" arrow autoAdjustOverflow>
+    <Dropdown
+      menu={{ items: mainItems }}
+      placement="bottomRight"
+      arrow
+      autoAdjustOverflow
+    >
       <a
         onClick={(e) => e.preventDefault()}
         style={{

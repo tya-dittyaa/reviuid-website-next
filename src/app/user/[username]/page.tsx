@@ -36,6 +36,7 @@ import {
   useSearchParams,
 } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Toaster } from "sonner";
 
 const { Content } = Layout;
 
@@ -176,6 +177,7 @@ export default function ProfilePage({
                 <HeaderLayout />
                 <BodyLayout />
                 <FooterLayout />
+                <Toaster richColors position="bottom-right" />
               </Layout>
             </UserFilmWatchlistTotalProvider>
           </UserFilmFavoriteTotalProvider>

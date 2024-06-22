@@ -11,6 +11,7 @@ import { TokenData, UserLogin } from "./userLogin.type";
 import { UserOtpType } from "./userOtp.type";
 import { UserProfile, UserSession, UserSettings } from "./userProfile.type";
 import { RegisterResult, UserRegister } from "./userRegister.type";
+import { ReportType, UserReport } from "./userReport.type";
 
 export type {
   Developer,
@@ -23,11 +24,13 @@ export type {
   ForumParentData,
   LogoConfig,
   RegisterResult,
+  ReportType,
   TokenData,
   UserLogin,
   UserOtpType,
   UserProfile,
   UserRegister,
+  UserReport,
   UserSession,
   UserSettings,
   ViewType,
