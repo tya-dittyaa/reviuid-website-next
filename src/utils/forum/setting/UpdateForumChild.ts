@@ -28,8 +28,6 @@ export async function UpdateForumChild(
       }),
     });
 
-    console.log(await res.json());
-
     // If not 200, return false
     if (res.status !== 200) return false;
 

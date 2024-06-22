@@ -30,8 +30,6 @@ export async function PatchUserFilmReview(
       }),
     });
 
-    console.log(res);
-
     // If the status is not 200, return false
     if (res.status !== 200) return false;
 
