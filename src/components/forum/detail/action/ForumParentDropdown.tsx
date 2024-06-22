@@ -1,5 +1,10 @@
 import { useForumParentData, useUserSession } from "@/context";
-import { CheckSafetyText, DeleteForumParent, UpdateForumParent } from "@/utils";
+import {
+  AddUserReport,
+  CheckSafetyText,
+  DeleteForumParent,
+  UpdateForumParent,
+} from "@/utils";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -258,12 +263,47 @@ const ForumParentDropdown: React.FC = () => {
       },
     },
     {
-      key: "report",
+      key: "report_title",
       danger: true,
-      label: "Laporkan Forum",
+      label: "Laporkan Judul Forum",
       icon: <DeleteOutlined />,
-      onClick: () => {
-        toast.info("Fitur ini akan segera hadir!");
+      onClick: async () => {
+        const res = await AddUserReport(
+          parent.id,
+          "USER_FORUM_PARENT_TITLE",
+          parent.title,
+          parent.user.id
+        );
+
+        if (res === undefined) {
+          toast.error("Terjadi kesalahan pada server!");
+        } else if (res === false) {
+          toast.error("Terjadi kesalahan saat melaporkan judul forum!");
+        } else {
+          toast.success("Judul forum berhasil dilaporkan!");
+        }
+      },
+    },
+    {
+      key: "report_content",
+      danger: true,
+      label: "Laporkan Konten Forum",
+      icon: <DeleteOutlined />,
+      onClick: async () => {
+        const res = await AddUserReport(
+          parent.id,
+          "USER_FORUM_PARENT_CONTENT",
+          parent.content,
+          parent.user.id
+        );
+
+        if (res === undefined) {
+          toast.error("Terjadi kesalahan pada server!");
+        } else if (res === false) {
+          toast.error("Terjadi kesalahan saat melaporkan konten forum!");
+        } else {
+          toast.success("Konten forum berhasil dilaporkan!");
+        }
       },
     },
   ];

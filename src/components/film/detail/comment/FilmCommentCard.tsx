@@ -4,6 +4,7 @@ import { GetFilmCommentByPage } from "@/utils";
 import { Avatar, Card, Col, Flex, Rate, Spin, Typography } from "antd";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import FilmCommentDropdown from "./FilmCommentDropdown";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -106,6 +107,7 @@ const Found: React.FC<{ reviewData: FilmReviewData }> = ({ reviewData }) => {
           padding: "1rem",
         },
       }}
+      extra={<FilmCommentDropdown reviewData={reviewData} />}
     >
       <Paragraph
         style={{
