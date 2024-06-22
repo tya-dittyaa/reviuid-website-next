@@ -16,7 +16,7 @@ const FilmCommentDropdown: React.FC<{
       onClick: async () => {
         const res = await AddUserReport(
           reviewData.id,
-          "USER_FORUM_CHILD_CONTENT",
+          "USER_FILM_COMMENT",
           reviewData.review,
           reviewData.user.id
         );
