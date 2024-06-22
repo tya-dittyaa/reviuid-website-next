@@ -5,7 +5,7 @@ import {
   useViewLayout,
 } from "@/context";
 import { DeleteUserFilmWatchlist, PostUserFilmWatchlist } from "@/utils";
-import { DeleteOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -117,7 +117,7 @@ const AddToWatchlist: React.FC = () => {
       type="primary"
       onClick={clickButton}
       loading={isLoading}
-      icon={userWatchlist ? <DeleteOutlined /> : <PlusCircleOutlined />}
+      icon={userWatchlist ? <DeleteOutlined /> : <EyeOutlined />}
       style={{
         color: "black",
         fontSize: layout === "horizontal" ? "1.2vw" : "4vw",

@@ -5,7 +5,7 @@ import {
   useViewLayout,
 } from "@/context";
 import { DeleteUserFilmFavorite, PostUserFilmFavorite } from "@/utils";
-import { DeleteOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { DeleteOutlined, SmileOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -117,7 +117,7 @@ const AddToFavorites: React.FC = () => {
       type="primary"
       onClick={clickButton}
       loading={isLoading}
-      icon={userFavorite ? <DeleteOutlined /> : <PlusCircleOutlined />}
+      icon={userFavorite ? <DeleteOutlined /> : <SmileOutlined />}
       style={{
         color: "black",
         fontSize: layout === "horizontal" ? "1.2vw" : "4vw",
