@@ -263,6 +263,7 @@ export default function SettingsPage({
       userSession.username === params.username
     ) {
       setUserSettings({
+        id: userProfile.id,
         username: userProfile.username,
         email: userSession.email,
         avatar: userProfile.avatar,
