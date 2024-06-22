@@ -1,5 +1,5 @@
 import { DividerCenter, TitleLayout } from "@/components/main";
-import { MessageOutlined } from "@ant-design/icons";
+import { CommentOutlined } from "@ant-design/icons";
 import { Card, Flex } from "antd";
 import ForumListCreateButton from "../action/ForumListCreateButton";
 import ForumListPageBar from "../action/ForumListPageBar";
@@ -17,7 +17,7 @@ const rules = [
 const ForumListVertical: React.FC = () => {
   return (
     <Flex vertical>
-      <TitleLayout icon={<MessageOutlined />} title="Forum Diskusi" />
+      <TitleLayout icon={<CommentOutlined />} title="Forum Diskusi" />
       <DividerCenter />
 
       <Flex vertical gap={25}>
