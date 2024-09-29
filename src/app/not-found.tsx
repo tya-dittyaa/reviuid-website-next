@@ -1,6 +1,9 @@
 "use client";
 
 import { FooterLayout, HeaderLayout } from "@/components";
+import { UserSessionProvider } from "@/context";
+import { UserSession } from "@/types";
+import { GetUserSession } from "@/utils";
 import { HomeOutlined, WarningOutlined } from "@ant-design/icons";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import "@fontsource/poppins";
@@ -50,11 +53,16 @@ function NotFoundView() {
 
 export default function NotFound() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [userSession, setUserSession] = useState<UserSession | null>(null);
+
+  const getUserSession = async () => {
+    const user = await GetUserSession();
+    setUserSession(user);
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    getUserSession();
   }, []);
 
   if (isLoading) {
@@ -69,13 +77,15 @@ export default function NotFound() {
         },
       }}
     >
-      <AntdRegistry>
-        <Layout style={{ minHeight: "100dvh" }}>
-          <HeaderLayout />
-          <NotFoundView />
-          <FooterLayout />
-        </Layout>
-      </AntdRegistry>
+      <UserSessionProvider user={userSession}>
+        <AntdRegistry>
+          <Layout style={{ minHeight: "100dvh" }}>
+            <HeaderLayout />
+            <NotFoundView />
+            <FooterLayout />
+          </Layout>
+        </AntdRegistry>{" "}
+      </UserSessionProvider>
     </ConfigProvider>
   );
 }

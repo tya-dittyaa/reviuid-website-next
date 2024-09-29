@@ -11,8 +11,8 @@ export async function GetUserProfile(
 
   try {
     // Fetch the user login
-    const resProfile = await fetch(
-      `${BACKEND_URL}/users/display/profile/${username}`,
+    const res = await fetch(
+      `${BACKEND_URL}/users/display/${username}/profile`,
       {
         method: "GET",
         headers: {
@@ -23,13 +23,13 @@ export async function GetUserProfile(
     );
 
     // Response is 200
-    if (resProfile.status === 200) {
-      const profile: UserProfile = await resProfile.json();
+    if (res.status === 200) {
+      const profile: UserProfile = await res.json();
       return profile;
     }
 
     // Return the status
-    return resProfile.status;
+    return res.status;
   } catch (error) {
     // Return false
     return 500;

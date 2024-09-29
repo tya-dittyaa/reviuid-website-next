@@ -1,139 +1,86 @@
 "use client";
 
-import { FooterLayout, HeaderLayout } from "@/components";
+import {
+  DividerCenter,
+  FooterLayout,
+  HeaderLayout,
+  TitleLayout,
+  UserHomeHorizontal,
+  UserHomeTabs,
+  UserHomeVertical,
+} from "@/components";
+import {
+  UserFilmFavoriteTotalProvider,
+  UserFilmWatchlistTotalProvider,
+  UserProfileProvider,
+  UserSessionProvider,
+  ViewLayoutProvider,
+  useUserFilmFavoriteTotal,
+  useUserFilmWatchlistTotal,
+  useViewLayout,
+} from "@/context";
 import { useWindowSize } from "@/hooks";
-import { UserProfile, ViewType } from "@/types";
-import { GetUserProfile } from "@/utils";
+import { UserProfile, UserSession } from "@/types";
+import {
+  GetUserFilmFavoriteTotal,
+  GetUserFilmWatchlistTotal,
+  GetUserProfile,
+  GetUserSession,
+} from "@/utils";
 import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Col, Divider, Flex, Layout, Spin, Typography } from "antd";
-import Image from "next/image";
-import { notFound } from "next/navigation";
+import { Layout, Spin } from "antd";
+import {
+  notFound,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { useEffect, useState } from "react";
+import { Toaster } from "sonner";
 
 const { Content } = Layout;
-const { Text, Title, Paragraph } = Typography;
 
-function DisplayUserVertical({ user }: { user: UserProfile }) {
-  return (
-    <>
-      <Flex
-        vertical
-        justify="center"
-        style={{
-          backgroundColor: "whitesmoke",
-          borderRadius: 10,
-          boxShadow: "2px 2px 10px rgba(0, 0, 0, 0.25)",
-          padding: "2rem",
-        }}
-      >
-        <Avatar
-          size={100}
-          icon={
-            <Image
-              src={user.avatar}
-              width={2048}
-              height={2048}
-              alt={`Avatar ${user.username}`}
-            />
-          }
-          style={{
-            borderColor: "black",
-            borderWidth: 2,
-            borderStyle: "solid",
-            boxShadow: "2px 2px 10px rgba(0, 0, 0, 0.25)",
-            marginBottom: "1rem",
-          }}
-        />
+function BodyLayout() {
+  const layout = useViewLayout();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const totalFavorite = useUserFilmFavoriteTotal();
+  const totalWatchlist = useUserFilmWatchlistTotal();
 
-        <Title level={4}>{user.username}</Title>
+  const getTab = searchParams.get("tab");
+  const getPage = searchParams.get("page");
 
-        <Paragraph>
-          {user.biography === null ? "Tidak ada deskripsi." : user.biography}
-        </Paragraph>
-      </Flex>
-    </>
-  );
-}
+  const totalPageFavorite = Math.ceil(totalFavorite / 10);
+  const totalPageWatchlist = Math.ceil(totalWatchlist / 10);
 
-function DisplayUserHorizontal({ user }: { user: UserProfile }) {
-  return (
-    <Flex
-      gap="30px"
-      vertical={false}
-      align="center"
-      style={{
-        backgroundColor: "whitesmoke",
-        borderRadius: 10,
-        boxShadow: "2px 2px 10px rgba(0, 0, 0, 0.25)",
-        padding: "2rem",
-      }}
-    >
-      <div>
-        <Avatar
-          size={125}
-          icon={
-            <Image
-              src={user.avatar}
-              width={2048}
-              height={2048}
-              alt={`Avatar ${user.username}`}
-            />
-          }
-          style={{
-            borderColor: "black",
-            borderWidth: 2,
-            borderStyle: "solid",
-            boxShadow: "2px 2px 10px rgba(0, 0, 0, 0.25)",
-          }}
-        />
-      </div>
+  useEffect(() => {
+    if (!getTab || parseInt(getTab) < 1 || parseInt(getTab) > 2) {
+      router.push(`${pathname}?tab=1`);
+    } else if (
+      getTab === "1" &&
+      (!getPage ||
+        parseInt(getPage) < 1 ||
+        parseInt(getPage) > totalPageFavorite)
+    ) {
+      router.push(`${pathname}?tab=1&page=1`);
+    } else if (
+      getTab === "2" &&
+      (!getPage ||
+        parseInt(getPage) < 1 ||
+        parseInt(getPage) > totalPageWatchlist)
+    ) {
+      router.push(`${pathname}?tab=2&page=1`);
+    }
+  }, [
+    getPage,
+    getTab,
+    pathname,
+    router,
+    totalPageFavorite,
+    totalPageWatchlist,
+  ]);
 
-      <div>
-        <Title level={4}>{user.username}</Title>
-        <Paragraph>
-          {user.biography === null ? "Tidak ada deskripsi." : user.biography}
-        </Paragraph>
-      </div>
-    </Flex>
-  );
-}
-
-function ProfileText({ layout }: { layout: ViewType }) {
-  return (
-    <Flex vertical style={{ width: "100%" }}>
-      <Col
-        style={{
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          textDecoration: "none",
-        }}
-      >
-        <Avatar
-          size={layout === "horizontal" ? "large" : "default"}
-          icon={<UserOutlined />}
-          style={{
-            backgroundColor: "#E2B808",
-            color: "black",
-            marginRight: "1rem",
-          }}
-        />
-
-        <Text
-          strong
-          style={{
-            color: "#E2B808",
-            fontSize: 30,
-          }}
-        >
-          <b style={{ fontWeight: "bold" }}>Profil User</b>
-        </Text>
-      </Col>
-    </Flex>
-  );
-}
-
-function UserFound({ layout, user }: { layout: ViewType; user: UserProfile }) {
   return (
     <Content
       style={{
@@ -144,31 +91,11 @@ function UserFound({ layout, user }: { layout: ViewType; user: UserProfile }) {
         padding: layout === "horizontal" ? "2rem" : "1rem",
       }}
     >
-      <ProfileText layout={layout} />
-
-      <Divider
-        orientation="center"
-        style={{
-          borderColor: "black",
-          borderWidth: 2,
-          margin: "20px 0 20px 0",
-        }}
-      />
-
-      {layout === "vertical" ? (
-        <DisplayUserVertical user={user} />
-      ) : (
-        <DisplayUserHorizontal user={user} />
-      )}
-
-      <Divider
-        orientation="center"
-        style={{
-          borderColor: "black",
-          borderWidth: 2,
-          margin: "20px 0 20px 0",
-        }}
-      />
+      <TitleLayout icon={<UserOutlined />} title="Profil Pengguna" />
+      <DividerCenter />
+      {layout === "vertical" ? <UserHomeVertical /> : <UserHomeHorizontal />}
+      <DividerCenter />
+      <UserHomeTabs />
     </Content>
   );
 }
@@ -179,9 +106,37 @@ export default function ProfilePage({
   params: { username: string };
 }) {
   const size = useWindowSize();
+
   const [layout, setLayout] = useState<"vertical" | "horizontal">("horizontal");
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [userData, setUserData] = useState<UserProfile | null>(null);
+  const [userSession, setUserSession] = useState<UserSession | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [totalFavorite, setTotalFavorite] = useState<number>(0);
+  const [totalWatchlist, setTotalWatchlist] = useState<number>(0);
+
+  const getUserSession = async () => {
+    const user = await GetUserSession();
+    setUserSession(user);
+  };
+
+  const getUserProfile = async (username: string) => {
+    const response = await GetUserProfile(username);
+    if (typeof response !== "number") {
+      setUserProfile(response);
+    }
+  };
+
+  const getTotalFavorite = async (username: string) => {
+    const response = await GetUserFilmFavoriteTotal(username);
+    if (response) setTotalFavorite(response);
+    else setTotalFavorite(0);
+  };
+
+  const getTotalWatchlist = async (username: string) => {
+    const response = await GetUserFilmWatchlistTotal(username);
+    if (response) setTotalWatchlist(response);
+    else setTotalWatchlist(0);
+  };
 
   useEffect(() => {
     if (size.width && size.width < 800) {
@@ -192,14 +147,10 @@ export default function ProfilePage({
   }, [size.width]);
 
   useEffect(() => {
-    const getUserData = async () => {
-      const response = await GetUserProfile(params.username);
-      if (typeof response !== "number") {
-        setUserData(response);
-      }
-      return;
-    };
-    getUserData();
+    getUserSession();
+    getUserProfile(params.username);
+    getTotalFavorite(params.username);
+    getTotalWatchlist(params.username);
   }, [params.username]);
 
   useEffect(() => {
@@ -212,15 +163,26 @@ export default function ProfilePage({
     return <Spin fullscreen />;
   }
 
-  if (!userData) {
+  if (!userProfile) {
     return notFound();
   }
 
   return (
-    <Layout style={{ minHeight: "100dvh" }}>
-      <HeaderLayout />
-      <UserFound layout={layout} user={userData} />
-      <FooterLayout />
-    </Layout>
+    <ViewLayoutProvider view={layout}>
+      <UserSessionProvider user={userSession}>
+        <UserProfileProvider user={userProfile}>
+          <UserFilmFavoriteTotalProvider total={totalFavorite}>
+            <UserFilmWatchlistTotalProvider total={totalWatchlist}>
+              <Layout style={{ minHeight: "100dvh" }}>
+                <HeaderLayout />
+                <BodyLayout />
+                <FooterLayout />
+                <Toaster richColors position="bottom-right" />
+              </Layout>
+            </UserFilmWatchlistTotalProvider>
+          </UserFilmFavoriteTotalProvider>
+        </UserProfileProvider>
+      </UserSessionProvider>
+    </ViewLayoutProvider>
   );
 }

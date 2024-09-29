@@ -33,8 +33,11 @@ function Vertical() {
           </Link>
         </Space>
         <Space direction="vertical">
-          <Link href="/developer" style={{ color: "white", listStyle: "none" }}>
-            Developer
+          <Link
+            href="/developers"
+            style={{ color: "white", listStyle: "none" }}
+          >
+            Pengembang
           </Link>
         </Space>
       </Space>
@@ -58,13 +61,13 @@ function Horizontal() {
       }}
     >
       <Space direction="horizontal" style={{ gap: 50 }}>
-        <Text style={{ color: "white" }}>© 2024, oleh Reviu Film ID, Inc.</Text>
         <Link href="/about-us" style={{ color: "white", listStyle: "none" }}>
           Tentang Kami
         </Link>
-        <Link href="/developer" style={{ color: "white", listStyle: "none" }}>
-          Developer
+        <Link href="/developers" style={{ color: "white", listStyle: "none" }}>
+          Pengembang
         </Link>
+        <Text style={{ color: "white" }}>© 2024, oleh Reviu Film ID, Inc.</Text>
       </Space>
     </Flex>
   );

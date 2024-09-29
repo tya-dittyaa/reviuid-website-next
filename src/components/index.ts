@@ -1,4 +1,5 @@
-import FooterLayout from "./FooterLayout";
-import HeaderLayout from "./HeaderLayout";
-
-export { FooterLayout, HeaderLayout };
+export * from "./admin";
+export * from "./film";
+export * from "./forum";
+export * from "./main";
+export * from "./user";
